@@ -1,5 +1,4 @@
 import express from 'express';
-// import { db } from '../config/db_config.js';
 import User from '../models/User.js';
 
 const app = express();
@@ -12,17 +11,25 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    console.log(req.body);
 
     const { email, lrn, grlvl, strand, password } = req.body;
     const user_role = "STUDENT";
 
-    // await db.query("INSERT INTO users (email, lrn, grlvl, strand, password, user_role) VALUES ($1, $2, $3, $4, $5, $6)", [
-    //     email, lrn, grlvl, strand, password, user_role
-    // ]);
+    console.log({ email: email, lrn: lrn, grlvl: grlvl, strand: strand, password: password, user_role: user_role });
 
-    await User.create({ email: email, lrn: lrn, grlvl: grlvl, strand: strand, password: password, user_role: user_role });
-    res.status(201).json({ message: 'User registered!' });
+    try {
+        await User.create({ email: email, lrn: lrn, grlvl: grlvl, strand: strand, password: password, user_role: user_role });
+        res.status(201).json({ message: 'User has been registered successfully!' });
+    } catch (error) {
+        console.error("Error registering user:", error);
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            res.status(400).json({ message: 'Email or LRN already exists!' });
+        } else if (error.name === 'SequelizeValidationError') {
+        res.status(400).json({ message: 'Validation error: Check your inputs.' });
+        } else {
+        res.status(500).json({ message: 'Internal server error. Please try again later.' });
+        }
+    }
 });
 
 export default router;
