@@ -1,9 +1,126 @@
 import styles from '../assets/styles/adminModules.module.scss'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 const AdminModules = () => {
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [title, setTitle] = useState('');
+  const [subject, setSubject] = useState('');
+  const [file, setFile] = useState(null);
+  const [modules, setModules] = useState([]);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const currentDate = new Date().toISOString();
+    const newModule = { 
+      title, 
+      subject, 
+      file, 
+      date: formatDate(currentDate) 
+    };
+    setModules([...modules, newModule]);
+
+    setTitle('');
+    setSubject('');
+    setFile(null);
+    
+    toggleModal();
+  };
+
   return (
     <main className={styles.main}>
-        <p>this is the admin modules</p>
+      <div className={styles.container}>
+
+        <section className={styles.upper}>
+          <h1>Admin Dashboard <i className="ri-arrow-right-wide-line"></i>Modules</h1>
+
+          <div className={styles.searchWrapper}>
+            <i className="ri-search-line"></i>
+            <input type="text" placeholder="Search..." />
+          </div>
+
+          <div className={styles.user} onClick={toggleDropdown}> 
+            <i className="ri-user-line"></i>
+            {isDropdownOpen && (
+              <div className={styles.dropdown}>
+                <div>My Account</div>
+                <Link to="/settings">Settings</Link>
+                <div>Support</div>
+                <Link to="/register">Sign In</Link>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className={styles.lower}>
+          <div className={styles.links}>
+            <Link to="/admin-users">Users</Link>
+            <Link to="/admin-modules">Modules</Link>
+          </div>
+          <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
+        </section>
+
+        {isModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Add Module</h2>
+              <form onSubmit={handleSubmit}>
+                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                <button type="submit">Submit</button>
+                <button type="button" onClick={toggleModal}>Cancel</button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <table className={styles.modulesTable}>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Subject</th>
+              <th>File</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {modules.map((module, index) => (
+              <tr key={index}>
+                <td>{module.title}</td>
+                <td>{module.subject}</td>
+                <td>
+                  {module.file ? (
+                    <a href={URL.createObjectURL(module.file)} download>
+                      {module.file.name}
+                    </a>
+                  ) : (
+                    'N/A'
+                  )}
+                </td>
+                <td>{formatDate(module.date)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </main>
   )
 }

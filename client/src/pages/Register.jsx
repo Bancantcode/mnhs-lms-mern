@@ -14,7 +14,7 @@ const Register = () => {
                 <input type="text" required />
 
                 <label htmlFor="grade__level">Grade Level</label>
-                <input type="text" required />
+                <input type="text" required/>
 
                 <label htmlFor="strand">Strand</label>
                 <input type="text" required />
