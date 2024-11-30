@@ -12,7 +12,8 @@ const User = sequelize.define('users', {
     grlvl: { type: DataTypes.INTEGER, allowNull: false },
     strand: { type: DataTypes.STRING, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false },
-    user_role: { type: DataTypes.STRING, allowNull: false }, 
+    user_role: { type: DataTypes.STRING, allowNull: false },
+    created_at: { type: DataTypes.DATEONLY, defaultValue: DataTypes.NOW } 
     }, {
         timestamps: false
 });

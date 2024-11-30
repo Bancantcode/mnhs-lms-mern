@@ -1,17 +1,54 @@
-import styles from '../assets/styles/login.module.scss'
-import { Link } from 'react-router-dom'
+import styles from '../assets/styles/login.module.scss';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
+  const [userData, setUserData] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post('http://localhost:3000/login', userData);
+      alert('You are now logged in!.');
+      setUserData({
+        email: '',
+        password: ''
+      });
+      navigate('/');
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || 'Login failed!');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className={styles.main}>
         <div className={styles.container}>
             <img src="" alt="" />
-            <form action="" className={styles.form}>
-                <label htmlFor="email">Email
-                <input type="email" /></label>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <label htmlFor="email">Email</label>
+                <input type="email" name='email'onChange={handleChange} />
                 
-                <label htmlFor="password">Password
-                <input type="password" /></label>
+                <label htmlFor="password">Password</label>
+                <input type="password" name='password'onChange={handleChange} />
 
                 <button type="submit">Login</button>
             </form>
