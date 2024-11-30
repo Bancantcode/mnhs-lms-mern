@@ -7,20 +7,20 @@ const Register = () => {
         <div className={styles.container}>
             <img src="" alt="" />
             <form action="" className={styles.form}>
-                <label htmlFor="email">Email</label>
-                <input type="email" required />
+                <label htmlFor="email">Email
+                <input type="email" required /></label>
 
-                <label htmlFor="lrn">LRN</label>
-                <input type="text" required />
+                <label htmlFor="lrn">LRN
+                <input type="text" required /></label>
 
-                <label htmlFor="grade__level">Grade Level</label>
-                <input type="text" required/>
+                <label htmlFor="grade__level">Grade Level
+                <input type="text" required /></label>
 
-                <label htmlFor="strand">Strand</label>
-                <input type="text" required />
+                <label htmlFor="strand">Strand
+                <input type="text" required /></label>
 
-                <label htmlFor="password">Password</label>
-                <input type="password" required />
+                <label htmlFor="password">Password
+                <input type="password" required /></label>
                 
                 <button type="submit">Register</button>
             </form>

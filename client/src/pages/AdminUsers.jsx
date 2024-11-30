@@ -17,11 +17,33 @@ const AdminUsers = () => {
     setModalOpen(!isModalOpen);
   };
 
+  //change the format of the date to be month, day, year
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  //make an object and put title, subject, file and date
   const handleSubmit = (e) => {
     e.preventDefault();
     const currentDate = new Date().toISOString();
-    const fileToSubmit = file ? file.name : 'N/A';
-    console.log({ title, subject, file: fileToSubmit, date: currentDate });
+    const newModule = { 
+      title, 
+      subject, 
+      file: file ? file.name : 'N/A', 
+      date: formatDate(currentDate) 
+    };
+
+    console.log(newModule);
+
+    //reset
+    setTitle('');
+    setSubject('');
+    setFile(null);
+    
     toggleModal();
   };
 
@@ -65,13 +87,35 @@ const AdminUsers = () => {
               <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                <input type="file" onChange={(e) => setFile(e.target.files[0])} required />
                 <button type="submit">Submit</button>
                 <button type="button" onClick={toggleModal}>Cancel</button>
               </form>
             </div>
           </div>
         )}
+
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>LRN</th>
+              <th>Email</th>
+              <th>Grade Level & Strand</th>
+              <th>Role</th>
+              <th>Created at</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                {/* THIS WILL BE CHANGED */}
+                <td>105996091234</td>
+                <td>bbsantiago@student.hau.edu.ph</td>
+                <td>12 - STEM</td>
+                <td>User</td>
+                <td>11/24/2024</td>
+              </tr>
+          </tbody>
+        </table>
 
       </div>
     </main>
