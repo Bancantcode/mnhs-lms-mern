@@ -1,6 +1,6 @@
 import styles from '../assets/styles/adminModules.module.scss'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const AdminModules = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -8,7 +8,6 @@ const AdminModules = () => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
-  const [modules, setModules] = useState([]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -18,6 +17,10 @@ const AdminModules = () => {
     setModalOpen(!isModalOpen);
   };
 
+  useEffect(() => {
+  }, [])
+
+  //change the format of the date to be month, day, year
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -29,14 +32,17 @@ const AdminModules = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const currentDate = new Date().toISOString();
+    //make an object and put title, subject, file and date
     const newModule = { 
       title, 
       subject, 
-      file, 
+      file: file ? file.name : 'N/A', 
       date: formatDate(currentDate) 
     };
-    setModules([...modules, newModule]);
 
+    console.log(newModule)
+
+    //reset
     setTitle('');
     setSubject('');
     setFile(null);
@@ -84,7 +90,7 @@ const AdminModules = () => {
               <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                <input type="file" onChange={(e) => setFile(e.target.files[0])} required/>
                 <button type="submit">Submit</button>
                 <button type="button" onClick={toggleModal}>Cancel</button>
               </form>
@@ -92,32 +98,23 @@ const AdminModules = () => {
           </div>
         )}
 
-        <table className={styles.modulesTable}>
+        <table className={styles.table}>
           <thead>
             <tr>
-              <th>Title</th>
               <th>Subject</th>
+              <th>Title</th>
               <th>File</th>
               <th>Date</th>
             </tr>
           </thead>
           <tbody>
-            {modules.map((module, index) => (
-              <tr key={index}>
-                <td>{module.title}</td>
-                <td>{module.subject}</td>
-                <td>
-                  {module.file ? (
-                    <a href={URL.createObjectURL(module.file)} download>
-                      {module.file.name}
-                    </a>
-                  ) : (
-                    'N/A'
-                  )}
-                </td>
-                <td>{formatDate(module.date)}</td>
+              <tr>
+                {/* THIS WILL BE CHANGED */}
+                <td>Progdats</td>
+                <td>Activity</td>
+                <td>N/A</td>
+                <td>11/24/2024</td>
               </tr>
-            ))}
           </tbody>
         </table>
       </div>

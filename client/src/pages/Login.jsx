@@ -7,11 +7,11 @@ const Login = () => {
         <div className={styles.container}>
             <img src="" alt="" />
             <form action="" className={styles.form}>
-                <label htmlFor="email">Email</label>
-                <input type="email" />
+                <label htmlFor="email">Email
+                <input type="email" /></label>
                 
-                <label htmlFor="password">Password</label>
-                <input type="password" />
+                <label htmlFor="password">Password
+                <input type="password" /></label>
 
                 <button type="submit">Login</button>
             </form>
