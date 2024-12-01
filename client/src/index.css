@@ -59,7 +59,7 @@
   --black: rgb(0 0 0 / var(--tw-text-opacity));
   --green: rgb(43 53 48 / var(--tw-text-opacity));
   --gray: rgb(102 102 102 / var(--tw-text-opacity));
-  --gray: rgb(243 243 241 / var(--tw-text-opacity));
+  --mid-white: rgb(243 243 241 / var(--tw-text-opacity));
 }
 
 /* =================== RESET =================== */

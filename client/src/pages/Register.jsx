@@ -72,29 +72,37 @@ const Register = () => {
       <div className={styles.container}>
         <img src="" alt="" />
         <form onSubmit={handleSubmit} className={styles.form}>
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" required value={userData.email} onChange={handleChange}/>
+          <img src="/images/MNHS-Logo.png" alt="Logo" />
+          <label htmlFor="email">Email
+            <input type="email" name="email" required value={userData.email} onChange={handleChange}/>
+          </label>
           
-          <label htmlFor="lrn">LRN</label>
-          <input type="text" name="lrn" required value={userData.lrn} onChange={handleChange} />
+          <label htmlFor="lrn">LRN
+            <input type="text" name="lrn" required value={userData.lrn} onChange={handleChange} />
+          </label>
 
           {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
 
-          <label htmlFor="grlvl">Grade Level</label>
-          <select name="grlvl" value={userData.grlvl} onChange={handleChange}>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
+          <div className={styles.flex}>
+            <label htmlFor="grlvl">Grade Level
+              <select name="grlvl" value={userData.grlvl} onChange={handleChange}>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+            </label>
 
-          <label htmlFor="strand">Strand</label>
-          <select name="strand" value={userData.strand} onChange={handleChange}>
-            <option value="STEM">STEM</option>
-            <option value="ABM">ABM</option>
-            <option value="GAS">GAS</option>
-          </select>
+            <label htmlFor="strand">Strand
+              <select name="strand" value={userData.strand} onChange={handleChange}>
+                <option value="STEM">STEM</option>
+                <option value="ABM">ABM</option>
+                <option value="GAS">GAS</option>
+              </select>
+            </label>
+          </div>
 
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" required value={userData.password} onChange={handleChange} />
+          <label htmlFor="password">Password
+            <input type="password" name="password" required value={userData.password} onChange={handleChange} />
+          </label>
 
           {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
 
@@ -103,7 +111,7 @@ const Register = () => {
           </button>
         </form>
         <p>
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login" className={styles.link}>Login</Link>
         </p>
       </div>
     </main>

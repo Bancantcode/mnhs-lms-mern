@@ -42,13 +42,15 @@ const Login = () => {
   return (
     <main className={styles.main}>
         <div className={styles.container}>
-            <img src="" alt="" />
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <label htmlFor="email">Email</label>
-                <input type="email" name='email'onChange={handleChange} />
+            <form onSubmit={handleSubmit}>
+                <img src="/images/MNHS-Logo.pngid" alt="Logo" />
+                <label htmlFor="email">Email
+                  <input type="email" name='email'onChange={handleChange} />
+                </label>
                 
-                <label htmlFor="password">Password</label>
-                <input type="password" name='password'onChange={handleChange} />
+                <label htmlFor="password">Password
+                  <input type="password" name='password'onChange={handleChange} />
+                </label>
 
                 <button type="submit">Login</button>
             </form>
