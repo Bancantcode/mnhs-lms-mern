@@ -1,6 +1,7 @@
 import styles from '../assets/styles/adminModules.module.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const AdminModules = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -29,18 +30,54 @@ const AdminModules = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const handleSubmit = (e) => {
+  // const validateData = () => {
+  //   const error = {};
+
+  //   if (!userData.lrn || !/^\d{12}$/.test(userData.lrn)) { // CHANGE
+  //     error.lrn = 'LRN must be exactly 12 numeric characters.';
+  //   }
+
+  //   if (!userData.password || userData.password.length < 8 || !/[A-Z]/.test(userData.password)) { // CHANGE
+  //     error.password = 'Password must be at least 8 characters and include an uppercase letter.';
+  //   }
+
+  //   setErrors(error);
+  //   return Object.keys(error).length === 0;
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const currentDate = new Date().toISOString();
     //make an object and put title, subject, file and date
-    const newModule = { 
-      title, 
-      subject, 
-      file: file ? file.name : 'N/A', 
-      date: formatDate(currentDate) 
-    };
+    // const newModule = { 
+    //   title, 
+    //   subject, 
+    //   file: file, 
+    //   date: formatDate(currentDate) 
+    // };
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('subject', subject);
+    formData.append('file', file);
+    formData.append('date', formatDate(currentDate));
 
-    console.log(newModule)
+    // console.log(newModule)
+
+    // if (validateData()) {
+      try {
+        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        alert('Module successfully uploaded!.');
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.message || 'Upload failed!');
+      } finally {
+        // setLoading(false);
+      }
+    // } 
+    // else {
+    //   console.log("Error with input validation:", errors);
+    //   setLoading(false);
+    // }
 
     //reset
     setTitle('');
@@ -90,7 +127,7 @@ const AdminModules = () => {
               <form onSubmit={handleSubmit}>
                 <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                <input type="file" onChange={(e) => setFile(e.target.files[0])} required/>
+                <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required/>
                 <button type="submit">Submit</button>
                 <button type="button" onClick={toggleModal}>Cancel</button>
               </form>
