@@ -146,11 +146,35 @@
             }
         }
 
-        table {
+        .table__container {
+            padding: var(--space-sm) var(--space-xl);
             background-color: var(--white);
-            width: 100%;
-            text-align: center;
-            border-radius: .5em;
+            border-radius: 1em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+
+            table {
+                background-color: var(--white);
+                width: 100%;
+                text-align: center;
+                border-collapse: collapse;
+                
+                thead {
+                    th {
+                        padding: var(--space-sm);
+                        text-transform: uppercase;
+                    }
+                }
+                tbody {
+                    td {
+                        border-top: 1px solid var(--green);
+                        padding: var(--space-xs);
+                    }
+
+                    .three__dots {
+                        cursor: pointer;
+                    }
+                }
+            }
         }
     }
 }

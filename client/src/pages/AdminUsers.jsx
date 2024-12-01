@@ -122,28 +122,32 @@ const AdminUsers = () => {
           </div>
         )}
 
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>LRN</th>
-              <th>Email</th>
-              <th>Grade Level & Strand</th>
-              <th>Role</th>
-              <th>Created at</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td>{user.lrn}</td>
-                <td>{user.email}</td>
-                <td>{`${user.grlvl} - ${user.strand}`}</td>
-                <td>{user.user_role}</td>
-                <td>{user.created_at}</td>
+        <div className={styles.table__container}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>LRN</th>
+                <th>Email</th>
+                <th>Grade Level & Strand</th>
+                <th>Role</th>
+                <th>Created at</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map((user, index) => (
+                <tr key={index}>
+                  <td>{user.lrn}</td>
+                  <td>{user.email}</td>
+                  <td>{`${user.grlvl} - ${user.strand}`}</td>
+                  <td>{user.user_role}</td>
+                  <td>{user.created_at}</td>
+                  <td><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20}/></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
       </div>
     </main>
