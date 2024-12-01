@@ -14,9 +14,32 @@
 
     .container {
         width: 100vw;
+        padding: var(--space-sm) var(--space-md);
         .upper {
             display: flex;
             justify-content: space-between;
+            margin-bottom: var(--space-md);
+
+            h1 {
+                font-size: var(--heading-4);
+            }
+
+            .search__wrapper {
+                background-color: var(--white);
+                border: 1px solid var(--green);
+                border-radius: .5em;
+                
+                i {
+                    padding: var(--space-2xs);
+                }
+                input {
+                    width: 300px;
+                    height: 100%;
+                    border: none;
+                    border-top-right-radius: .75em;
+                    border-bottom-right-radius: .75em;
+                }
+            }
 
             .user {
                 position: relative; 
@@ -71,7 +94,29 @@
     
         .lower {
             display: flex;
-            justify-content: space-between;
+            font-size: var(--text-base);
+            gap: var(--space-3xs);
+            margin-bottom: var(--space-md);
+            
+            button, .a {
+                background-color: var(--green);
+                border: none;
+                border-radius: .5em;
+                padding: var(--space-2xs) var(--space-xs);
+                color: var(--white);
+                font-weight: 500;
+                cursor: pointer;
+            }
+            
+            .links {
+                display: flex;
+                gap: var(--space-3xs);
+            }
+
+            button {
+                font-family: 'Neue Montreal', sans-serif;   
+                font-size: var(--text-base);
+            }
         }
 
         .modal {
@@ -88,19 +133,24 @@
             
             .modalContent {
                 background-color: var(--white);
-                padding: 20px;
+                padding: var(--space-xs);
                 border-radius: .5em;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 width: 400px; 
                 max-width: 90%;
 
                 form {
+                    display: flex;
+                    flex-direction: column;
                 }
             }
         }
 
         table {
             background-color: var(--white);
+            width: 100%;
+            text-align: center;
+            border-radius: .5em;
         }
     }
 }

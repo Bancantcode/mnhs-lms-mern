@@ -78,29 +78,29 @@ const AdminUsers = () => {
 
         <section className={styles.upper}>
           <h1>Admin Dashboard <i className="ri-arrow-right-wide-line"></i>Users</h1>
+          
+          <div className={styles.search__wrapper}>
+            <i className="ri-search-line"></i>
+            <input type="text" placeholder="Search..." />
+          </div>
 
-            <div className={styles.searchWrapper}>
-              <i className="ri-search-line"></i>
-              <input type="text" placeholder="Search..." />
-            </div>
-
-            <div className={styles.user} onClick={toggleDropdown}> 
-              <i className="ri-user-fill"></i>
-              {isDropdownOpen && (
-                <div className={styles.dropdown}>
-                  <div>My Account</div>
-                  <Link to="/settings">Settings</Link>
-                  <div>Support</div>
-                  <Link to="/register">Sign In</Link>
-                </div>
-              )}
-            </div>
+          <div className={styles.user} onClick={toggleDropdown}> 
+            <i className="ri-user-fill"></i>
+            {isDropdownOpen && (
+              <div className={styles.dropdown}>
+                <div>My Account</div>
+                <Link to="/settings">Settings</Link>
+                <div>Support</div>
+                <Link to="/register">Log out</Link>
+              </div>
+            )}
+          </div>
         </section>
 
         <section className={styles.lower}>
           <div className={styles.links}>
-            <Link to="/admin-users">Users</Link>
-            <Link to="/admin-modules">Modules</Link>
+            <Link className={styles.a} to="/admin-users">Users</Link>
+            <Link className={styles.a} to="/admin-modules">Modules</Link>
           </div>
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
         </section>
@@ -113,8 +113,10 @@ const AdminUsers = () => {
                 <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
                 <input type="file" onChange={(e) => setFile(e.target.files[0])} required />
-                <button type="submit">Submit</button>
-                <button type="button" onClick={toggleModal}>Cancel</button>
+                <div>
+                  <button type="submit">Submit</button>
+                  <button type="button" onClick={toggleModal}>Cancel</button>
+                </div>
               </form>
             </div>
           </div>
