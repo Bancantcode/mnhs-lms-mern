@@ -12,11 +12,11 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [activeUserIndex, setActiveUserIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 8;
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editUser, setEditUser] = useState({ lrn: '', email: '', grlvl: '', strand: '', user_role: '', password: '' });
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const usersPerPage = 8;
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -44,7 +44,7 @@ const AdminUsers = () => {
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Handle Previous and Next
   const handleNext = () => {
@@ -63,15 +63,15 @@ const AdminUsers = () => {
   //make an object and put title, subject, file and date
   const handleSubmit = (e) => {
     e.preventDefault();
-    const currentDate = new Date().toISOString();
-    const newModule = { 
-      title, 
-      subject, 
-      file: file ? file.name : 'N/A', 
-      date: formatDate(currentDate) 
-    };
+    // const currentDate = new Date().toISOString();
+    // const newModule = { 
+    //   title, 
+    //   subject, 
+    //   file: file ? file.name : 'N/A', 
+    //   date: formatDate(currentDate) 
+    // };
 
-    console.log(newModule);
+    // console.log(newModule);
 
     //reset
     setTitle('');
@@ -262,11 +262,11 @@ const AdminUsers = () => {
           </table>
 
           <div className={styles.pagination}>
-            <span>Showing {indexOfFirstUser + 1} - {Math.min(indexOfLastUser, users.length)} of {users.length} Users</span>
+            <p>Showing <span>{indexOfFirstUser + 1} - {Math.min(indexOfLastUser, users.length)}</span> of <span>{users.length} Users</span></p>
             <div>
-              <button onClick={handlePrevious} disabled={currentPage === 1}>&lt; Prev</button>
+              <button onClick={handlePrevious} disabled={currentPage === 1}><i className="ri-arrow-left-s-fill"></i></button>
               <span>Page {currentPage} of {Math.ceil(users.length / usersPerPage)}</span>
-              <button onClick={handleNext} disabled={currentPage === Math.ceil(users.length / usersPerPage)}>Next &gt;</button>
+              <button onClick={handleNext} disabled={currentPage === Math.ceil(users.length / usersPerPage)}><i className="ri-arrow-right-s-fill"></i></button>
             </div>
           </div>
         </div>

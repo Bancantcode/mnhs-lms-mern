@@ -139,10 +139,14 @@
                 width: 100%;
                 text-align: center;
                 border-collapse: collapse;
+                margin-bottom: var(--space-xl);
                 thead {
-                    th {
-                        padding: var(--space-sm);
-                        text-transform: uppercase;
+                    tr {
+                        font-size: var(--heading-5);
+                        color: var(--green);
+                        th {
+                            padding: var(--space-sm);
+                        }
                     }
                 }
                 tbody {
@@ -177,6 +181,30 @@
             .pagination {
                 display: flex;
                 justify-content: space-between;
+                p {
+                    font-size: var(--text-base--small);
+                    vertical-align: bottom;
+                    color: var(--gray);
+
+                    span {
+                        color: var(--black);
+                        font-weight: 500;
+                    }
+                }
+                div {
+                    display: flex;
+                    gap: var(--space-md);
+                    span {
+                        font-size: var(--text-base);
+                    }
+                    button {
+                        font-size: var(--heading-6);
+                        border: none;
+                        background-color: var(--green);
+                        color: var(--white);
+                        cursor: pointer;
+                    }
+                }
             }
         }
     }
@@ -278,6 +306,6 @@
     }
 }
 
-@media screen and (min-width: 1567px) {
+// @media screen and (min-width: 1567px) {
 
-}
+// }
