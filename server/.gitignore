@@ -24,3 +24,5 @@ uploads
 *.njsproj
 *.sln
 *.sw?
+
+db_config.js

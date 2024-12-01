@@ -110,7 +110,7 @@ const Register = () => {
             {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
-        <p>
+        <p className={styles.question}>
           Already have an account? <Link to="/login" className={styles.link}>Login</Link>
         </p>
       </div>

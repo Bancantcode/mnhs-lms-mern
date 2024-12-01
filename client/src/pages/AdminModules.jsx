@@ -12,6 +12,10 @@ const AdminModules = () => {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeUserIndex, setActiveUserIndex] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [moduleToEdit, setModuleToEdit] = useState(null);
+  const [moduleToDelete, setModuleToDelete] = useState(null);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -67,8 +71,6 @@ const AdminModules = () => {
     formData.append('subject', subject);
     formData.append('file', file);
     formData.append('date', formatDate(currentDate));
-
-    // console.log(newModule)
 
     // if (validateData()) {
       try {
@@ -137,6 +139,31 @@ const AdminModules = () => {
       console.error('Download failed:', err);
       alert('Failed to download file');
     }
+  };
+
+  const handleEdit = (module) => {
+    setModuleToEdit(module);
+    setEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Edited Module:', moduleToEdit);
+    setEditModalOpen(false);
+  };
+
+  const handleDelete = (module) => {
+    setModuleToDelete(module);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    console.log('Deleted Module:', moduleToDelete);
+    setDeleteModalOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setDeleteModalOpen(false);
   };
 
   return (
@@ -210,8 +237,8 @@ const AdminModules = () => {
                     </div>
                     {activeUserIndex === index && (
                       <div className={styles.dropdown}>
-                        <div className={styles.dropdown__item}>Edit</div>
-                        <div className={styles.dropdown__item}>Delete</div>
+                        <div className={styles.dropdown__item} onClick={() => handleEdit(module)}>Edit</div>
+                        <div className={styles.dropdown__item} onClick={() => handleDelete(module)}>Delete</div>
                       </div>
                     )}
                   </td>
@@ -219,6 +246,36 @@ const AdminModules = () => {
             ))}
           </tbody>
         </table>
+
+        {deleteModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Confirm Deletion</h2>
+              <p>Are you sure you want to delete this module?</p>
+              <div>
+                <button onClick={confirmDelete}>Yes</button>
+                <button onClick={cancelDelete}>No</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {editModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Edit Module</h2>
+              <form onSubmit={handleEditSubmit}>
+                <input type="text" placeholder="Title" value={moduleToEdit?.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })} required />
+                <input type="text" placeholder="Subject" value={moduleToEdit?.subject || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, subject: e.target.value })} required />
+                <input type="file" onChange={(e) => setModuleToEdit({ ...moduleToEdit, file: e.target.files[0] })} />
+                <div>
+                  <button type="submit">Save</button>
+                  <button type="button" onClick={() => setEditModalOpen(false)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   )

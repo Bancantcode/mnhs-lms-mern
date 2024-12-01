@@ -1,11 +1,11 @@
 .main {
-    height: 150vh; //will be change
+    height: 100vh; //will be change
     width: 100%;
     display: flex;
     background-color: var(--mid-white);
     .sidebar {
         background-color: var(--green);
-        height: 150vh; //will be change
+        height: 100vh; //will be change
         width: var(--space-2xl);
         img {
             width: 50px;
@@ -172,6 +172,11 @@
                         }
                     }
                 }
+            }
+
+            .pagination {
+                display: flex;
+                justify-content: space-between;
             }
         }
     }
