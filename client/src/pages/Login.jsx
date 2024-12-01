@@ -12,12 +12,18 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const [rememberMe, setRememberMe] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({
       ...userData,
       [name]: value,
     });
+  };
+
+  const handleRememberMeChange = (e) => {
+    setRememberMe(e.target.checked);
   };
 
   const handleSubmit = async (e) => {
@@ -43,7 +49,7 @@ const Login = () => {
     <main className={styles.main}>
         <div className={styles.container}>
             <form onSubmit={handleSubmit}>
-                <img src="/images/MNHS-Logo.pngid" alt="Logo" />
+                <img src="/images/MNHS-Logo.png" alt="Logo" />
                 <label htmlFor="email">Email
                   <input type="email" name='email'onChange={handleChange} />
                 </label>
@@ -54,7 +60,7 @@ const Login = () => {
 
                 <button type="submit">Login</button>
             </form>
-            <p>Don&apos;t have an account? <Link to={"/Register"}>Register</Link></p>
+            <p>Don&apos;t have an account? <Link to={"/Register"} className={styles.link}>Register</Link></p>
         </div>
     </main>
   )

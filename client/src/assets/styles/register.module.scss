@@ -1,5 +1,5 @@
 .main {
-    background-image: url('/public/images/test.jpg');
+    background-image: url('/images/test.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -13,7 +13,7 @@
 
     .container {
         border-radius: .5em;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
         padding: var(--space-md);
         margin: var(--space-sm);
 
@@ -74,6 +74,7 @@
                 color: var(--white);
                 text-transform: uppercase;
                 font-weight: 500;
+                text-decoration: underline;
             }
         }
     }
