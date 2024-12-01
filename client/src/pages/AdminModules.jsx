@@ -11,6 +11,7 @@ const AdminModules = () => {
   const [file, setFile] = useState(null);
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeUserIndex, setActiveUserIndex] = useState(null);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -18,6 +19,10 @@ const AdminModules = () => {
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
+  };
+
+  const toggleUserDropdown = (index) => {
+    setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
   useEffect(() => {
@@ -199,7 +204,17 @@ const AdminModules = () => {
                 <td>{module.file_name}</td>
                 <td>{module.upload_date}</td>
                 <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
-                <td><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20}/></td>
+                <td>
+                    <div onClick={() => toggleUserDropdown(index)}>
+                      <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
+                    </div>
+                    {activeUserIndex === index && (
+                      <div className={styles.dropdown}>
+                        <div className={styles.dropdown__item}>Edit</div>
+                        <div className={styles.dropdown__item}>Delete</div>
+                      </div>
+                    )}
+                  </td>
               </tr>
             ))}
           </tbody>

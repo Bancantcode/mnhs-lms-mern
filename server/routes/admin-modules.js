@@ -107,4 +107,14 @@ router.get('/download/:id', async (req, res) => {
         }
 });
 
+router.put('/edit/:id', async (req, res, next) => {
+    try {
+      const data = await Module.findByPk(req.params.id);
+      res.json(data);
+      console.log('Property successfully updated!');
+    } catch (error) {
+      return next(error);
+    }
+  });
+
 export default router;
