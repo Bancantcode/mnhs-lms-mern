@@ -1,6 +1,6 @@
 import styles from '../assets/styles/adminUsers.module.scss'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const AdminUsers = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -8,6 +8,8 @@ const AdminUsers = () => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -46,6 +48,26 @@ const AdminUsers = () => {
     
     toggleModal();
   };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/admin-users');
+        const data = await response.json();
+        setUsers(data);
+        setLoading(false);
+      } 
+      catch (error) {
+        console.error('Failed to fetch users', error);
+        setLoading(false); 
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  if (loading) {
+    return <p>Loading users...</p>;
+  }
 
   return (
     <main className={styles.main}>
@@ -106,14 +128,15 @@ const AdminUsers = () => {
             </tr>
           </thead>
           <tbody>
-              <tr>
-                {/* THIS WILL BE CHANGED */}
-                <td>105996091234</td>
-                <td>bbsantiago@student.hau.edu.ph</td>
-                <td>12 - STEM</td>
-                <td>User</td>
-                <td>11/24/2024</td>
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td>{user.lrn}</td>
+                <td>{user.email}</td>
+                <td>{`${user.grlvl} - ${user.strand}`}</td>
+                <td>{user.user_role}</td>
+                <td>{user.created_at}</td>
               </tr>
+            ))}
           </tbody>
         </table>
 

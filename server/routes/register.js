@@ -6,8 +6,8 @@ app.use(express.json());
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send("HELLO")
+router.get('/', (req, res) => { 
+    res.send("HELLO") // REMOVE
 })
 
 router.post('/', async (req, res) => {
@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     const { email, lrn, grlvl, strand, password } = req.body;
     const user_role = "STUDENT";
 
-    console.log({ email: email, lrn: lrn, grlvl: grlvl, strand: strand, password: password, user_role: user_role });
+    console.log({ email: email, lrn: lrn, grlvl: grlvl, strand: strand, password: password, user_role: user_role }); // REMOVE
 
     try {
         await User.create({ email: email, lrn: lrn, grlvl: grlvl, strand: strand, password: password, user_role: user_role });

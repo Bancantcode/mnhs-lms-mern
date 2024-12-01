@@ -62,7 +62,7 @@ const Register = () => {
         setLoading(false);
       }
     } else {
-      console.log("Error with input validation:", errors); // Debugging log
+      console.log("Error with input validation:", errors);
       setLoading(false);
     }
   };
