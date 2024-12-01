@@ -10,6 +10,7 @@ const AdminUsers = () => {
   const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeUserIndex, setActiveUserIndex] = useState(null);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -17,6 +18,10 @@ const AdminUsers = () => {
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
+  };
+
+  const toggleUserDropdown = (index) => {
+    setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
   //change the format of the date to be month, day, year
@@ -145,7 +150,17 @@ const AdminUsers = () => {
                   <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>
                   <td className={`${styles.hidden} ${styles.role}`}>{user.user_role}</td>
                   <td>{user.created_at}</td>
-                  <td><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20}/></td>
+                  <td>
+                    <div onClick={() => toggleUserDropdown(index)}>
+                      <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
+                    </div>
+                    {activeUserIndex === index && (
+                      <div className={styles.dropdown}>
+                        <div className={styles.dropdown__item}>Edit</div>
+                        <div className={styles.dropdown__item}>Delete</div>
+                      </div>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
