@@ -15,7 +15,8 @@ const app = express();
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE'
+    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+    exposedHeaders: ['Content-Disposition']
 }))
 
 app.use(express.json());

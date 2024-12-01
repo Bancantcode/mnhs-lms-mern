@@ -21,6 +21,17 @@ const app = express();
 app.use(express.json());
 const router = express.Router();
 
+router.get('/', async (req, res) => { 
+    try {
+        const modules = await Module.findAll();
+        // console.log(modules);
+        res.status(200).json(modules);
+    } catch (error) {
+        console.error('Error fetching modules:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
 router.post('/', upload.single('file'), async (req, res) => {
     console.log(req.file.path);
     const { subject, title } = req.body;
@@ -42,7 +53,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         uploader: "DEV"
     }) 
 
-    // console.log(newModule);
+    console.log(newModule);
 
     res.status(201).json({ message: 'Module has been uploaded successfully!' }); // FOR TESTING
 
@@ -70,6 +81,30 @@ router.post('/', upload.single('file'), async (req, res) => {
     //         res.status(500).json({ message: 'Internal server error. Please try again later.' });
     //     }
     // }
+});
+
+router.get('/download/:id', async (req, res) => { 
+    try {
+        const module = await Module.findByPk(req.params.id);
+    
+        if (!module) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        const filePath = path.join('uploads', module.file_name);
+        const fileName = module.file_name;
+
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="${module.file_name}"`);
+        res.download(filePath, fileName, (err) => {
+            if (err) {
+                res.status(500).send({ message: 'Error downloading the file', error: err });
+            }
+        });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error retrieving the file', error: err.message });
+        }
 });
 
 export default router;

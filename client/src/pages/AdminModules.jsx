@@ -9,6 +9,8 @@ const AdminModules = () => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -87,6 +89,51 @@ const AdminModules = () => {
     toggleModal();
   };
 
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/admin-modules');
+        const data = await response.json();
+        setModules(data);
+        setLoading(false);
+      } 
+      catch (error) {
+        console.error('Failed to fetch modules', error);
+        setLoading(false); 
+      }
+    };
+    fetchModules();
+  }, []);
+
+  if (loading) {
+    return <p>Loading modules...</p>;
+  }
+
+  const handleDownload = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/admin-modules/download/${id}`, {
+        responseType: 'blob', 
+      });
+
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        alert('No file to download');
+      }
+    } catch (err) {
+      console.error('Download failed:', err);
+      alert('Failed to download file');
+    }
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -145,13 +192,16 @@ const AdminModules = () => {
             </tr>
           </thead>
           <tbody>
-              <tr>
-                {/* THIS WILL BE CHANGED */}
-                <td>Progdats</td>
-                <td>Activity</td>
-                <td>N/A</td>
-                <td>11/24/2024</td>
+            {modules.map((module, index) => (
+              <tr key={index}>
+                <td>{module.subject}</td>
+                <td>{module.title}</td>
+                <td>{module.file_name}</td>
+                <td>{module.upload_date}</td>
+                <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
+                <td><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20}/></td>
               </tr>
+            ))}
           </tbody>
         </table>
       </div>
