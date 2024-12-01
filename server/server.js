@@ -8,6 +8,7 @@ import registerRoute from './routes/register.js';
 import Login from './auth/authcontroller.js';
 import dboardRoute from './routes/dashboard.js';
 import AdminUsersRoute from './routes/admin-users.js';
+import AdminModulesRoute from './routes/admin-modules.js';
 
 dotenv.config();
 const app = express();
@@ -29,6 +30,7 @@ app.use('/', dboardRoute);
 app.use('/login', Login);
 app.use('/register', registerRoute);
 app.use('/admin-users', AdminUsersRoute)
+app.use('/admin-modules', AdminModulesRoute)
 
 const PORT = process.env.PORT || 3000;
 
