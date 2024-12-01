@@ -74,10 +74,13 @@ const AdminUsers = () => {
       <aside className={styles.sidebar}>
         <img src="/images/MNHS-Logo.png" alt="Logo" />
       </aside>
-      <div className={styles.container}>
 
+      <div className={styles.container}>
         <section className={styles.upper}>
           <h1>Admin Dashboard <i className="ri-arrow-right-wide-line"></i>Users</h1>
+          <button className={styles.hamburger}>
+            <i className="ri-menu-2-line"></i>
+          </button>
           
           <div className={styles.search__wrapper}>
             <i className="ri-search-line"></i>
@@ -127,9 +130,9 @@ const AdminUsers = () => {
             <thead>
               <tr>
                 <th>LRN</th>
-                <th>Email</th>
-                <th>Grade Level & Strand</th>
-                <th>Role</th>
+                <th className={styles.hidden}>Email</th>
+                <th className={styles.hidden}>Grade Level & Strand</th>
+                <th className={`${styles.hidden} ${styles.role}`}>Role</th>
                 <th>Created at</th>
                 <th></th>
               </tr>
@@ -138,9 +141,9 @@ const AdminUsers = () => {
               {users.map((user, index) => (
                 <tr key={index}>
                   <td>{user.lrn}</td>
-                  <td>{user.email}</td>
-                  <td>{`${user.grlvl} - ${user.strand}`}</td>
-                  <td>{user.user_role}</td>
+                  <td className={styles.hidden}>{user.email}</td>
+                  <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>
+                  <td className={`${styles.hidden} ${styles.role}`}>{user.user_role}</td>
                   <td>{user.created_at}</td>
                   <td><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20}/></td>
                 </tr>

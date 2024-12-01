@@ -1,11 +1,12 @@
 .main {
-    height: 100vh;
+    height: 150vh; //will be change
+    width: 100%;
     display: flex;
     background-color: var(--mid-white);
 
     .sidebar {
         background-color: var(--green);
-        height: 100vh;
+        height: 150vh; //will be change
         width: var(--space-2xl);
         img {
             width: 50px;
@@ -14,14 +15,14 @@
 
     .container {
         width: 100vw;
-        padding: var(--space-sm) var(--space-md);
+        
         .upper {
             display: flex;
             justify-content: space-between;
             margin-bottom: var(--space-md);
 
             h1 {
-                font-size: var(--heading-4);
+                font-size: var(--heading-5);
             }
 
             .search__wrapper {
@@ -147,7 +148,7 @@
         }
 
         .table__container {
-            padding: var(--space-sm) var(--space-xl);
+            
             background-color: var(--white);
             border-radius: 1em;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
@@ -166,7 +167,7 @@
                 }
                 tbody {
                     td {
-                        border-top: 1px solid var(--green);
+                        border-top: 1px solid #d1d0d0;
                         padding: var(--space-xs);
                     }
 
@@ -182,18 +183,93 @@
 @media screen and (max-width: 768px) {
     .main {
         .sidebar {
-            width: 100vw;
-            height: 60px;
+            display: none;
+        }
+
+        .container {
+            padding: var(--space-xs) var(--space-2xs);
+            .upper {
+                h1 {
+                    display: none;
+                }
+                .hamburger {
+                    border: none;
+                    i {
+                        background-color: var(--white);
+                        font-size: var(--heading-3);
+                        color: var(--green);
+                        padding: var(--space-3xs);
+                        border: 1px solid var(--green);
+                        border-radius: .15em;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+                }
+                .search__wrapper {
+                    input {
+                        width: 150px;
+                    }
+                }
+            }
+
+            .table__container {
+                padding: var(--space-2xs);
+                table {
+                    border-radius: .5em;
+
+                    .hidden {
+                        display: none;
+                    }
+                }
+            }
         }
     }
 }
 
 @media screen and (min-width: 768px) {
+    .main {
+        .sidebar {
+            display: block;
+        }
 
+        .container {
+            padding: var(--space-sm) var(--space-md);
+            .upper {
+                h1 {
+                    display: block;
+                }
+                .hamburger {
+                    display: none;
+                }
+            }
+            .table__container {
+                padding: var(--space-xs);
+
+                table {
+                    
+                    .role {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
 }
 
 @media screen and (min-width: 1024px) {
-
+    .main {
+        .container {
+            .upper {
+                h1 {
+                    font-size: var(--heading-4);
+                }
+            }
+            .table__container {
+                padding: var(--space-sm) var(--space-xl);
+            }
+        }
+    }
 }
 
 @media screen and (min-width: 1567px) {
