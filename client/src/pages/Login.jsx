@@ -12,18 +12,12 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [rememberMe, setRememberMe] = useState(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({
       ...userData,
       [name]: value,
     });
-  };
-
-  const handleRememberMeChange = (e) => {
-    setRememberMe(e.target.checked);
   };
 
   const handleSubmit = async (e) => {

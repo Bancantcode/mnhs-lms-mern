@@ -71,27 +71,30 @@ const AdminUsers = () => {
 
   return (
     <main className={styles.main}>
+      <aside className={styles.sidebar}>
+        <img src="/images/MNHS-Logo.png" alt="Logo" />
+      </aside>
       <div className={styles.container}>
 
         <section className={styles.upper}>
           <h1>Admin Dashboard <i className="ri-arrow-right-wide-line"></i>Users</h1>
 
-          <div className={styles.searchWrapper}>
-            <i className="ri-search-line"></i>
-            <input type="text" placeholder="Search..." />
-          </div>
+            <div className={styles.searchWrapper}>
+              <i className="ri-search-line"></i>
+              <input type="text" placeholder="Search..." />
+            </div>
 
-          <div className={styles.user} onClick={toggleDropdown}> 
-            <i className="ri-user-line"></i>
-            {isDropdownOpen && (
-              <div className={styles.dropdown}>
-                <div>My Account</div>
-                <Link to="/settings">Settings</Link>
-                <div>Support</div>
-                <Link to="/register">Sign In</Link>
-              </div>
-            )}
-          </div>
+            <div className={styles.user} onClick={toggleDropdown}> 
+              <i className="ri-user-fill"></i>
+              {isDropdownOpen && (
+                <div className={styles.dropdown}>
+                  <div>My Account</div>
+                  <Link to="/settings">Settings</Link>
+                  <div>Support</div>
+                  <Link to="/register">Sign In</Link>
+                </div>
+              )}
+            </div>
         </section>
 
         <section className={styles.lower}>

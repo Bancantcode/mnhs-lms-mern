@@ -99,7 +99,11 @@
     .main {
         .container {
             width: 30%;
-            padding: var(--space-lg);
+            
+            form {
+                width: 80%;
+                margin: auto;
+            }
         }
     }
 }
