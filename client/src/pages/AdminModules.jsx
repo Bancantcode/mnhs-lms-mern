@@ -59,29 +59,23 @@ const AdminModules = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentDate = new Date().toISOString();
-    //make an object and put title, subject, file and date
-    // const newModule = { 
-    //   title, 
-    //   subject, 
-    //   file: file, 
-    //   date: formatDate(currentDate) 
-    // };
     const formData = new FormData();
     formData.append('title', title);
     formData.append('subject', subject);
     formData.append('file', file);
     formData.append('date', formatDate(currentDate));
+    console.log(file);
 
     // if (validateData()) {
-      try {
-        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-        alert('Module successfully uploaded!.');
-      } catch (err) {
-        console.error(err);
-        alert(err.response?.data?.message || 'Upload failed!');
-      } finally {
-        // setLoading(false);
-      }
+      // try {
+      //   const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      //   alert('Module successfully uploaded!.');
+      // } catch (err) {
+      //   console.error(err);
+      //   alert(err.response?.data?.message || 'Upload failed!');
+      // } finally {
+      //   // setLoading(false);
+      // }
     // } 
     // else {
     //   console.log("Error with input validation:", errors);
@@ -148,6 +142,29 @@ const AdminModules = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
+    const id = moduleToEdit.MID;
+    const formData = new FormData();
+    formData.append('title', moduleToEdit.title);
+    formData.append('subject', moduleToEdit.subject);
+    if (moduleToEdit.file) {
+      formData.append('file', moduleToEdit.file);
+    }
+
+    // if (validateData()) {
+      try {
+        const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        alert('Module successfully updated!');
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.message || 'Update failed!');
+      } finally {
+        // setLoading(false);
+      }
+    // } 
+    // else {
+    //   console.log("Error with input validation:", errors);
+    //   setLoading(false);
+    // }
     console.log('Edited Module:', moduleToEdit);
     setEditModalOpen(false);
   };

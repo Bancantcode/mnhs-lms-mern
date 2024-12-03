@@ -24,7 +24,6 @@ const router = express.Router();
 router.get('/', async (req, res) => { 
     try {
         const modules = await Module.findAll();
-        // console.log(modules);
         res.status(200).json(modules);
     } catch (error) {
         console.error('Error fetching modules:', error);
@@ -109,12 +108,27 @@ router.get('/download/:id', async (req, res) => {
 
 router.put('/edit/:id', async (req, res, next) => {
     try {
-      const data = await Module.findByPk(req.params.id);
-      res.json(data);
-      console.log('Property successfully updated!');
+        const { id } = req.params;
+        const { title, subject } = req.body;
+        const file = req.file;
+       
+        const updatedModule = await Module.update(
+            {
+              title,
+              subject,
+              file_name: file ? file.filename : undefined, // Update only if file is provided
+            },
+            { where: { id } }
+        );
+        console.log(updatedModule);
+        if (!updatedModule[0]) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+        res.status(200).json({ message: 'Module successfully updated!' });
+        console.log('Module successfully updated!');
     } catch (error) {
-      return next(error);
+        return next(error);
     }
-  });
+});
 
 export default router;
