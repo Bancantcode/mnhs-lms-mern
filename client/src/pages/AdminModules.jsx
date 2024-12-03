@@ -16,6 +16,7 @@ const AdminModules = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [moduleToEdit, setModuleToEdit] = useState(null);
   const [moduleToDelete, setModuleToDelete] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -41,20 +42,41 @@ const AdminModules = () => {
     return `${month}/${day}/${year}`;
   };
 
-  // const validateData = () => {
-  //   const error = {};
+  const validateModuleData = (module) => {
+    const error = {};
+  
+    if (!module.title || module.title.length > 100) {
+      error.title = 'Title is required and should be less than 100 characters.';
+    }
+  
+    if (!module.subject || module.subject.length > 100) {
+      error.subject = 'Subject is required and should be less than 100 characters.';
+    }
+  
+    if (!module.file) {
+      error.file = 'File is required.';
+    } else {
+      const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+      const fileExtension = module.file.name.split('.').pop();
+      if (!allowedExtensions.includes(`.${fileExtension}`)) {
+        error.file = 'Invalid file type.';
+      }
+    }
+  
+    return error;
+  };
 
-  //   if (!userData.lrn || !/^\d{12}$/.test(userData.lrn)) { // CHANGE
-  //     error.lrn = 'LRN must be exactly 12 numeric characters.';
-  //   }
+  const validateData = () => {
+    const error = validateModuleData({ title, subject, file });
+    setErrors(error);
+    return Object.keys(error).length === 0;
+  };
 
-  //   if (!userData.password || userData.password.length < 8 || !/[A-Z]/.test(userData.password)) { // CHANGE
-  //     error.password = 'Password must be at least 8 characters and include an uppercase letter.';
-  //   }
-
-  //   setErrors(error);
-  //   return Object.keys(error).length === 0;
-  // };
+  const validateEditData = () => {
+    const error = validateModuleData(moduleToEdit);
+    setErrors(error);
+    return Object.keys(error).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,23 +86,23 @@ const AdminModules = () => {
     formData.append('subject', subject);
     formData.append('file', file);
     formData.append('date', formatDate(currentDate));
-    console.log(file);
+    console.log(file); // TESTING PURPOSES ONLY
 
-    // if (validateData()) {
-      // try {
-      //   const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      //   alert('Module successfully uploaded!.');
-      // } catch (err) {
-      //   console.error(err);
-      //   alert(err.response?.data?.message || 'Upload failed!');
-      // } finally {
-      //   // setLoading(false);
-      // }
-    // } 
-    // else {
-    //   console.log("Error with input validation:", errors);
-    //   setLoading(false);
-    // }
+    if (validateData()) {                // ----- ADD INPUT VALIDATION ----- //
+      try {
+        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        alert('Module successfully uploaded!.');
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.message || 'Upload failed!');
+      } finally {
+        setLoading(false);
+      }
+    } 
+    else {
+      console.log("Error with input validation:", errors);
+      setLoading(false);
+    }
 
     //reset
     setTitle('');
@@ -150,22 +172,22 @@ const AdminModules = () => {
       formData.append('file', moduleToEdit.file);
     }
 
-    // if (validateData()) {
+    if (validateEditData()) {            // ----- ADD INPUT VALIDATION ----- //
       try {
-        const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData );
         alert('Module successfully updated!');
       } catch (err) {
-        console.error(err);
-        alert(err.response?.data?.message || 'Update failed!');
+          console.error(err);
+          alert(err.response?.data?.message || 'Update failed!');
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
-    // } 
-    // else {
-    //   console.log("Error with input validation:", errors);
-    //   setLoading(false);
-    // }
-    console.log('Edited Module:', moduleToEdit);
+    } else {
+      console.log("Error with input validation:", errors);
+      setLoading(false);
+    }
+  
+    console.log('Edited Module:', moduleToEdit); // TESTING PURPOSES //
     setEditModalOpen(false);
   };
 
@@ -174,9 +196,16 @@ const AdminModules = () => {
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    console.log('Deleted Module:', moduleToDelete);
-    setDeleteModalOpen(false);
+  const confirmDelete = async () => {
+    try {
+      const id = moduleToDelete.MID;
+      const response = await axios.delete(`http://localhost:3000/admin-modules/delete/${id}`);
+      alert('Module successfully deleted!');
+      setDeleteModalOpen(false);
+    } catch (error){
+      console.log(error);
+      alert(err.response?.data?.messsage || 'Delete failed!');
+    }
   };
 
   const cancelDelete = () => {
@@ -221,8 +250,8 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-                <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required/>
                 <button type="submit">Submit</button>
                 <button type="button" onClick={toggleModal}>Cancel</button>
@@ -230,6 +259,8 @@ const AdminModules = () => {
             </div>
           </div>
         )}
+
+        {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
 
         <table className={styles.table}>
           <thead>
@@ -282,8 +313,8 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Edit Module</h2>
               <form onSubmit={handleEditSubmit}>
-                <input type="text" placeholder="Title" value={moduleToEdit?.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })} required />
                 <input type="text" placeholder="Subject" value={moduleToEdit?.subject || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, subject: e.target.value })} required />
+                <input type="text" placeholder="Title" value={moduleToEdit?.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })} required />
                 <input type="file" onChange={(e) => setModuleToEdit({ ...moduleToEdit, file: e.target.files[0] })} />
                 <div>
                   <button type="submit">Save</button>

@@ -1,6 +1,7 @@
 import styles from '../assets/styles/adminUsers.module.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const AdminUsers = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -17,6 +18,7 @@ const AdminUsers = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const usersPerPage = 8;
+  const [errors, setErrors] = useState({});
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -60,18 +62,61 @@ const AdminUsers = () => {
     }
   };
 
-  //make an object and put title, subject, file and date
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // const currentDate = new Date().toISOString();
-    // const newModule = { 
-    //   title, 
-    //   subject, 
-    //   file: file ? file.name : 'N/A', 
-    //   date: formatDate(currentDate) 
-    // };
+  const validateModuleData = (module) => {
+    const error = {};
+  
+    if (!module.title || module.title.length > 100) {
+      error.title = 'Title is required and should be less than 100 characters.';
+    }
+  
+    if (!module.subject || module.subject.length > 100) {
+      error.subject = 'Subject is required and should be less than 100 characters.';
+    }
+  
+    if (!module.file) {
+      error.file = 'File is required.';
+    } else {
+      const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+      const fileExtension = module.file.name.split('.').pop();
+      if (!allowedExtensions.includes(`.${fileExtension}`)) {
+        error.file = 'Invalid file type.';
+      }
+    }
+  
+    return error;
+  };
 
-    // console.log(newModule);
+  const validateData = () => {
+    const error = validateModuleData({ title, subject, file });
+    setErrors(error);
+    return Object.keys(error).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const currentDate = new Date().toISOString();
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('subject', subject);
+    formData.append('file', file);
+    formData.append('date', formatDate(currentDate));
+    console.log(file); // TESTING PURPOSES ONLY
+
+    if (validateData()) {                // ----- ADD INPUT VALIDATION ----- //
+      try {
+        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        alert('Module successfully uploaded!.');
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.message || 'Upload failed!');
+      } finally {
+        setLoading(false);
+      }
+    } 
+    else {
+      console.log("Error with input validation:", errors);
+      setLoading(false);
+    }
 
     //reset
     setTitle('');
@@ -79,25 +124,6 @@ const AdminUsers = () => {
     setFile(null);
     
     toggleModal();
-  };
-
-  const handleEdit = (user) => {
-    setEditUser({
-      lrn: user.lrn,
-      email: user.email,
-      grlvl: user.grlvl,
-      strand: user.strand,
-      user_role: user.user_role,
-      password: '' // Initialize password as empty
-    });
-    setEditModalOpen(true);
-  };
-
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
-    // Handle the submission of edited user data
-    console.log('Edited User:', editUser);
-    setEditModalOpen(false);
   };
 
   const handleDelete = (user) => {
@@ -173,6 +199,7 @@ const AdminUsers = () => {
             <Link className={styles.a} to="/admin-modules">Modules</Link>
           </div>
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
+          {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
         </section>
 
         {isModalOpen && (
