@@ -62,34 +62,40 @@ const AdminUsers = () => {
     }
   };
 
-  const validateModuleData = (module) => {
+  const validateData = (type, data) => {
     const error = {};
   
-    if (!module.title || module.title.length > 100) {
-      error.title = 'Title is required and should be less than 100 characters.';
-    }
+    if (type === 'module') {
+      if (!data.title || data.title.length > 100) {
+        error.title = 'Title is required and should be less than 100 characters.';
+      }
   
-    if (!module.subject || module.subject.length > 100) {
-      error.subject = 'Subject is required and should be less than 100 characters.';
-    }
+      if (!data.subject || data.subject.length > 100) {
+        error.subject = 'Subject is required and should be less than 100 characters.';
+      }
   
-    if (!module.file) {
-      error.file = 'File is required.';
-    } else {
-      const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
-      const fileExtension = module.file.name.split('.').pop();
-      if (!allowedExtensions.includes(`.${fileExtension}`)) {
-        error.file = 'Invalid file type.';
+      if (!data.file) {
+        error.file = 'File is required.';
+      } else {
+        const extensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+        const fileExtension = data.file.name.split('.').pop();
+        if (!extensions.includes(`.${fileExtension}`)) {
+          error.file = 'Invalid file type.';
+        }
+      }
+    } 
+
+    else if (type === 'user') {
+      if (!data.lrn || !/^\d{12}$/.test(data.lrn)) {
+        error.lrn = 'LRN must be exactly 12 numeric characters.';
+      }
+    
+      if (!data.password || data.password.length < 8 || !/[A-Z]/.test(data.password)) {
+        error.password = 'Password must be at least 8 characters and include an uppercase letter.';
       }
     }
   
     return error;
-  };
-
-  const validateData = () => {
-    const error = validateModuleData({ title, subject, file });
-    setErrors(error);
-    return Object.keys(error).length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -102,7 +108,10 @@ const AdminUsers = () => {
     formData.append('date', formatDate(currentDate));
     console.log(file); // TESTING PURPOSES ONLY
 
-    if (validateData()) {                // ----- ADD INPUT VALIDATION ----- //
+    const error = validateData('module', { title, subject, file });
+    setErrors(error);
+    
+    if (Object.keys(error).length === 0) {
       try {
         const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         alert('Module successfully uploaded!.');
@@ -112,10 +121,6 @@ const AdminUsers = () => {
       } finally {
         setLoading(false);
       }
-    } 
-    else {
-      console.log("Error with input validation:", errors);
-      setLoading(false);
     }
 
     //reset
@@ -126,16 +131,45 @@ const AdminUsers = () => {
     toggleModal();
   };
 
+  const handleEdit = (user) => {
+    setEditUser(user);
+    setEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const id = editUser.UID;
+    const error = validateData('user', editUser);
+    setErrors(error);
+
+    if (Object.keys(error).length === 0) {
+      try {
+        const response = await axios.put(`http://localhost:3000/admin-users/edit/${id}`, editUser);
+        alert('User details updated successfully!');
+        setEditModalOpen(false); 
+      } catch (error) {
+        console.error('Error updating user:', error);
+        alert(error.response?.data?.message || 'Failed to update user details.');
+      }
+    }
+    
+  };
+
   const handleDelete = (user) => {
     setUserToDelete(user);
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    // Logic to delete the user
-    console.log('Deleted User:', userToDelete);
-    setDeleteModalOpen(false);
-    // Optionally, refresh the user list or update state
+  const confirmDelete = async () => {
+    try {
+      const id = userToDelete.UID;
+      const response = await axios.delete(`http://localhost:3000/admin-users/delete/${id}`);
+      alert('User successfully deleted!');
+      setDeleteModalOpen(false);
+    } catch (error){
+      console.log(error);
+      alert(err.response?.data?.messsage || 'Delete failed!');
+    }
   };
 
   const cancelDelete = () => {
@@ -200,6 +234,8 @@ const AdminUsers = () => {
           </div>
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
           {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
+          {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
+          {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
         </section>
 
         {isModalOpen && (
