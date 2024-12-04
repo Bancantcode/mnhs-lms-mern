@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 router.post('/', upload.single('file'), async (req, res) => {
     try {
         console.log(req.file.path);
-        const { subject, title } = req.body;
+        const { subject, title, uploader } = req.body;
         const file = req.file;
 
         if (!file) {
@@ -49,7 +49,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             subject: subject,
             title: title,
             file: file,
-            uploader: "EMAIL MO", // FOR TESTING PURPOSES
+            uploader: uploader, // FOR TESTING PURPOSES
         }); // REMOVE
 
         const newModule = await Module.create({
@@ -57,7 +57,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             title: title,
             file_name: file.originalname,
             file_data: fileData,
-            uploader: "DEV" // EDIT SOON WITH USER EMAIL
+            uploader: uploader,
         });
         
         res.status(201).json({ message: 'Module has been uploaded successfully!' });

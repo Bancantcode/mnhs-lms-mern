@@ -80,12 +80,15 @@ const AdminModules = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const uploader = localStorage.getItem("Email");
+    console.log(uploader);
     const currentDate = new Date().toISOString();
     const formData = new FormData();
     formData.append('title', title);
     formData.append('subject', subject);
     formData.append('file', file);
     formData.append('date', formatDate(currentDate));
+    formData.append('uploader', uploader);
     console.log(file); // TESTING PURPOSES ONLY
 
     if (validateData()) {                // ----- ADD INPUT VALIDATION ----- //
@@ -269,6 +272,7 @@ const AdminModules = () => {
               <th>Title</th>
               <th>File</th>
               <th>Date</th>
+              <th>Uploader</th>
             </tr>
           </thead>
           <tbody>
@@ -278,6 +282,7 @@ const AdminModules = () => {
                 <td>{module.title}</td>
                 <td>{module.file_name}</td>
                 <td>{module.upload_date}</td>
+                <td>{module.uploader}</td>
                 <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
                 <td>
                     <div onClick={() => toggleUserDropdown(index)}>
