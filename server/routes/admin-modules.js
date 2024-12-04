@@ -1,0 +1,165 @@
+import express from 'express';
+import Module from '../models/Module.js';
+
+// file upload imports
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+
+// file uploads config
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${file.originalname}`);
+    },
+});
+  
+const upload = multer({ storage });
+const app = express();
+app.use(express.json());
+const router = express.Router();
+
+// get all modules
+router.get('/', async (req, res) => { 
+    try {
+        const modules = await Module.findAll();
+        res.status(200).json(modules);
+    } catch (error) {
+        console.error('Error fetching modules:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+})
+
+// upload module
+router.post('/', upload.single('file'), async (req, res) => {
+    try {
+        console.log(req.file.path);
+        const { subject, title, uploader } = req.body;
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        const fileData = fs.readFileSync(file.path);
+
+        console.log({
+            subject: subject,
+            title: title,
+            file: file,
+            uploader: uploader, // FOR TESTING PURPOSES
+        }); // REMOVE
+
+        const newModule = await Module.create({
+            subject: subject,
+            title: title,
+            file_name: file.originalname,
+            file_data: fileData,
+            uploader: uploader,
+        });
+        
+        res.status(201).json({ message: 'Module has been uploaded successfully!' });
+    } catch (error) {
+        console.error('Error uploading module:', error);
+        res.status(500).json({ message: 'Error uploading module, please try again later.' });
+    }
+});
+
+// download module
+router.get('/download/:id', async (req, res) => { 
+    try {
+        const module = await Module.findByPk(req.params.id);
+    
+        if (!module) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        const filePath = path.join('uploads', module.file_name);
+        const fileName = module.file_name;
+
+        res.setHeader('Content-Type', 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="${module.file_name}"`);
+        res.download(filePath, fileName, (err) => {
+            if (err) {
+                res.status(500).send({ message: 'Error downloading the file', error: err });
+            }
+        });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Error retrieving the file', error: err.message });
+        }
+});
+
+// edit module
+router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { title, subject } = req.body;
+        const file = req.file;
+
+        console.log('ID:', id); // TESTING PURPOSES ONLY
+        console.log('Title:', title);
+        console.log('Subject:', subject);
+        console.log('File Name:', file ? file.filename : 'No file uploaded');
+
+        const updateData = { title, subject };
+        
+        if (file) {
+            const module = await Module.findOne({ where: { MID: id } });
+
+            if (module && module.file_name) {
+                const oldFile = path.join('uploads', module.file_name);
+                if (fs.existsSync(oldFile)) {
+                    fs.unlinkSync(oldFile);
+                    console.log(`Deleted old file: ${module.file_name}`);
+                }
+            }
+
+            updateData.file_name = file.filename;
+        }
+
+        const [updatedRow] = await Module.update(updateData, { where: { 'MID': id } });
+
+        if (!updatedRow) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        const updatedModule = await Module.findOne({ where: { 'MID': id } });
+        res.status(200).json({ message: 'Module successfully updated!', updatedModule });
+    } catch (error) {
+        console.error('Error updating module:', error);
+        next(error);
+    }
+});
+
+// delete module
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const module = await Module.findOne({ where: { "MID" : id } });
+
+        if (!module) return res.status(404).json({ message: 'Module not found!'});
+
+        const filePath = path.join('uploads', module.file_name);
+        if (fs.existsSync(filePath)){
+            fs.unlinkSync(filePath);
+        }
+
+        await Module.destroy({ where: { "MID" : id } });
+        res.status(200).json({ message: 'Module successfully deleted!' });
+    } catch (error) {
+        console.error(error);
+        return next(error);
+    }
+});
+
+router.get('/edit/:id', async (req, res) => { // FOR TESTING PURPOSES ONLY
+    try {
+        const module = await Module.findByPk(req.params.id);
+        res.status(200).json({module});
+    } catch { };
+});
+
+export default router;
