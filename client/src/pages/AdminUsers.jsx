@@ -172,6 +172,12 @@ const AdminUsers = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    setLRNUser(null);
+    window.location.reload();
+  };
+
   const cancelDelete = () => {
     setDeleteModalOpen(false);
   };
@@ -221,7 +227,7 @@ const AdminUsers = () => {
                 <div>My Account</div>
                 <Link to="/settings">Settings</Link>
                 <div>Support</div>
-                <Link to="/register">Log out</Link>
+                <Link onClick={handleLogout}>Logout</Link>
               </div>
             )}
           </div>
@@ -234,8 +240,6 @@ const AdminUsers = () => {
           </div>
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
           {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
-          {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
-          {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
         </section>
 
         {isModalOpen && (
@@ -259,6 +263,8 @@ const AdminUsers = () => {
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <h2>Edit User</h2>
+              {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
+              {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
               <form onSubmit={handleEditSubmit}>
                 <input type="text" placeholder="LRN" value={editUser.lrn} onChange={(e) => setEditUser({ ...editUser, lrn: e.target.value })} required />
                 <input type="email" placeholder="Email" value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} required />

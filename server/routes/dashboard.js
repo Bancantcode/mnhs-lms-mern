@@ -1,12 +1,20 @@
 import express from 'express';
+import Module from '../models/Module.js';
 
 const app = express();
 app.use(express.json());
 
 const router = express.Router();
 
-router.get('/', (req, res) => { 
-    res.json({ message: "Welcome to the Dashboard" }); // REMOVE
+router.get('/dashboard', async (req, res) => { 
+    const { strand } = req.query;
+    console.log(req.query);
+    try {
+      const modules = await Module.findAll({ where: { strand } }); // Adjust DB query
+      res.json(modules);
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to fetch modules' });
+    }
 })
 
 router.get('/download/:id', async (req, res) => { // TESTING PURPOSES ONLY

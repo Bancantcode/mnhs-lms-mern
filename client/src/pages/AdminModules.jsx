@@ -32,6 +32,11 @@ const AdminModules = () => {
 
   useEffect(() => {
   }, [])
+  const handleLogout = () => {
+    localStorage.clear();
+    setLRNUser(null);
+    window.location.reload();
+  };
 
   //change the format of the date to be month, day, year
   const formatDate = (dateString) => {
@@ -234,7 +239,7 @@ const AdminModules = () => {
                 <div>My Account</div>
                 <Link to="/settings">Settings</Link>
                 <div>Support</div>
-                <Link to="/register">Sign In</Link>
+                <Link onClick={handleLogout}>Logout</Link>
               </div>
             )}
           </div>

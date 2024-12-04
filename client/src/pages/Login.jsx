@@ -6,7 +6,7 @@ import axios from 'axios';
 const Login = () => {
   const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errors, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -15,18 +15,23 @@ const Login = () => {
   
     try {
       const response = await axios.post('http://localhost:3000/login', { emailOrUsername, password });
+      console.log(response);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('Email', response.data.username);
       localStorage.setItem('LRN', response.data.userID);
       localStorage.setItem('User_Role', response.data.userRole)
-      navigate('/');
+      localStorage.setItem('Strand', response.data.strand)
+
+      if (response.data.userRole === "ADMIN"){
+        navigate('/admin-users');
+      } else { navigate('/'); }
+      
     } catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
       setErrorMessage(error.response?.data?.message || 'Login failed! Please try again.');
     }
   };
   
-
   const handleEmailOrUsernameChange = (e) => {
     setEmailOrUsername(e.target.value);
   };
@@ -57,6 +62,8 @@ const Login = () => {
               onChange={handlePasswordChange} 
             />
           </label>
+
+          {errors && <p style={{ color: 'red' }}>{errors}</p>}
 
           <button type="submit">Login</button>
         </form>

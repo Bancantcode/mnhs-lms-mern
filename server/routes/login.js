@@ -36,8 +36,8 @@ router.post('/', async (req, res) => {
             token,
             username: user.email,
             userID: user.lrn,
-            userRole: user.user_role
-            
+            userRole: user.user_role,
+            strand: user.strand
         });
     } catch (err) {
         console.error(err);
