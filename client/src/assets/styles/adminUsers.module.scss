@@ -290,6 +290,12 @@
                     .role {
                         display: none;
                     }
+                    td {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        max-width: 100px;
+                    }
                 }
             }
         }
@@ -310,12 +316,25 @@
                     .role {
                         display: block;
                     }
+                    td {
+                        max-width: 140px;
+                    }
                 }
             }
         }
     }
 }
 
-// @media screen and (min-width: 1567px) {
-
-// }
+@media screen and (min-width: 1567px) {
+    .main {
+        .container {
+            .table__container {
+                table {
+                    td {
+                        max-width: 200px;
+                    }
+                }
+            }
+        }
+    }
+}

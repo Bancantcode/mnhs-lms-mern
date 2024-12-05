@@ -352,7 +352,7 @@ const AdminUsers = () => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Full Name</th>
+                <th className={styles.hidden}>Full Name</th>
                 <th>LRN</th>
                 <th className={styles.hidden}>Email</th>
                 <th className={styles.hidden}>Grade Level & Strand</th>
@@ -365,7 +365,7 @@ const AdminUsers = () => {
               {currentUsers.map((user, index) => (
                 <tr key={index}>
                   {/* adjust */}
-                  <td>Bryan Aaron Santiago</td> 
+                  <td className={styles.hidden}>Bryan Aaron Santiago</td> 
                   <td>{user.lrn}</td>
                   <td className={styles.hidden}>{user.email}</td>
                   <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>

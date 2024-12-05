@@ -18,6 +18,8 @@ const AdminModules = () => {
   const [moduleToEdit, setModuleToEdit] = useState(null);
   const [moduleToDelete, setModuleToDelete] = useState(null);
   const [errors, setErrors] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const modulesPerPage = 8;
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -131,6 +133,24 @@ const AdminModules = () => {
     setFile(null);
     
     toggleModal();
+  };
+
+  //pagination
+  const indexOfLastModule = currentPage * modulesPerPage;
+  const indexOfFirstModule = indexOfLastModule - modulesPerPage;
+  const currentModules = modules.slice(indexOfFirstModule, indexOfLastModule);
+
+  const handleNext = () => {
+    const totalPages = Math.ceil(modules.length / modulesPerPage);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   useEffect(() => {
@@ -297,56 +317,6 @@ const AdminModules = () => {
 
         {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
 
-        <table className={styles.table__container}>
-          <thead>
-            <tr>
-              <th>Strand</th>
-              <th>Subject</th>
-              <th>Title</th>
-              <th>File</th>
-              <th>Date</th>
-              <th>Uploader</th>
-            </tr>
-          </thead>
-          <tbody>
-            {modules.map((module, index) => (
-              <tr key={index}>
-                <td>{module.strand}</td>
-                <td>{module.subject}</td>
-                <td>{module.title}</td>
-                <td><p onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>
-                <td>{module.upload_date}</td>
-                <td>{module.uploader}</td>
-                {/* <td><button onClick={() => handleDownload(module.MID)}>Download</button></td> */}
-                <td>
-                    <div onClick={() => toggleUserDropdown(index)}>
-                      <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
-                    </div>
-                    {activeUserIndex === index && (
-                      <div className={styles.dropdown}>
-                        <div className={styles.dropdown__item} onClick={() => handleEdit(module)}>Edit</div>
-                        <div className={styles.dropdown__item} onClick={() => handleDelete(module)}>Delete</div>
-                      </div>
-                    )}
-                  </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {deleteModalOpen && (
-          <div className={styles.modal}>
-            <div className={styles.modalContent}>
-              <h2>Confirm Deletion</h2>
-              <p>Are you sure you want to delete this module?</p>
-              <div>
-                <button onClick={confirmDelete}>Yes</button>
-                <button onClick={cancelDelete}>No</button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {editModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
@@ -363,6 +333,66 @@ const AdminModules = () => {
             </div>
           </div>
         )}
+
+        {deleteModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Confirm Deletion</h2>
+              <p>Are you sure you want to delete this module?</p>
+              <div>
+                <button onClick={confirmDelete}>Yes</button>
+                <button onClick={cancelDelete}>No</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className={styles.table__container}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th className={styles.hidden}>Subject</th>
+                <th className={styles.hidden}>Strand</th>
+                <th className={styles.hidden}>Title</th>
+                <th>File</th>
+                <th className={`${styles.hidden} ${styles.uploader}`}>Uploader</th>
+                <th className={styles.hidden}>Created At</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentModules.map((module, index) => (
+                <tr key={index}>
+                  <td className={styles.hidden}>{module.subject}</td>
+                  <td className={styles.hidden}>{module.strand}</td>
+                  <td className={styles.hidden}>{module.title}</td>
+                  <td><p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>
+                  <td className={`${styles.hidden} ${styles.uploader}`}>{module.uploader}</td>
+                  <td className={styles.hidden}>{module.upload_date}</td>
+                  <td>
+                      <div onClick={() => toggleUserDropdown(index)}>
+                        <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
+                      </div>
+                      {activeUserIndex === index && (
+                        <div className={styles.dropdown}>
+                          <div className={styles.dropdown__item} onClick={() => handleEdit(module)}>Edit</div>
+                          <div className={styles.dropdown__item} onClick={() => handleDelete(module)}>Delete</div>
+                        </div>
+                      )}
+                    </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className={styles.pagination}>
+            <p>Showing <span>{indexOfFirstModule + 1} - {Math.min(indexOfLastModule, modules.length)}</span> of <span>{modules.length}</span> Modules</p>
+            <div>
+              <button onClick={handlePrevious} disabled={currentPage === 1}><i className="ri-arrow-left-s-fill"></i></button>
+              <span>Page {currentPage} of {Math.ceil(modules.length / modulesPerPage)}</span>
+              <button onClick={handleNext} disabled={currentPage === Math.ceil(modules.length / modulesPerPage)}><i className="ri-arrow-right-s-fill"></i></button>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   )

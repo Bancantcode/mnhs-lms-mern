@@ -105,6 +105,7 @@
                 font-size: var(--text-base);
             }
         }
+        // modal for add modules
         .modal {
             position: fixed;
             top: 0;
@@ -153,31 +154,34 @@
                     td {
                         border-top: 1px solid #d1d0d0;
                         padding: var(--space-xs);
+                        .file__link {
+                            color: blue;
+                            text-decoration: underline;
+                            cursor: pointer;
+                        }
+                        .three__dots {
+                            cursor: pointer;
+                        }
                     }
-
-                    .three__dots {
-                        cursor: pointer;
-                    }
-                }
-                .dropdown {
-                    position: absolute;
-                    background-color: var(--green);
-                    color: var(--white);
-                    padding: var(--space-xs);
-                    border-radius: .5em;
-                    text-align: start;
-                    .dropdown__item {
-                        cursor: pointer;
-                        transition: 0.4s;
-                        padding: 0 var(--space-3xs);
-                        &:hover {
-                            background-color: var(--mid-white); 
-                            color: var(--black);
+                    .dropdown {
+                        position: absolute;
+                        background-color: var(--green);
+                        color: var(--white);
+                        padding: var(--space-xs);
+                        border-radius: .5em;
+                        text-align: start;
+                        .dropdown__item {
+                            cursor: pointer;
+                            transition: 0.4s;
+                            padding: 0 var(--space-3xs);
+                            &:hover {
+                                background-color: var(--mid-white); 
+                                color: var(--black);
+                            }
                         }
                     }
                 }
             }
-
             .pagination {
                 display: flex;
                 justify-content: space-between;
@@ -206,11 +210,14 @@
                     }
                 }
             }
+                
         }
     }
 }
 
-@media screen and (max-width: 768px) {
+
+// fix responsive for below
+@media screen and (max-width: 767px) {
     .main {
         .sidebar {
             display: none;
@@ -287,8 +294,11 @@
             .table__container {
                 padding: var(--space-xs);
                 table {
-                    .role {
-                        display: none;
+                    td {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        max-width: 90px;
                     }
                 }
             }
@@ -307,15 +317,21 @@
             .table__container {
                 padding: var(--space-sm) var(--space-xl);
                 table {
-                    .role {
-                        display: block;
-                    }
+                    
                 }
             }
         }
     }
 }
 
-// @media screen and (min-width: 1567px) {
-
-// }
+@media screen and (min-width: 1567px) {
+    .main {
+        .container {
+            .table__container {
+                table {
+                    
+                }
+            }
+        }
+    }
+}
