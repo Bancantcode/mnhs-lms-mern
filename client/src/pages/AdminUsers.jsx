@@ -15,13 +15,13 @@ const AdminUsers = () => {
   const [activeUserIndex, setActiveUserIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editUser, setEditUser] = useState({ lrn: '', email: '', grlvl: '', strand: '', user_role: '', password: '' });
+  const [editUser, setEditUser] = useState({ name: '', lrn: '', email: '', grlvl: '', strand: '', user_role: '', password: '' });
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const usersPerPage = 8;
   const [errors, setErrors] = useState({});
   const [addUserModalOpen, setAddUserModalOpen] = useState(false);
-  const [newUser, setNewUser] = useState({ fullName: '', lrn: '', email: '', grlvl: '', strand: '', user_role: '' });
+  const [newUser, setNewUser] = useState({ name: '', email: '', password: '', grlvl: '11', strand: 'STEM' });
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -98,6 +98,12 @@ const AdminUsers = () => {
         error.password = 'Password must be at least 8 characters and include an uppercase letter.';
       }
     }
+
+    else if (type === 'admin') {    
+      if (!data.password || data.password.length < 8 || !/[A-Z]/.test(data.password)) {
+        error.password = 'Password must be at least 8 characters and include an uppercase letter.';
+      }
+    }
   
     return error;
   };
@@ -146,14 +152,23 @@ const AdminUsers = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const id = editUser.UID;
-    const error = validateData('user', editUser);
-    setErrors(error);
+    const role = editUser.user_role;
+    let error = '';
+
+    if (role === "ADMIN"){
+      error = validateData('admin', editUser);
+      setErrors(error);
+    } else {
+      error = validateData('user', editUser);
+      setErrors(error);
+    }
 
     if (Object.keys(error).length === 0) {
       try {
         const response = await axios.put(`http://localhost:3000/admin-users/edit/${id}`, editUser);
         alert('User details updated successfully!');
         setEditModalOpen(false); 
+        setUsers(users.map(user => (user.UID === id ? editUser : user)));
       } catch (error) {
         console.error('Error updating user:', error);
         alert(error.response?.data?.message || 'Failed to update user details.');
@@ -173,6 +188,7 @@ const AdminUsers = () => {
       const response = await axios.delete(`http://localhost:3000/admin-users/delete/${id}`);
       alert('User successfully deleted!');
       setDeleteModalOpen(false);
+      setUsers((users) => users.filter((user) => user.UID !== id));
     } catch (error){
       console.log(error);
       alert(err.response?.data?.messsage || 'Delete failed!');
@@ -189,23 +205,31 @@ const AdminUsers = () => {
     setDeleteModalOpen(false);
   };
 
-  //will be added kapag may userName na sa database
   const handleAddUserSubmit = async (e) => {
     e.preventDefault();
-    const error = validateData('user', newUser);
+    const error = validateData('admin', newUser);
     setErrors(error);
 
     if (Object.keys(error).length === 0) {
       try {
         const response = await axios.post('http://localhost:3000/admin-users/add', newUser);
         alert('User successfully added!');
+        const newAdmin = response.data.newAdmin;
+        setUsers([...users, newAdmin]);
         setAddUserModalOpen(false);
-        // Optionally, fetch users again to update the list
       } catch (error) {
         console.error('Error adding user:', error);
         alert(error.response?.data?.message || 'Failed to add user.');
       }
     }
+
+    setNewUser({
+      name: '',
+      email: '',
+      password: '',
+      grlvl: '11',
+      strand: 'STEM'
+    });
   };
 
   useEffect(() => {
@@ -298,6 +322,7 @@ const AdminUsers = () => {
               {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
               {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
               <form onSubmit={handleEditSubmit}>
+                <input type="text" placeholder="name" value={editUser.name} onChange={(e) => setEditUser({ ...editUser, name: e.target.value })} required />
                 <input type="text" placeholder="LRN" value={editUser.lrn} onChange={(e) => setEditUser({ ...editUser, lrn: e.target.value })} required />
                 <input type="email" placeholder="Email" value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} required />
                 <input type="text" placeholder="Grade Level" value={editUser.grlvl} onChange={(e) => setEditUser({ ...editUser, grlvl: e.target.value })} required />
@@ -331,14 +356,22 @@ const AdminUsers = () => {
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <h2>Add Admin</h2>
-              {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
+              {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
               <form onSubmit={handleAddUserSubmit}>
-                <input type="text" placeholder="Full Name" value={newUser.fullName} onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })} required />
-                <input type="text" placeholder="LRN" value={newUser.lrn} onChange={(e) => setNewUser({ ...newUser, lrn: e.target.value })} required />
+                <input type="text" placeholder="Full Name" value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} required />
+                {/* <input type="text" placeholder="LRN" value="0" onChange={(e) => setNewUser({ ...newUser, lrn: "0" })} required disabled/> */}
                 <input type="email" placeholder="Email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} required />
-                <input type="text" placeholder="Grade Level" value={newUser.grlvl} onChange={(e) => setNewUser({ ...newUser, grlvl: e.target.value })} required />
-                <input type="text" placeholder="Strand" value={newUser.strand} onChange={(e) => setNewUser({ ...newUser, strand: e.target.value })} required />
-                <input type="text" placeholder="Role" value={newUser.user_role} onChange={(e) => setNewUser({ ...newUser, user_role: e.target.value })} required />
+                <input type="password" placeholder="Password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} required />
+                <select value={newUser.grlvl} onChange={(e) => setNewUser({ ...newUser, grlvl: e.target.value })} required >
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                <select value={newUser.strand} onChange={(e) => setNewUser({ ...newUser, strand: e.target.value })} required >
+                  <option value="STEM">STEM</option>
+                  <option value="ABM">ABM</option>
+                  <option value="GAS">GAS</option>
+                </select>
+                {/* <input type="text" placeholder="Role" value="ADMIN" onChange={(e) => setNewUser({ ...newUser, user_role: "ADMIN" })} required disabled/> */}
                 <div>
                   <button type="submit">Add Admin</button>
                   <button type="button" onClick={() => setAddUserModalOpen(false)}>Cancel</button>
@@ -364,8 +397,7 @@ const AdminUsers = () => {
             <tbody>
               {currentUsers.map((user, index) => (
                 <tr key={index}>
-                  {/* adjust */}
-                  <td className={styles.hidden}>Bryan Aaron Santiago</td> 
+                  <td className={styles.hidden}>{user.name}</td> 
                   <td>{user.lrn}</td>
                   <td className={styles.hidden}>{user.email}</td>
                   <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>

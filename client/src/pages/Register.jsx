@@ -5,6 +5,7 @@ import axios from 'axios';
 
 const Register = () => {
   const [userData, setUserData] = useState({
+    name: '',
     email: '',
     lrn: '',
     grlvl: '11',
@@ -48,6 +49,7 @@ const Register = () => {
         const response = await axios.post('http://localhost:3000/register', userData);
         alert('Registration successful! You can now log in.');
         setUserData({
+          name: '',
           email: '',
           lrn: '',
           grlvl: '11',
@@ -73,8 +75,8 @@ const Register = () => {
         <img src="" alt="" />
         <form onSubmit={handleSubmit} className={styles.form}>
           <img src="/images/MNHS-Logo.png" alt="Logo" />
-          <label htmlFor="fullname">Full Name
-            <input type="text" name="fullname" required />
+          <label htmlFor="name">Full Name
+            <input type="text" name="name" value={userData.name} onChange={handleChange} required />
           </label>
           
           <label htmlFor="email">Email

@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 // edit user
 router.put('/edit/:id', async (req, res, next) => {
     const { id } = req.params;
-    const { lrn, email, grlvl, strand, user_role, password } = req.body;
+    const { name, lrn, email, grlvl, strand, user_role, password } = req.body;
     
     try {
         const user = await User.findOne({ where: { 'UID' : id } });
@@ -29,7 +29,7 @@ router.put('/edit/:id', async (req, res, next) => {
         }
     
         await User.update(
-          { lrn, email, grlvl, strand, user_role, password }, { where: { 'UID' : id } }
+          { name, lrn, email, grlvl, strand, user_role, password }, { where: { 'UID' : id } }
         );
     
         const updateUser = await User.findOne({ where: { 'UID' : id } });
@@ -55,5 +55,39 @@ router.delete('/delete/:id', async (req, res, next) => {
         return next(error);
     }
 });
+
+// add admin
+router.post('/add', async (req, res, next) => {
+  console.log(req.body);
+  const { name, email, password, grlvl, strand, } = req.body;
+  const lrn = "0";
+  const user_role = "ADMIN";
+
+  try {
+    const newAdmin = await User.create({
+        name: name, 
+        email: email, 
+        lrn: lrn, 
+        grlvl: grlvl, 
+        strand: strand, 
+        password: password, 
+        user_role: user_role 
+    });
+    res.status(201).json({ message: 'User has been registered successfully!', newAdmin });
+    } catch (error) {
+      console.error("Error registering user:", error);
+
+      if (error.name === 'SequelizeUniqueConstraintError') {
+          res.status(400).json({ message: 'Email or LRN already exists!' });
+      } 
+      else if (error.name === 'SequelizeValidationError') {
+          res.status(400).json({ message: 'Validation error: Check your inputs.' });
+      } 
+      else {
+          res.status(500).json({ message: 'Internal server error. Please try again later.' });
+      }
+    }
+
+})
 
 export default router;

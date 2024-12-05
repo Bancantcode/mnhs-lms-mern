@@ -18,8 +18,9 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('Email', response.data.username);
       localStorage.setItem('LRN', response.data.userID);
-      localStorage.setItem('User_Role', response.data.userRole)
-      localStorage.setItem('Strand', response.data.strand)
+      localStorage.setItem('User_Role', response.data.userRole);
+      localStorage.setItem('Strand', response.data.strand);
+      localStorage.setItem('id', response.data.id);
 
       if (response.data.userRole === "ADMIN"){
         navigate('/admin-users');

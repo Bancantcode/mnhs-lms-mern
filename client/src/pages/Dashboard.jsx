@@ -5,6 +5,8 @@ import axios from 'axios';
 const Dashboard = () => {
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
   const [Strand, setStrand] = useState(localStorage.getItem('Strand'));
+  const [id, setID] = useState(localStorage.getItem('id'));
+  const [name, setName] = useState('');
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
@@ -12,33 +14,46 @@ const Dashboard = () => {
   useEffect(() => {
     const handleStorageChange = () => {
       setLRNUser(localStorage.getItem('LRN'));
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
       setStrand(localStorage.getItem('Strand'));
+      setID(localStorage.getItem('id'));
     };
-    
+  
     window.addEventListener('storage', handleStorageChange);
-
+  
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
+
+  // useEffect(() => {
+  //   const fetchModules = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(`http://localhost:3000/dashboard/?strand=${Strand}`);
+  //       setModules(response.data);
+  //     } catch (err) {
+  //       console.error('Error fetching modules:', err.response || err.message);
+  //       setErrors(err.response?.data?.message || 'Failed to fetch modules.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   if (Strand) {
+  //     fetchModules();
+  //   } else {
+  //     setErrors('Strand is not defined. Please login or update your profile.');
+  //     setLoading(false);
+  //   }
+  // }, [Strand]);
 
   useEffect(() => {
     const fetchModules = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3000/dashboard/?strand=${Strand}`);
-        setModules(response.data);
+        const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
+        setModules(response.data.modules);
+        setName(response.data.name);
       } catch (err) {
         console.error('Error fetching modules:', err.response || err.message);
         setErrors(err.response?.data?.message || 'Failed to fetch modules.');
@@ -46,14 +61,8 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
-    if (Strand) {
-      fetchModules();
-    } else {
-      setErrors('Strand is not defined. Please login or update your profile.');
-      setLoading(false);
-    }
-  }, [Strand]);
+    fetchModules();
+  }, []);
 
   const handleDownload = async (id) => {
     try {
@@ -89,6 +98,7 @@ const Dashboard = () => {
   return (
     <main className={styles.main}>
       <p>Student LRN: {LRNUser || 'Loading...'}</p> 
+      <p>Student Name: {name || 'Loading...'}</p> 
       <p>Student Strand: {Strand || 'Loading...'}</p>
 
       <table className={styles.table}>
@@ -114,22 +124,7 @@ const Dashboard = () => {
           ))}
         </tbody>
       </table>
-
-      {/* {loading ? (
-        <p>Loading modules...</p>
-      ) : errors ? (
-        <p>{errors}</p>
-      ) : (
-        <div>
-          <h1>Welcome to the Dashboard</h1>
-          <ul>
-            {modules.map((module) => (
-              <li key={module.id}>{module.title}</li>
-            ))}
-          </ul>
-        </div>
-      )} */}
-
+      
       <button type="button" onClick={handleLogout}>Logout</button>
     </main>
   );

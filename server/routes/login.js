@@ -37,7 +37,8 @@ router.post('/', async (req, res) => {
             username: user.email,
             userID: user.lrn,
             userRole: user.user_role,
-            strand: user.strand
+            strand: user.strand,
+            id: user.UID
         });
     } catch (err) {
         console.error(err);

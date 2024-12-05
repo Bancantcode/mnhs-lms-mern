@@ -1,4 +1,5 @@
 import express from 'express';
+import User from '../models/User.js';
 import Module from '../models/Module.js';
 import path from 'path';
 
@@ -7,13 +8,35 @@ app.use(express.json());
 
 const router = express.Router();
 
+// router.get('/dashboard', async (req, res) => { 
+//     const { strand } = req.query;
+//     try {
+//       const modules = await Module.findAll({ where: { strand } }); // Adjust DB query
+//       res.json(modules);
+//     } catch (err) {
+//       res.status(500).json({ message: 'Failed to fetch modules' });
+//     }
+// })
+
 router.get('/dashboard', async (req, res) => { 
-    const { strand } = req.query;
+    const { id } = req.query;
     try {
-      const modules = await Module.findAll({ where: { strand } }); // Adjust DB query
-      res.json(modules);
+        const user = await User.findOne({ where: { 'UID' : id } });
+        const { grlvl, strand, name } = user;
+
+        const modules = await Module.findAll({ 
+            where: { strand } 
+        });
+
+        // const modules = await Module.findAll({       ----- CHANGE TO THIS AFTER EDITING DB -----
+        //     where: { 
+        //         strand, 
+        //         grlvl 
+        //     } 
+        // });
+        res.status(200).json({ name, modules });
     } catch (err) {
-      res.status(500).json({ message: 'Failed to fetch modules' });
+        res.status(500).json({ message: 'Failed to fetch modules' });
     }
 })
 

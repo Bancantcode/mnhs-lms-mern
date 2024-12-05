@@ -33,9 +33,10 @@ const AdminModules = () => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
-  // alang laman
+  // alang laman ----- MAYBE DELETE? -----
   useEffect(() => {
   }, [])
+
   const handleLogout = () => {
     localStorage.clear();
     setLRNUser(null);
@@ -127,7 +128,7 @@ const AdminModules = () => {
     }
 
     //reset
-    setStrand('');
+    setStrand('STEM');
     setTitle('');
     setSubject('');
     setFile(null);

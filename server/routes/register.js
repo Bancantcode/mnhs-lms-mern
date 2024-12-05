@@ -12,10 +12,11 @@ router.get('/', (req, res) => {
 
 router.post('/', async (req, res) => {
 
-    const { email, lrn, grlvl, strand, password } = req.body;
+    const { name, email, lrn, grlvl, strand, password } = req.body;
     const user_role = "STUDENT";
 
     console.log({ 
+        name: name,
         email: email, 
         lrn: lrn, 
         grlvl: grlvl, 
@@ -25,7 +26,8 @@ router.post('/', async (req, res) => {
     }); // REMOVE
 
     try {
-        await User.create({ 
+        await User.create({
+            name: name, 
             email: email, 
             lrn: lrn, 
             grlvl: grlvl, 
