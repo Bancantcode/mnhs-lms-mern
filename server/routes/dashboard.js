@@ -1,5 +1,6 @@
 import express from 'express';
 import Module from '../models/Module.js';
+import path from 'path';
 
 const app = express();
 app.use(express.json());
@@ -8,7 +9,6 @@ const router = express.Router();
 
 router.get('/dashboard', async (req, res) => { 
     const { strand } = req.query;
-    console.log(req.query);
     try {
       const modules = await Module.findAll({ where: { strand } }); // Adjust DB query
       res.json(modules);

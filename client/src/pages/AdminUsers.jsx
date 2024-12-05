@@ -6,8 +6,9 @@ import axios from 'axios';
 const AdminUsers = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [title, setTitle] = useState('');
+  const [strand, setStrand] = useState('STEM');
   const [subject, setSubject] = useState('');
+  const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,12 +101,15 @@ const AdminUsers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const uploader = localStorage.getItem("Email");
     const currentDate = new Date().toISOString();
     const formData = new FormData();
+    formData.append('strand', strand);
     formData.append('title', title);
     formData.append('subject', subject);
     formData.append('file', file);
     formData.append('date', formatDate(currentDate));
+    formData.append('uploader', uploader);
     console.log(file); // TESTING PURPOSES ONLY
 
     const error = validateData('module', { title, subject, file });
@@ -247,8 +251,13 @@ const AdminUsers = () => {
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
+                  <option value="STEM">STEM</option>
+                  <option value="ABM">ABM</option>
+                  <option value="GAS">GAS</option>
+                </select>
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="file" onChange={(e) => setFile(e.target.files[0])} required />
                 <div>
                   <button type="submit">Submit</button>

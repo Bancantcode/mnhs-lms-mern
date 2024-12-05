@@ -55,6 +55,31 @@ const Dashboard = () => {
     }
   }, [Strand]);
 
+  const handleDownload = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/download/${id}`, {
+        responseType: 'blob', 
+      });
+
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        alert('No file to download');
+      }
+    } catch (err) {
+      console.error('Download failed:', err);
+      alert('Failed to download file');
+    }
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     setLRNUser(null);
@@ -84,18 +109,7 @@ const Dashboard = () => {
               <td>{module.file_name}</td>
               <td>{module.upload_date}</td>
               <td>{module.uploader}</td>
-              {/* <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
-              <td>
-                  <div onClick={() => toggleUserDropdown(index)}>
-                    <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
-                  </div>
-                  {activeUserIndex === index && (
-                    <div className={styles.dropdown}>
-                      <div className={styles.dropdown__item} onClick={() => handleEdit(module)}>Edit</div>
-                      <div className={styles.dropdown__item} onClick={() => handleDelete(module)}>Delete</div>
-                    </div>
-                  )}
-              </td> */}
+              <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
             </tr>
           ))}
         </tbody>

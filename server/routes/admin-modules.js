@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 router.post('/', upload.single('file'), async (req, res) => {
     try {
         console.log(req.file.path);
-        const { subject, title, uploader } = req.body;
+        const { strand, subject, title, uploader } = req.body;
         const file = req.file;
 
         if (!file) {
@@ -46,6 +46,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         const fileData = fs.readFileSync(file.path);
 
         console.log({
+            strand: strand,
             subject: subject,
             title: title,
             file: file,
@@ -53,6 +54,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         }); // REMOVE
 
         const newModule = await Module.create({
+            strand: strand,
             subject: subject,
             title: title,
             file_name: file.originalname,
@@ -60,7 +62,7 @@ router.post('/', upload.single('file'), async (req, res) => {
             uploader: uploader,
         });
         
-        res.status(201).json({ message: 'Module has been uploaded successfully!' });
+        res.status(201).json({ message: 'Module has been uploaded successfully!', newModule });
     } catch (error) {
         console.error('Error uploading module:', error);
         res.status(500).json({ message: 'Error uploading module, please try again later.' });

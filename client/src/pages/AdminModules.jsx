@@ -6,6 +6,7 @@ import axios from 'axios';
 const AdminModules = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [strand, setStrand] = useState('STEM');
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
@@ -57,17 +58,25 @@ const AdminModules = () => {
     if (!module.subject || module.subject.length > 100) {
       error.subject = 'Subject is required and should be less than 100 characters.';
     }
-  
-    if (!module.file) {
-      error.file = 'File is required.';
-    } else {
+
+    if (module.file) {
       const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
       const fileExtension = module.file.name.split('.').pop();
       if (!allowedExtensions.includes(`.${fileExtension}`)) {
         error.file = 'Invalid file type.';
       }
-    }
+    } 
   
+    // if (!module.file) {                  ----- TO DELETE -----
+    //   error.file = 'File is required.';
+    // } else {
+    //   const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+    //   const fileExtension = module.file.name.split('.').pop();
+    //   if (!allowedExtensions.includes(`.${fileExtension}`)) {
+    //     error.file = 'Invalid file type.';
+    //   }
+    // }
+
     return error;
   };
 
@@ -86,9 +95,9 @@ const AdminModules = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const uploader = localStorage.getItem("Email");
-    console.log(uploader);
     const currentDate = new Date().toISOString();
     const formData = new FormData();
+    formData.append('strand', strand);
     formData.append('title', title);
     formData.append('subject', subject);
     formData.append('file', file);
@@ -100,6 +109,8 @@ const AdminModules = () => {
       try {
         const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         alert('Module successfully uploaded!.');
+        const addedModule = response.data.newModule;
+        setModules([...modules, addedModule]);
       } catch (err) {
         console.error(err);
         alert(err.response?.data?.message || 'Upload failed!');
@@ -113,6 +124,7 @@ const AdminModules = () => {
     }
 
     //reset
+    setStrand('');
     setTitle('');
     setSubject('');
     setFile(null);
@@ -184,6 +196,7 @@ const AdminModules = () => {
       try {
         const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData );
         alert('Module successfully updated!');
+        setModules(modules.map(module => (module.MID === id ? moduleToEdit : module)));
       } catch (err) {
           console.error(err);
           alert(err.response?.data?.message || 'Update failed!');
@@ -210,6 +223,7 @@ const AdminModules = () => {
       const response = await axios.delete(`http://localhost:3000/admin-modules/delete/${id}`);
       alert('Module successfully deleted!');
       setDeleteModalOpen(false);
+      setModules(modules.filter(module => module.MID !== id));
     } catch (error){
       console.log(error);
       alert(err.response?.data?.messsage || 'Delete failed!');
@@ -258,6 +272,11 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
+                <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
+                  <option value="STEM">STEM</option>
+                  <option value="ABM">ABM</option>
+                  <option value="GAS">GAS</option>
+                </select>
                 <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
                 <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required/>
@@ -273,6 +292,7 @@ const AdminModules = () => {
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>Strand</th>
               <th>Subject</th>
               <th>Title</th>
               <th>File</th>
@@ -283,6 +303,7 @@ const AdminModules = () => {
           <tbody>
             {modules.map((module, index) => (
               <tr key={index}>
+                <td>{module.strand}</td>
                 <td>{module.subject}</td>
                 <td>{module.title}</td>
                 <td>{module.file_name}</td>
