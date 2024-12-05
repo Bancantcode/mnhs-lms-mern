@@ -73,6 +73,10 @@ const Register = () => {
         <img src="" alt="" />
         <form onSubmit={handleSubmit} className={styles.form}>
           <img src="/images/MNHS-Logo.png" alt="Logo" />
+          <label htmlFor="fullname">Full Name
+            <input type="text" name="fullname" required />
+          </label>
+          
           <label htmlFor="email">Email
             <input type="email" name="email" required value={userData.email} onChange={handleChange}/>
           </label>

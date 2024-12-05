@@ -26,3 +26,5 @@ server/config/db_config.js
 *.sln
 *.sw?
 
+db_config
+

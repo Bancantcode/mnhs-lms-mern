@@ -20,6 +20,8 @@ const AdminUsers = () => {
   const [userToDelete, setUserToDelete] = useState(null);
   const usersPerPage = 8;
   const [errors, setErrors] = useState({});
+  const [addUserModalOpen, setAddUserModalOpen] = useState(false);
+  const [newUser, setNewUser] = useState({ fullName: '', lrn: '', email: '', grlvl: '', strand: '', user_role: '' });
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -187,6 +189,25 @@ const AdminUsers = () => {
     setDeleteModalOpen(false);
   };
 
+  //will be added kapag may userName na sa database
+  const handleAddUserSubmit = async (e) => {
+    e.preventDefault();
+    const error = validateData('user', newUser);
+    setErrors(error);
+
+    if (Object.keys(error).length === 0) {
+      try {
+        const response = await axios.post('http://localhost:3000/admin-users/add', newUser);
+        alert('User successfully added!');
+        setAddUserModalOpen(false);
+        // Optionally, fetch users again to update the list
+      } catch (error) {
+        console.error('Error adding user:', error);
+        alert(error.response?.data?.message || 'Failed to add user.');
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -245,6 +266,7 @@ const AdminUsers = () => {
           </div>
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
           {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
+          <button onClick={() => setAddUserModalOpen(true)}><i className="ri-add-circle-line"></i>Add Admin</button>
         </section>
 
         {isModalOpen && (
@@ -304,10 +326,33 @@ const AdminUsers = () => {
           </div>
         )}
 
+        {/* modal for add admin */}
+        {addUserModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Add Admin</h2>
+              {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
+              <form onSubmit={handleAddUserSubmit}>
+                <input type="text" placeholder="Full Name" value={newUser.fullName} onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })} required />
+                <input type="text" placeholder="LRN" value={newUser.lrn} onChange={(e) => setNewUser({ ...newUser, lrn: e.target.value })} required />
+                <input type="email" placeholder="Email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} required />
+                <input type="text" placeholder="Grade Level" value={newUser.grlvl} onChange={(e) => setNewUser({ ...newUser, grlvl: e.target.value })} required />
+                <input type="text" placeholder="Strand" value={newUser.strand} onChange={(e) => setNewUser({ ...newUser, strand: e.target.value })} required />
+                <input type="text" placeholder="Role" value={newUser.user_role} onChange={(e) => setNewUser({ ...newUser, user_role: e.target.value })} required />
+                <div>
+                  <button type="submit">Add Admin</button>
+                  <button type="button" onClick={() => setAddUserModalOpen(false)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
         <div className={styles.table__container}>
           <table className={styles.table}>
             <thead>
               <tr>
+                <th>Full Name</th>
                 <th>LRN</th>
                 <th className={styles.hidden}>Email</th>
                 <th className={styles.hidden}>Grade Level & Strand</th>
@@ -319,6 +364,8 @@ const AdminUsers = () => {
             <tbody>
               {currentUsers.map((user, index) => (
                 <tr key={index}>
+                  {/* adjust */}
+                  <td>Bryan Aaron Santiago</td> 
                   <td>{user.lrn}</td>
                   <td className={styles.hidden}>{user.email}</td>
                   <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>

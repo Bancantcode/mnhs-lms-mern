@@ -31,6 +31,7 @@ const AdminModules = () => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
+  // alang laman
   useEffect(() => {
   }, [])
   const handleLogout = () => {
@@ -236,12 +237,18 @@ const AdminModules = () => {
 
   return (
     <main className={styles.main}>
-      <div className={styles.container}>
+      <aside className={styles.sidebar}>
+        <img src="/images/MNHS-Logo.png" alt="Logo" />
+      </aside>
 
+      <div className={styles.container}>
         <section className={styles.upper}>
           <h1>Admin Dashboard <i className="ri-arrow-right-wide-line"></i>Modules</h1>
+          <button className={styles.hamburger}>
+            <i className="ri-menu-2-line"></i>
+          </button>
 
-          <div className={styles.searchWrapper}>
+          <div className={styles.search__wrapper}>
             <i className="ri-search-line"></i>
             <input type="text" placeholder="Search..." />
           </div>
@@ -261,12 +268,13 @@ const AdminModules = () => {
 
         <section className={styles.lower}>
           <div className={styles.links}>
-            <Link to="/admin-users">Users</Link>
-            <Link to="/admin-modules">Modules</Link>
+            <Link className={styles.a} to="/admin-users">Users</Link>
+            <Link className={styles.a} to="/admin-modules">Modules</Link>
           </div>
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
         </section>
 
+        {/* modal for adding modules */}
         {isModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
@@ -289,7 +297,7 @@ const AdminModules = () => {
 
         {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
 
-        <table className={styles.table}>
+        <table className={styles.table__container}>
           <thead>
             <tr>
               <th>Strand</th>
@@ -306,10 +314,10 @@ const AdminModules = () => {
                 <td>{module.strand}</td>
                 <td>{module.subject}</td>
                 <td>{module.title}</td>
-                <td>{module.file_name}</td>
+                <td><p onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>
                 <td>{module.upload_date}</td>
                 <td>{module.uploader}</td>
-                <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
+                {/* <td><button onClick={() => handleDownload(module.MID)}>Download</button></td> */}
                 <td>
                     <div onClick={() => toggleUserDropdown(index)}>
                       <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
