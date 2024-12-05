@@ -241,6 +241,16 @@
                     }
                 }
             }
+            .lower {
+                button {
+                    i {
+                        font-size: var(--heading-6);
+                    }
+                    span {
+                        display: none;
+                    }
+                }
+            }
             .table__container {
                 padding: var(--space-2xs);
                 table {

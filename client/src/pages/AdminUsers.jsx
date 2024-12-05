@@ -31,6 +31,7 @@ const AdminUsers = () => {
   };
 
   //change the format of the date to be month, day, year
+  //not being used
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -172,7 +173,7 @@ const AdminUsers = () => {
             <Link className={styles.a} to="/admin-users">Users</Link>
             <Link className={styles.a} to="/admin-modules">Modules</Link>
           </div>
-          <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
+          <button onClick={toggleModal}><i className="ri-add-circle-line"></i><span>Add Modules</span></button>
         </section>
 
         {isModalOpen && (
