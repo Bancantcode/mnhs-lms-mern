@@ -13,6 +13,7 @@ dist-ssr
 *.local
 .env
 uploads
+server/config/db_config.js
 
 # Editor directories and files
 .vscode/*
@@ -25,4 +26,3 @@ uploads
 *.sln
 *.sw?
 
-db_config.js

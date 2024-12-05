@@ -21,10 +21,10 @@ const app = express();
 app.use(express.json());
 const router = express.Router();
 
+// get all modules
 router.get('/', async (req, res) => { 
     try {
         const modules = await Module.findAll();
-        // console.log(modules);
         res.status(200).json(modules);
     } catch (error) {
         console.error('Error fetching modules:', error);
@@ -32,57 +32,44 @@ router.get('/', async (req, res) => {
     }
 })
 
+// upload module
 router.post('/', upload.single('file'), async (req, res) => {
-    console.log(req.file.path);
-    const { subject, title } = req.body;
-    const file = req.file;
-    const fileData = fs.readFileSync(file.path);
+    try {
+        console.log(req.file.path);
+        const { strand, subject, title, uploader } = req.body;
+        const file = req.file;
 
-    console.log({ 
-        subject: subject, 
-        title: title, 
-        file: file, 
-        uploader: "EMAIL MO", // soon
-    }); // REMOVE
+        if (!file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
 
-    const newModule = await Module.create({
-        subject: subject,
-        title: title,
-        file_name: file.originalname,
-        file_data: fileData,
-        uploader: "DEV"
-    }) 
+        const fileData = fs.readFileSync(file.path);
 
-    console.log(newModule);
+        console.log({
+            strand: strand,
+            subject: subject,
+            title: title,
+            file: file,
+            uploader: uploader, // FOR TESTING PURPOSES
+        }); // REMOVE
 
-    res.status(201).json({ message: 'Module has been uploaded successfully!' }); // FOR TESTING
-
-    // try {
-    //     await Module.create({ 
-    //         email: email, 
-    //         lrn: lrn, 
-    //         grlvl: grlvl, 
-    //         strand: strand, 
-    //         password: password, 
-    //         user_role: user_role 
-    //     });
-    //     res.status(201).json({ message: 'User has been registered successfully!' });
-    // } 
-    // catch (error) {
-    //     console.error("Error registering user:", error);
-
-    //     if (error.name === 'SequelizeUniqueConstraintError') {
-    //         res.status(400).json({ message: 'Email or LRN already exists!' });
-    //     } 
-    //     else if (error.name === 'SequelizeValidationError') {
-    //         res.status(400).json({ message: 'Validation error: Check your inputs.' });
-    //     } 
-    //     else {
-    //         res.status(500).json({ message: 'Internal server error. Please try again later.' });
-    //     }
-    // }
+        const newModule = await Module.create({
+            strand: strand,
+            subject: subject,
+            title: title,
+            file_name: file.originalname,
+            file_data: fileData,
+            uploader: uploader,
+        });
+        
+        res.status(201).json({ message: 'Module has been uploaded successfully!', newModule });
+    } catch (error) {
+        console.error('Error uploading module:', error);
+        res.status(500).json({ message: 'Error uploading module, please try again later.' });
+    }
 });
 
+// download module
 router.get('/download/:id', async (req, res) => { 
     try {
         const module = await Module.findByPk(req.params.id);
@@ -107,14 +94,74 @@ router.get('/download/:id', async (req, res) => {
         }
 });
 
-router.put('/edit/:id', async (req, res, next) => {
+// edit module
+router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
     try {
-      const data = await Module.findByPk(req.params.id);
-      res.json(data);
-      console.log('Property successfully updated!');
+        const { id } = req.params;
+        const { title, subject } = req.body;
+        const file = req.file;
+
+        console.log('ID:', id); // TESTING PURPOSES ONLY
+        console.log('Title:', title);
+        console.log('Subject:', subject);
+        console.log('File Name:', file ? file.filename : 'No file uploaded');
+
+        const updateData = { title, subject };
+        
+        if (file) {
+            const module = await Module.findOne({ where: { MID: id } });
+
+            if (module && module.file_name) {
+                const oldFile = path.join('uploads', module.file_name);
+                if (fs.existsSync(oldFile)) {
+                    fs.unlinkSync(oldFile);
+                    console.log(`Deleted old file: ${module.file_name}`);
+                }
+            }
+
+            updateData.file_name = file.filename;
+        }
+
+        const [updatedRow] = await Module.update(updateData, { where: { 'MID': id } });
+
+        if (!updatedRow) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        const updatedModule = await Module.findOne({ where: { 'MID': id } });
+        res.status(200).json({ message: 'Module successfully updated!', updatedModule });
     } catch (error) {
-      return next(error);
+        console.error('Error updating module:', error);
+        next(error);
     }
-  });
+});
+
+// delete module
+router.delete('/delete/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const module = await Module.findOne({ where: { "MID" : id } });
+
+        if (!module) return res.status(404).json({ message: 'Module not found!'});
+
+        const filePath = path.join('uploads', module.file_name);
+        if (fs.existsSync(filePath)){
+            fs.unlinkSync(filePath);
+        }
+
+        await Module.destroy({ where: { "MID" : id } });
+        res.status(200).json({ message: 'Module successfully deleted!' });
+    } catch (error) {
+        console.error(error);
+        return next(error);
+    }
+});
+
+router.get('/edit/:id', async (req, res) => { // FOR TESTING PURPOSES ONLY
+    try {
+        const module = await Module.findByPk(req.params.id);
+        res.status(200).json({module});
+    } catch { };
+});
 
 export default router;

@@ -4,60 +4,72 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
-  const [userData, setUserData] = useState({
-    email: '',
-    password: ''
-  });
-
-  const [loading, setLoading] = useState(false);
+  const [emailOrUsername, setEmailOrUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({
-      ...userData,
-      [name]: value,
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setErrorMessage('');
+  
     try {
-      const response = await axios.post('http://localhost:3000/login', userData);
-      alert('You are now logged in!.');
-      setUserData({
-        email: '',
-        password: ''
-      });
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || 'Login failed!');
-    } finally {
-      setLoading(false);
+      const response = await axios.post('http://localhost:3000/login', { emailOrUsername, password });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('Email', response.data.username);
+      localStorage.setItem('LRN', response.data.userID);
+      localStorage.setItem('User_Role', response.data.userRole)
+      localStorage.setItem('Strand', response.data.strand)
+
+      if (response.data.userRole === "ADMIN"){
+        navigate('/admin-users');
+      } else { navigate('/'); }
+      
+    } catch (error) {
+      console.error('Login failed:', error.response?.data || error.message);
+      setErrorMessage(error.response?.data?.message || 'Login failed! Please try again.');
     }
+  };
+  
+  const handleEmailOrUsernameChange = (e) => {
+    setEmailOrUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
   };
 
   return (
     <main className={styles.main}>
-        <div className={styles.container}>
-            <form onSubmit={handleSubmit}>
-                <img src="/images/MNHS-Logo.png" alt="Logo" />
-                <label htmlFor="email">Email
-                  <input type="email" name='email'onChange={handleChange} />
-                </label>
-                
-                <label htmlFor="password">Password
-                  <input type="password" name='password'onChange={handleChange} />
-                </label>
+      <div className={styles.container}>
+        <form onSubmit={handleSubmit}>
+          <img src="/images/MNHS-Logo.png" alt="Logo" />
+          <label htmlFor="email">Email
+            <input 
+              type="email" 
+              name="email" 
+              value={emailOrUsername}
+              onChange={handleEmailOrUsernameChange} 
+            />
+          </label>
+          
+          <label htmlFor="password">Password
+            <input 
+              type="password" 
+              name="password" 
+              value={password}
+              onChange={handlePasswordChange} 
+            />
+          </label>
 
-                <button type="submit">Login</button>
-            </form>
-            <p>Don&apos;t have an account? <Link to={"/Register"} className={styles.link}>Register</Link></p>
-        </div>
+          {errors && <p style={{ color: 'red' }}>{errors}</p>}
+
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <Link to="/Register" className={styles.link}>Register</Link></p>
+      </div>
     </main>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

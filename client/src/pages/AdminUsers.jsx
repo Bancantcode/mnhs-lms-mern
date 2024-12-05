@@ -1,12 +1,14 @@
 import styles from '../assets/styles/adminUsers.module.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import axios from 'axios';
 
 const AdminUsers = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [title, setTitle] = useState('');
+  const [strand, setStrand] = useState('STEM');
   const [subject, setSubject] = useState('');
+  const [title, setTitle] = useState('');
   const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +19,7 @@ const AdminUsers = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
   const usersPerPage = 8;
+  const [errors, setErrors] = useState({});
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -61,18 +64,69 @@ const AdminUsers = () => {
     }
   };
 
-  //make an object and put title, subject, file and date
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // const currentDate = new Date().toISOString();
-    // const newModule = { 
-    //   title, 
-    //   subject, 
-    //   file: file ? file.name : 'N/A', 
-    //   date: formatDate(currentDate) 
-    // };
+  const validateData = (type, data) => {
+    const error = {};
+  
+    if (type === 'module') {
+      if (!data.title || data.title.length > 100) {
+        error.title = 'Title is required and should be less than 100 characters.';
+      }
+  
+      if (!data.subject || data.subject.length > 100) {
+        error.subject = 'Subject is required and should be less than 100 characters.';
+      }
+  
+      if (!data.file) {
+        error.file = 'File is required.';
+      } else {
+        const extensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+        const fileExtension = data.file.name.split('.').pop();
+        if (!extensions.includes(`.${fileExtension}`)) {
+          error.file = 'Invalid file type.';
+        }
+      }
+    } 
 
-    // console.log(newModule);
+    else if (type === 'user') {
+      if (!data.lrn || !/^\d{12}$/.test(data.lrn)) {
+        error.lrn = 'LRN must be exactly 12 numeric characters.';
+      }
+    
+      if (!data.password || data.password.length < 8 || !/[A-Z]/.test(data.password)) {
+        error.password = 'Password must be at least 8 characters and include an uppercase letter.';
+      }
+    }
+  
+    return error;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const uploader = localStorage.getItem("Email");
+    const currentDate = new Date().toISOString();
+    const formData = new FormData();
+    formData.append('strand', strand);
+    formData.append('title', title);
+    formData.append('subject', subject);
+    formData.append('file', file);
+    formData.append('date', formatDate(currentDate));
+    formData.append('uploader', uploader);
+    console.log(file); // TESTING PURPOSES ONLY
+
+    const error = validateData('module', { title, subject, file });
+    setErrors(error);
+    
+    if (Object.keys(error).length === 0) {
+      try {
+        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        alert('Module successfully uploaded!.');
+      } catch (err) {
+        console.error(err);
+        alert(err.response?.data?.message || 'Upload failed!');
+      } finally {
+        setLoading(false);
+      }
+    }
 
     //reset
     setTitle('');
@@ -83,22 +137,27 @@ const AdminUsers = () => {
   };
 
   const handleEdit = (user) => {
-    setEditUser({
-      lrn: user.lrn,
-      email: user.email,
-      grlvl: user.grlvl,
-      strand: user.strand,
-      user_role: user.user_role,
-      password: '' // Initialize password as empty
-    });
+    setEditUser(user);
     setEditModalOpen(true);
   };
 
-  const handleEditSubmit = (e) => {
+  const handleEditSubmit = async (e) => {
     e.preventDefault();
-    // Handle the submission of edited user data
-    console.log('Edited User:', editUser);
-    setEditModalOpen(false);
+    const id = editUser.UID;
+    const error = validateData('user', editUser);
+    setErrors(error);
+
+    if (Object.keys(error).length === 0) {
+      try {
+        const response = await axios.put(`http://localhost:3000/admin-users/edit/${id}`, editUser);
+        alert('User details updated successfully!');
+        setEditModalOpen(false); 
+      } catch (error) {
+        console.error('Error updating user:', error);
+        alert(error.response?.data?.message || 'Failed to update user details.');
+      }
+    }
+    
   };
 
   const handleDelete = (user) => {
@@ -106,11 +165,22 @@ const AdminUsers = () => {
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    // Logic to delete the user
-    console.log('Deleted User:', userToDelete);
-    setDeleteModalOpen(false);
-    // Optionally, refresh the user list or update state
+  const confirmDelete = async () => {
+    try {
+      const id = userToDelete.UID;
+      const response = await axios.delete(`http://localhost:3000/admin-users/delete/${id}`);
+      alert('User successfully deleted!');
+      setDeleteModalOpen(false);
+    } catch (error){
+      console.log(error);
+      alert(err.response?.data?.messsage || 'Delete failed!');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setLRNUser(null);
+    window.location.reload();
   };
 
   const cancelDelete = () => {
@@ -162,7 +232,7 @@ const AdminUsers = () => {
                 <div>My Account</div>
                 <Link to="/settings">Settings</Link>
                 <div>Support</div>
-                <Link to="/register">Log out</Link>
+                <Link onClick={handleLogout}>Logout</Link>
               </div>
             )}
           </div>
@@ -173,7 +243,8 @@ const AdminUsers = () => {
             <Link className={styles.a} to="/admin-users">Users</Link>
             <Link className={styles.a} to="/admin-modules">Modules</Link>
           </div>
-          <button onClick={toggleModal}><i className="ri-add-circle-line"></i><span>Add Modules</span></button>
+          <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
+          {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
         </section>
 
         {isModalOpen && (
@@ -181,8 +252,13 @@ const AdminUsers = () => {
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
-                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
+                  <option value="STEM">STEM</option>
+                  <option value="ABM">ABM</option>
+                  <option value="GAS">GAS</option>
+                </select>
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="file" onChange={(e) => setFile(e.target.files[0])} required />
                 <div>
                   <button type="submit">Submit</button>
@@ -197,6 +273,8 @@ const AdminUsers = () => {
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <h2>Edit User</h2>
+              {errors.lrn && <p style={{ color: 'red' }}>{errors.lrn}</p>}
+              {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
               <form onSubmit={handleEditSubmit}>
                 <input type="text" placeholder="LRN" value={editUser.lrn} onChange={(e) => setEditUser({ ...editUser, lrn: e.target.value })} required />
                 <input type="email" placeholder="Email" value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} required />
