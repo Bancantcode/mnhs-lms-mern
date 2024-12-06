@@ -6,6 +6,7 @@ import axios from 'axios';
 const AdminModules = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [grlvl, setGrlvl] = useState('11');
   const [strand, setStrand] = useState('STEM');
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
@@ -101,6 +102,7 @@ const AdminModules = () => {
     const uploader = localStorage.getItem("Email");
     const currentDate = new Date().toISOString();
     const formData = new FormData();
+    formData.append('grlvl', grlvl);
     formData.append('strand', strand);
     formData.append('title', title);
     formData.append('subject', subject);
@@ -128,6 +130,7 @@ const AdminModules = () => {
     }
 
     //reset
+    setGrlvl('11');
     setStrand('STEM');
     setTitle('');
     setSubject('');
@@ -208,6 +211,7 @@ const AdminModules = () => {
     e.preventDefault();
     const id = moduleToEdit.MID;
     const formData = new FormData();
+    formData.append('grlvl', moduleToEdit.grlvl);
     formData.append('strand', moduleToEdit.strand);
     formData.append('subject', moduleToEdit.subject);
     formData.append('title', moduleToEdit.title);
@@ -302,6 +306,10 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
+                <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required >
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
                 <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
                   <option value="STEM">STEM</option>
                   <option value="ABM">ABM</option>
@@ -324,6 +332,10 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Edit Module</h2>
               <form onSubmit={handleEditSubmit}>
+                <select value={moduleToEdit?.grlvl || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, grlvl: e.target.value })} required >
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
                 <select required value={moduleToEdit?.strand || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, strand: e.target.value })}>
                   <option value="STEM">STEM</option>
                   <option value="ABM">ABM</option>
@@ -358,7 +370,7 @@ const AdminModules = () => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th className={styles.hidden}>Strand</th>
+                <th className={styles.hidden}>Grade Level & Strand</th>
                 <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Title</th>
                 <th>File</th>
@@ -369,7 +381,7 @@ const AdminModules = () => {
             <tbody>
               {currentModules.map((module, index) => (
                 <tr key={index}>
-                  <td className={styles.hidden}>{module.strand}</td>
+                  <td className={styles.hidden}>{`${module.grlvl} - ${module.strand}`}</td>
                   <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.title}</td>
                   <td><p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>

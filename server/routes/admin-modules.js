@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 router.post('/', upload.single('file'), async (req, res) => {
     try {
         console.log(req.file.path);
-        const { strand, subject, title, uploader } = req.body;
+        const { grlvl, strand, subject, title, uploader } = req.body;
         const file = req.file;
 
         if (!file) {
@@ -46,6 +46,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         const fileData = fs.readFileSync(file.path);
 
         console.log({
+            grlvl: grlvl,
             strand: strand,
             subject: subject,
             title: title,
@@ -54,6 +55,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         }); // REMOVE
 
         const newModule = await Module.create({
+            grlvl: grlvl,
             strand: strand,
             subject: subject,
             title: title,
@@ -98,15 +100,17 @@ router.get('/download/:id', async (req, res) => {
 router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { title, subject } = req.body;
+        const { grlvl, strand, title, subject } = req.body;
         const file = req.file;
 
         console.log('ID:', id); // TESTING PURPOSES ONLY
+        console.log('Gr Lvl:', grlvl);
+        console.log('Strand:', strand);
         console.log('Title:', title);
         console.log('Subject:', subject);
         console.log('File Name:', file ? file.filename : 'No file uploaded');
 
-        const updateData = { title, subject };
+        const updateData = { grlvl, strand, title, subject };
         
         if (file) {
             const module = await Module.findOne({ where: { MID: id } });

@@ -334,7 +334,11 @@ const AdminUsers = () => {
                   <option value="ABM">ABM</option>
                   <option value="GAS">GAS</option>
                 </select>
-                <input type="text" placeholder="Role" value={editUser.user_role} onChange={(e) => setEditUser({ ...editUser, user_role: e.target.value })} required />
+                <select required value={editUser.user_role} onChange={(e) => setEditUser({ ...editUser, user_role: e.target.value })}>
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="STUDENT">STUDENT</option>
+                  <option value="IRREG">IRREG</option>
+                </select>
                 <input type="password" placeholder="Password" value={editUser.password} onChange={(e) => setEditUser({ ...editUser, password: e.target.value })} required />
                 <div>
                   <button type="submit">Save</button>
@@ -366,7 +370,6 @@ const AdminUsers = () => {
               {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
               <form onSubmit={handleAddUserSubmit}>
                 <input type="text" placeholder="Full Name" value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} required />
-                {/* <input type="text" placeholder="LRN" value="0" onChange={(e) => setNewUser({ ...newUser, lrn: "0" })} required disabled/> */}
                 <input type="email" placeholder="Email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} required />
                 <input type="password" placeholder="Password" value={newUser.password} onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} required />
                 <select value={newUser.grlvl} onChange={(e) => setNewUser({ ...newUser, grlvl: e.target.value })} required >
@@ -378,7 +381,6 @@ const AdminUsers = () => {
                   <option value="ABM">ABM</option>
                   <option value="GAS">GAS</option>
                 </select>
-                {/* <input type="text" placeholder="Role" value="ADMIN" onChange={(e) => setNewUser({ ...newUser, user_role: "ADMIN" })} required disabled/> */}
                 <div>
                   <button type="submit">Add Admin</button>
                   <button type="button" onClick={() => setAddUserModalOpen(false)}>Cancel</button>

@@ -24,16 +24,12 @@ router.get('/dashboard', async (req, res) => {
         const user = await User.findOne({ where: { 'UID' : id } });
         const { grlvl, strand, name } = user;
 
-        const modules = await Module.findAll({ 
-            where: { strand } 
+        const modules = await Module.findAll({       
+            where: { 
+                strand, 
+                grlvl 
+            } 
         });
-
-        // const modules = await Module.findAll({       ----- CHANGE TO THIS AFTER EDITING DB -----
-        //     where: { 
-        //         strand, 
-        //         grlvl 
-        //     } 
-        // });
         res.status(200).json({ name, modules });
     } catch (err) {
         res.status(500).json({ message: 'Failed to fetch modules' });

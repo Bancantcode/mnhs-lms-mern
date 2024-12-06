@@ -97,9 +97,9 @@ const Dashboard = () => {
 
   return (
     <main className={styles.main}>
-      <p>Student LRN: {LRNUser || 'Loading...'}</p> 
+      <p>Student LRN: {LRNUser || 'Loading...'}</p>         { /* PLACEHOLDER ONLY ? */ }
       <p>Student Name: {name || 'Loading...'}</p> 
-      <p>Student Strand: {Strand || 'Loading...'}</p>
+      <p>Student Strand: {Strand || 'Loading...'}</p>       { /* PLACEHOLDER ONLY ? */ }
 
       <table className={styles.table}>
         <thead>
