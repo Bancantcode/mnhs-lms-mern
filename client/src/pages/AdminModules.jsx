@@ -208,8 +208,9 @@ const AdminModules = () => {
     e.preventDefault();
     const id = moduleToEdit.MID;
     const formData = new FormData();
-    formData.append('title', moduleToEdit.title);
+    formData.append('strand', moduleToEdit.strand);
     formData.append('subject', moduleToEdit.subject);
+    formData.append('title', moduleToEdit.title);
     if (moduleToEdit.file) {
       formData.append('file', moduleToEdit.file);
     }
@@ -323,6 +324,11 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Edit Module</h2>
               <form onSubmit={handleEditSubmit}>
+                <select required value={moduleToEdit?.strand || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, strand: e.target.value })}>
+                  <option value="STEM">STEM</option>
+                  <option value="ABM">ABM</option>
+                  <option value="GAS">GAS</option>
+                </select>
                 <input type="text" placeholder="Subject" value={moduleToEdit?.subject || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, subject: e.target.value })} required />
                 <input type="text" placeholder="Title" value={moduleToEdit?.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })} required />
                 <input type="file" onChange={(e) => setModuleToEdit({ ...moduleToEdit, file: e.target.files[0] })} />
@@ -352,8 +358,8 @@ const AdminModules = () => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Strand</th>
+                <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Title</th>
                 <th>File</th>
                 <th className={`${styles.hidden} ${styles.uploader}`}>Uploader</th>
@@ -363,8 +369,8 @@ const AdminModules = () => {
             <tbody>
               {currentModules.map((module, index) => (
                 <tr key={index}>
-                  <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.strand}</td>
+                  <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.title}</td>
                   <td><p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>
                   <td className={`${styles.hidden} ${styles.uploader}`}>{module.uploader}</td>

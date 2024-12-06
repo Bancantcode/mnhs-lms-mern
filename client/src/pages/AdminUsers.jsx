@@ -325,8 +325,15 @@ const AdminUsers = () => {
                 <input type="text" placeholder="name" value={editUser.name} onChange={(e) => setEditUser({ ...editUser, name: e.target.value })} required />
                 <input type="text" placeholder="LRN" value={editUser.lrn} onChange={(e) => setEditUser({ ...editUser, lrn: e.target.value })} required />
                 <input type="email" placeholder="Email" value={editUser.email} onChange={(e) => setEditUser({ ...editUser, email: e.target.value })} required />
-                <input type="text" placeholder="Grade Level" value={editUser.grlvl} onChange={(e) => setEditUser({ ...editUser, grlvl: e.target.value })} required />
-                <input type="text" placeholder="Strand" value={editUser.strand} onChange={(e) => setEditUser({ ...editUser, strand: e.target.value })} required />
+                <select value={editUser.grlvl} onChange={(e) => setEditUser({ ...editUser, grlvl: e.target.value })} required >
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
+                <select required value={editUser.strand} onChange={(e) => setEditUser({ ...editUser, strand: e.target.value })}>
+                  <option value="STEM">STEM</option>
+                  <option value="ABM">ABM</option>
+                  <option value="GAS">GAS</option>
+                </select>
                 <input type="text" placeholder="Role" value={editUser.user_role} onChange={(e) => setEditUser({ ...editUser, user_role: e.target.value })} required />
                 <input type="password" placeholder="Password" value={editUser.password} onChange={(e) => setEditUser({ ...editUser, password: e.target.value })} required />
                 <div>
