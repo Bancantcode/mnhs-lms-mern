@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from '../assets/styles/dashboard.module.scss';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { gsap } from 'gsap';
 
 const Dashboard = () => {
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
@@ -16,6 +17,8 @@ const Dashboard = () => {
   }); 
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
+
+  const courseRefs = useRef([]);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -128,20 +131,41 @@ const Dashboard = () => {
     window.location.reload();
   };
 
+  const handleMouseEnter = (index) => {
+    gsap.to(courseRefs.current[index].querySelector('::before'), {
+      height: '100%',
+      ease: 'power3.inOut',
+    });
+  };
+
+  const handleMouseLeave = (index) => {
+    gsap.to(courseRefs.current[index].querySelector('::before'), {
+      height: '0%',
+      ease: 'power3.inOut',
+    });
+  };
+
   return (
     <main className={styles.main}>
+
+      <div className={styles.hamburger}>
+        <i className="ri-menu-2-line"></i>
+      </div>
       {/* ASIDE */}
       <aside>
         <div className={styles.main__container}>
           <h1>MNHS-LMS</h1>
           <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
         </div>
-        <div className={styles.profile}>
-          <p>Student LRN: {LRNUser || 'Loading...'}</p>         { /* PLACEHOLDER ONLY ? */ }
-          <p>Student Name: {name || 'Loading...'}</p> 
-          <p>Student Strand: {Strand || 'Loading...'}</p> 
-          <br />
-          <button type="button" onClick={handleLogout}>Logout</button>
+        <div className={styles.profile__flex}>
+          <div className={styles.profile}>
+            <p>LRN: {LRNUser || 'Loading...'}</p>
+            <p>Student Strand: {Strand || 'Loading...'}</p> 
+            <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+            <br />
+            <button type="button" onClick={handleLogout}>Logout</button>
+          </div>
+          <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
         </div>
       </aside>
 
@@ -152,13 +176,13 @@ const Dashboard = () => {
 
         <div className={styles.courses}>
           {/* core */}
-          <h4>Core Subjects</h4>
+          <h4><i className="ri-corner-down-right-line"></i>Core Subjects</h4>
           <ul>
             {modules.core.length === 0 ? (  
               <p>No core subjects available</p>
             ) : (
               modules.core.map((module, index) => (
-                <Link to="/subject-page" key={index} className={styles.course__container}>
+                <Link to="/subject-page" key={index} className={styles.course__container} ref={el => courseRefs.current[index] = el} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
@@ -169,13 +193,13 @@ const Dashboard = () => {
           <br />
 
           {/* applied */}
-          <h4>Applied Subjects</h4>
+          <h4><i className="ri-corner-down-right-line"></i>Applied Subjects</h4>
           <ul>
             {modules.applied.length === 0 ? (
               <p>No applied subjects available</p>
             ) : (
               modules.applied.map((module, index) => (
-                <Link to="/subject-page" key={index} className={styles.course__container}>
+                <Link  to="/subject-page"  key={index}  className={styles.course__container} ref={el => courseRefs.current[index] = el} >
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
@@ -185,7 +209,7 @@ const Dashboard = () => {
 
           <br />
           {/* specialized */}
-          <h4>Specialized Subjects</h4>
+          <h4><i className="ri-corner-down-right-line"></i>Specialized Subjects</h4>
           <ul>
             {modules.specialized.length === 0 ? (
               <p>No specialized subjects available</p>
