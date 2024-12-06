@@ -129,7 +129,7 @@ const Dashboard = () => {
               <p>No core subjects available</p>
             ) : (
               modules.core.map((module, index) => (
-                <Link to="/subject-page" key={index} className={styles.course__container}>
+                <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
@@ -146,7 +146,7 @@ const Dashboard = () => {
               <p>No applied subjects available</p>
             ) : (
               modules.applied.map((module, index) => (
-                <Link to="/subject-page" key={index} className={styles.course__container}>
+                <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
@@ -162,7 +162,7 @@ const Dashboard = () => {
               <p>No specialized subjects available</p>
             ) : (
               modules.specialized.map((module, index) => (
-                <Link to="/subject-page" key={index} className={styles.course__container}>
+                <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
