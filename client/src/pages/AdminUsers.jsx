@@ -6,9 +6,11 @@ import axios from 'axios';
 const AdminUsers = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [grlvl, setGrlvl] = useState('11');
   const [strand, setStrand] = useState('STEM');
-  const [subject, setSubject] = useState('');
+  const [type, setType] = useState('Core');
   const [title, setTitle] = useState('');
+  const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -113,7 +115,9 @@ const AdminUsers = () => {
     const uploader = localStorage.getItem("Email");
     const currentDate = new Date().toISOString();
     const formData = new FormData();
+    formData.append('grlvl', grlvl);
     formData.append('strand', strand);
+    formData.append('type', type);
     formData.append('title', title);
     formData.append('subject', subject);
     formData.append('file', file);
@@ -298,10 +302,19 @@ const AdminUsers = () => {
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
+                <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required >
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                </select>
                 <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
                   <option value="STEM">STEM</option>
                   <option value="ABM">ABM</option>
                   <option value="GAS">GAS</option>
+                </select>
+                <select required value={type} onChange={(e) => setType(e.target.value)}>
+                  <option value="Core">Core</option>
+                  <option value="Applied">Applied</option>
+                  <option value="Specialized">Specialized</option>
                 </select>
                 <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
                 <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
