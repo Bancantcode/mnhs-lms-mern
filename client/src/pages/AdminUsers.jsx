@@ -394,7 +394,7 @@ const AdminUsers = () => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th className={styles.hidden}>Full Name</th>
+                <th className={styles.hidden}>Name</th>
                 <th>LRN</th>
                 <th className={styles.hidden}>Email</th>
                 <th className={styles.hidden}>Grade Level & Strand</th>

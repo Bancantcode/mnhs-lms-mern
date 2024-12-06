@@ -384,7 +384,7 @@ const AdminModules = () => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th className={styles.hidden}>Grade Level & Strand</th>
+                <th className={styles.hidden}>Strand</th>
                 <th className={styles.hidden}>Type</th>
                 <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Title</th>

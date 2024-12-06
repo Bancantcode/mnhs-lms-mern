@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../assets/styles/dashboard.module.scss';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
@@ -144,7 +145,7 @@ const Dashboard = () => {
             <p>No core subjects available</p>
           ) : (
             modules.core.map(module => (
-              <li key={module.MID}>{module.subject}</li>
+              <Link to="/subject-page" key={module.MID}>{module.subject}</Link>
             ))
           )}
         </ul>
@@ -156,7 +157,7 @@ const Dashboard = () => {
             <p>No applied subjects available</p>
           ) : (
             modules.applied.map(module => (
-              <li key={module.MID}>{module.subject}</li>
+              <Link to="/subject-page" key={module.MID}>{module.subject}</Link>
             ))
           )}
         </ul>
@@ -168,7 +169,7 @@ const Dashboard = () => {
             <p>No specialized subjects available</p>
           ) : (
             modules.specialized.map(module => (
-              <li key={module.MID}>{module.subject}</li>
+              <Link to="/subject-page" key={module.MID}>{module.subject}</Link>
             ))
           )}
         </ul>
