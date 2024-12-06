@@ -153,11 +153,7 @@ const Dashboard = () => {
               <p>No core subjects available</p>
             ) : (
               modules.core.map((module, index) => (
-<<<<<<< HEAD
-                <Link to="/subject-page" key={index} className={styles.course__container} ref={el => courseRefs.current[index] = el} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
-=======
                 <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
->>>>>>> a2dd773aee29cc5da91485e784ba8ac4fecde988
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
@@ -174,11 +170,7 @@ const Dashboard = () => {
               <p>No applied subjects available</p>
             ) : (
               modules.applied.map((module, index) => (
-<<<<<<< HEAD
-                <Link  to="/subject-page"  key={index}  className={styles.course__container} ref={el => courseRefs.current[index] = el} >
-=======
                 <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
->>>>>>> a2dd773aee29cc5da91485e784ba8ac4fecde988
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
