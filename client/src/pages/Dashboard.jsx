@@ -101,53 +101,100 @@ const Dashboard = () => {
 
   return (
     <main className={styles.main}>
-      <p>Student LRN: {LRNUser || 'Loading...'}</p>         { /* PLACEHOLDER ONLY ? */ }
-      <p>Student Name: {name || 'Loading...'}</p> 
-      <p>Student Strand: {Strand || 'Loading...'}</p>       { /* PLACEHOLDER ONLY ? */ }
+      {/* ASIDE */}
+      <aside>
+        <div className={styles.main__container}>
+          <h1>MNHS-LMS</h1>
+          <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
+        </div>
+        <div className={styles.profile}>
+          <p>Student LRN: {LRNUser || 'Loading...'}</p>         { /* PLACEHOLDER ONLY ? */ }
+          <p>Student Name: {name || 'Loading...'}</p> 
+          <p>Student Strand: {Strand || 'Loading...'}</p> 
+          <br />
+          <button type="button" onClick={handleLogout}>Logout</button>
+        </div>
+      </aside>
 
-      <div>
-        <br />
-        <h1>Modules Dashboard</h1>
+      <div className={styles.container}>
+        <div className={styles.dashboard}>
+          <h1>Dashboard</h1>
+        </div>
 
-        <br />
-        <h2>Core Subjects</h2>
-        <ul>
-          {modules.core.length === 0 ? (  
-            <p>No core subjects available</p>
-          ) : (
-            modules.core.map(module => (
-              <Link to={`/subject-page/?subject=${module.subject}`} key={module.MID}>{module.subject}</Link>
-            ))
-          )}
-        </ul>
+        <div className={styles.courses}>
+          {/* core */}
+          <h4>Core Subjects</h4>
+          <ul>
+            {modules.core.length === 0 ? (  
+              <p>No core subjects available</p>
+            ) : (
+              modules.core.map((module, index) => (
+                <Link to="/subject-page" key={index} className={styles.course__container}>
+                  <i className="ri-arrow-right-up-line"></i>
+                  <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                </Link>
+              ))
+            )}
+          </ul>
 
-        <br />
-        <h2>Applied Subjects</h2>
-        <ul>
-          {modules.applied.length === 0 ? (
-            <p>No applied subjects available</p>
-          ) : (
-            modules.applied.map(module => (
-              <Link to={`/subject-page/?subject=${module.subject}`} key={module.MID}>{module.subject}</Link>
-            ))
-          )}
-        </ul>
+          <br />
 
-        <br />
-        <h2>Specialized Subjects</h2>
-        <ul>
-          {modules.specialized.length === 0 ? (
-            <p>No specialized subjects available</p>
-          ) : (
-            modules.specialized.map(module => (
-              <Link to={`/subject-page/?subject=${module.subject}`} key={module.MID}>{module.subject}</Link>
-            ))
-          )}
-        </ul>
+          {/* applied */}
+          <h4>Applied Subjects</h4>
+          <ul>
+            {modules.applied.length === 0 ? (
+              <p>No applied subjects available</p>
+            ) : (
+              modules.applied.map((module, index) => (
+                <Link to="/subject-page" key={index} className={styles.course__container}>
+                  <i className="ri-arrow-right-up-line"></i>
+                  <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                </Link>
+              ))
+            )}
+          </ul>
+
+          <br />
+          {/* specialized */}
+          <h4>Specialized Subjects</h4>
+          <ul>
+            {modules.specialized.length === 0 ? (
+              <p>No specialized subjects available</p>
+            ) : (
+              modules.specialized.map((module, index) => (
+                <Link to="/subject-page" key={index} className={styles.course__container}>
+                  <i className="ri-arrow-right-up-line"></i>
+                  <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                </Link>
+              ))
+            )}
+          </ul>
+        </div>
+
+        {/* <table className={styles.table}> 
+          <thead>
+            <tr>
+              <th>Subject</th>
+              <th>Title</th>
+              <th>File</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {modules.map((module, index) => (
+              <tr key={index}>
+                <td>{module.subject}</td>
+                <td>{module.title}</td>
+                <td>{module.file_name}</td>
+                <td>{module.upload_date}</td>
+                <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table> */}
+        
+        
       </div>
-
-      <br />
-      <button type="button" onClick={handleLogout}>Logout</button>
     </main>
   );
 };
