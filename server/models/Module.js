@@ -7,9 +7,10 @@ const Module = sequelize.define('modules', {
         primaryKey: true,
         autoIncrement: true
     },
-    subject: { type: DataTypes.STRING, allowNull: false },
     grlvl: { type: DataTypes.INTEGER, allowNull: false },
     strand: { type: DataTypes.STRING, allowNull: false },
+    type: { type:DataTypes.STRING, allowNull: false },
+    subject: { type: DataTypes.STRING, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
     file_name: { type: DataTypes.STRING, allowNull: false },
     file_data: { type: DataTypes.BLOB('long'), allowNull: false },  

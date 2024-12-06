@@ -20,16 +20,22 @@ const router = express.Router();
 
 router.get('/dashboard', async (req, res) => { 
     const { id } = req.query;
+    
     try {
         const user = await User.findOne({ where: { 'UID' : id } });
-        const { grlvl, strand, name } = user;
+        const { grlvl, strand, name, user_role } = user;
+        let modules;
 
-        const modules = await Module.findAll({       
-            where: { 
-                strand, 
-                grlvl 
-            } 
-        });
+        if (user_role === "IRREG"){
+            modules = await Module.findAll({ where: { strand }}); 
+        } else {
+            modules = await Module.findAll({       
+                where: { 
+                    strand, 
+                    grlvl 
+                } 
+            });
+        }
         res.status(200).json({ name, modules });
     } catch (err) {
         res.status(500).json({ message: 'Failed to fetch modules' });

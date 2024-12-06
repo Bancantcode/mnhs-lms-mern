@@ -8,6 +8,7 @@ const AdminModules = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [grlvl, setGrlvl] = useState('11');
   const [strand, setStrand] = useState('STEM');
+  const [type, setType] = useState('Core');
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
@@ -104,6 +105,7 @@ const AdminModules = () => {
     const formData = new FormData();
     formData.append('grlvl', grlvl);
     formData.append('strand', strand);
+    formData.append('type', type);
     formData.append('title', title);
     formData.append('subject', subject);
     formData.append('file', file);
@@ -132,6 +134,7 @@ const AdminModules = () => {
     //reset
     setGrlvl('11');
     setStrand('STEM');
+    setType('Core');
     setTitle('');
     setSubject('');
     setFile(null);
@@ -213,6 +216,7 @@ const AdminModules = () => {
     const formData = new FormData();
     formData.append('grlvl', moduleToEdit.grlvl);
     formData.append('strand', moduleToEdit.strand);
+    formData.append('type', moduleToEdit.type);
     formData.append('subject', moduleToEdit.subject);
     formData.append('title', moduleToEdit.title);
     if (moduleToEdit.file) {
@@ -315,6 +319,11 @@ const AdminModules = () => {
                   <option value="ABM">ABM</option>
                   <option value="GAS">GAS</option>
                 </select>
+                <select required value={type} onChange={(e) => setType(e.target.value)}>
+                  <option value="Core">Core</option>
+                  <option value="Applied">Applied</option>
+                  <option value="Specialized">Specialized</option>
+                </select>
                 <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
                 <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
                 <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required/>
@@ -340,6 +349,11 @@ const AdminModules = () => {
                   <option value="STEM">STEM</option>
                   <option value="ABM">ABM</option>
                   <option value="GAS">GAS</option>
+                </select>
+                <select required value={moduleToEdit?.type || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, type: e.target.value })}>
+                  <option value="Core">Core</option>
+                  <option value="Applied">Applied</option>
+                  <option value="Specialized">Specialized</option>
                 </select>
                 <input type="text" placeholder="Subject" value={moduleToEdit?.subject || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, subject: e.target.value })} required />
                 <input type="text" placeholder="Title" value={moduleToEdit?.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })} required />
@@ -371,6 +385,7 @@ const AdminModules = () => {
             <thead>
               <tr>
                 <th className={styles.hidden}>Grade Level & Strand</th>
+                <th className={styles.hidden}>Type</th>
                 <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Title</th>
                 <th>File</th>
@@ -382,6 +397,7 @@ const AdminModules = () => {
               {currentModules.map((module, index) => (
                 <tr key={index}>
                   <td className={styles.hidden}>{`${module.grlvl} - ${module.strand}`}</td>
+                  <td className={styles.hidden}>{module.type}</td>
                   <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.title}</td>
                   <td><p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>

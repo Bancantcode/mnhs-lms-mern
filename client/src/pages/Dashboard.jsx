@@ -7,9 +7,41 @@ const Dashboard = () => {
   const [Strand, setStrand] = useState(localStorage.getItem('Strand'));
   const [id, setID] = useState(localStorage.getItem('id'));
   const [name, setName] = useState('');
-  const [modules, setModules] = useState([]);
+  // const [modules, setModules] = useState([]);          // PREV DISPLAY MODULES
+  const [modules, setModules] = useState({
+    core: [],
+    applied: [],
+    specialized: []
+  }); 
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
+        const fetchedModules = response.data.modules;
+
+        const categorizedModules = fetchedModules.reduce((acc, module) => {
+          if (module.type === 'Core') {
+            acc.core.push(module);
+          } else if (module.type === 'Applied') {
+            acc.applied.push(module);
+          } else if (module.type === 'Specialized') {
+            acc.specialized.push(module);
+          }
+          return acc;
+        }, { core: [], applied: [], specialized: [] });
+
+        setModules(categorizedModules);
+        setName(response.data.name);
+      } catch (err) {
+        console.error('Error fetching modules:', err);
+      }
+    };
+
+    fetchModules();
+  }, []);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -47,22 +79,22 @@ const Dashboard = () => {
   //   }
   // }, [Strand]);
 
-  useEffect(() => {
-    const fetchModules = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
-        setModules(response.data.modules);
-        setName(response.data.name);
-      } catch (err) {
-        console.error('Error fetching modules:', err.response || err.message);
-        setErrors(err.response?.data?.message || 'Failed to fetch modules.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchModules();
-  }, []);
+  // useEffect(() => {                      // PREV DISPLAY MODULES
+  //   const fetchModules = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
+  //       setModules(response.data.modules);
+  //       setName(response.data.name);
+  //     } catch (err) {
+  //       console.error('Error fetching modules:', err.response || err.message);
+  //       setErrors(err.response?.data?.message || 'Failed to fetch modules.');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchModules();
+  // }, []);
 
   const handleDownload = async (id) => {
     try {
@@ -101,14 +133,54 @@ const Dashboard = () => {
       <p>Student Name: {name || 'Loading...'}</p> 
       <p>Student Strand: {Strand || 'Loading...'}</p>       { /* PLACEHOLDER ONLY ? */ }
 
-      <table className={styles.table}>
+      <div>
+        <br />
+        <h1>Modules Dashboard</h1>
+
+        <br />
+        <h2>Core Subjects</h2>
+        <ul>
+          {modules.core.length === 0 ? (  
+            <p>No core subjects available</p>
+          ) : (
+            modules.core.map(module => (
+              <li key={module.MID}>{module.subject}</li>
+            ))
+          )}
+        </ul>
+
+        <br />
+        <h2>Applied Subjects</h2>
+        <ul>
+          {modules.applied.length === 0 ? (
+            <p>No applied subjects available</p>
+          ) : (
+            modules.applied.map(module => (
+              <li key={module.MID}>{module.subject}</li>
+            ))
+          )}
+        </ul>
+
+        <br />
+        <h2>Specialized Subjects</h2>
+        <ul>
+          {modules.specialized.length === 0 ? (
+            <p>No specialized subjects available</p>
+          ) : (
+            modules.specialized.map(module => (
+              <li key={module.MID}>{module.subject}</li>
+            ))
+          )}
+        </ul>
+      </div>
+
+      {/* <table className={styles.table}> 
         <thead>
           <tr>
             <th>Subject</th>
             <th>Title</th>
             <th>File</th>
             <th>Date</th>
-            <th>Uploader</th>
           </tr>
         </thead>
         <tbody>
@@ -118,13 +190,13 @@ const Dashboard = () => {
               <td>{module.title}</td>
               <td>{module.file_name}</td>
               <td>{module.upload_date}</td>
-              <td>{module.uploader}</td>
               <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
       
+      <br />
       <button type="button" onClick={handleLogout}>Logout</button>
     </main>
   );

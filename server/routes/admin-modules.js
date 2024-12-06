@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 router.post('/', upload.single('file'), async (req, res) => {
     try {
         console.log(req.file.path);
-        const { grlvl, strand, subject, title, uploader } = req.body;
+        const { grlvl, strand, type, subject, title, uploader } = req.body;
         const file = req.file;
 
         if (!file) {
@@ -48,6 +48,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         console.log({
             grlvl: grlvl,
             strand: strand,
+            type: type,
             subject: subject,
             title: title,
             file: file,
@@ -57,6 +58,7 @@ router.post('/', upload.single('file'), async (req, res) => {
         const newModule = await Module.create({
             grlvl: grlvl,
             strand: strand,
+            type: type,
             subject: subject,
             title: title,
             file_name: file.originalname,
@@ -100,17 +102,18 @@ router.get('/download/:id', async (req, res) => {
 router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { grlvl, strand, title, subject } = req.body;
+        const { grlvl, strand, type, title, subject } = req.body;
         const file = req.file;
 
         console.log('ID:', id); // TESTING PURPOSES ONLY
         console.log('Gr Lvl:', grlvl);
         console.log('Strand:', strand);
+        console.log('Type:', type);
         console.log('Title:', title);
         console.log('Subject:', subject);
         console.log('File Name:', file ? file.filename : 'No file uploaded');
 
-        const updateData = { grlvl, strand, title, subject };
+        const updateData = { grlvl, strand, type, title, subject };
         
         if (file) {
             const module = await Module.findOne({ where: { MID: id } });
@@ -122,7 +125,6 @@ router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
                     console.log(`Deleted old file: ${module.file_name}`);
                 }
             }
-
             updateData.file_name = file.filename;
         }
 
