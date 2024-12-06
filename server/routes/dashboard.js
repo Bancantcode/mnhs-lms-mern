@@ -27,7 +27,9 @@ router.get('/dashboard', async (req, res) => {
         let modules;
 
         if (user_role === "IRREG"){
-            modules = await Module.findAll({ where: { strand }}); 
+            modules = await Module.findAll({
+                where: { strand },
+            });
         } else {
             modules = await Module.findAll({       
                 where: { 
