@@ -8,7 +8,6 @@ const Dashboard = () => {
   const [Strand, setStrand] = useState(localStorage.getItem('Strand'));
   const [id, setID] = useState(localStorage.getItem('id'));
   const [name, setName] = useState('');
-  // const [modules, setModules] = useState([]);          // PREV DISPLAY MODULES
   const [modules, setModules] = useState({
     core: [],
     applied: [],
@@ -20,10 +19,21 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchModules = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
         const fetchedModules = response.data.modules;
 
-        const categorizedModules = fetchedModules.reduce((acc, module) => {
+        const uniqueModules = [];
+        const seenSubjects = new Set();
+  
+        fetchedModules.forEach(module => {
+          if (!seenSubjects.has(module.subject)) {
+            uniqueModules.push(module);
+            seenSubjects.add(module.subject);
+          }
+        });
+  
+        const categorizedModules = uniqueModules.reduce((acc, module) => {
           if (module.type === 'Core') {
             acc.core.push(module);
           } else if (module.type === 'Applied') {
@@ -33,11 +43,14 @@ const Dashboard = () => {
           }
           return acc;
         }, { core: [], applied: [], specialized: [] });
-
+  
         setModules(categorizedModules);
         setName(response.data.name);
       } catch (err) {
         console.error('Error fetching modules:', err);
+        setErrors(err.response?.data?.message || 'Failed to fetch modules.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -80,48 +93,6 @@ const Dashboard = () => {
   //   }
   // }, [Strand]);
 
-  // useEffect(() => {                      // PREV DISPLAY MODULES
-  //   const fetchModules = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
-  //       setModules(response.data.modules);
-  //       setName(response.data.name);
-  //     } catch (err) {
-  //       console.error('Error fetching modules:', err.response || err.message);
-  //       setErrors(err.response?.data?.message || 'Failed to fetch modules.');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchModules();
-  // }, []);
-
-  const handleDownload = async (id) => {
-    try {
-      const response = await axios.get(`http://localhost:3000/download/${id}`, {
-        responseType: 'blob', 
-      });
-
-      const contentDisposition = response.headers['content-disposition'];
-      if (contentDisposition) {
-        const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } else {
-        alert('No file to download');
-      }
-    } catch (err) {
-      console.error('Download failed:', err);
-      alert('Failed to download file');
-    }
-  };
-
   const handleLogout = () => {
     localStorage.clear();
     setLRNUser(null);
@@ -145,7 +116,7 @@ const Dashboard = () => {
             <p>No core subjects available</p>
           ) : (
             modules.core.map(module => (
-              <Link to="/subject-page" key={module.MID}>{module.subject}</Link>
+              <Link to={`/subject-page/?subject=${module.subject}`} key={module.MID}>{module.subject}</Link>
             ))
           )}
         </ul>
@@ -157,7 +128,7 @@ const Dashboard = () => {
             <p>No applied subjects available</p>
           ) : (
             modules.applied.map(module => (
-              <Link to="/subject-page" key={module.MID}>{module.subject}</Link>
+              <Link to={`/subject-page/?subject=${module.subject}`} key={module.MID}>{module.subject}</Link>
             ))
           )}
         </ul>
@@ -169,34 +140,12 @@ const Dashboard = () => {
             <p>No specialized subjects available</p>
           ) : (
             modules.specialized.map(module => (
-              <Link to="/subject-page" key={module.MID}>{module.subject}</Link>
+              <Link to={`/subject-page/?subject=${module.subject}`} key={module.MID}>{module.subject}</Link>
             ))
           )}
         </ul>
       </div>
 
-      {/* <table className={styles.table}> 
-        <thead>
-          <tr>
-            <th>Subject</th>
-            <th>Title</th>
-            <th>File</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {modules.map((module, index) => (
-            <tr key={index}>
-              <td>{module.subject}</td>
-              <td>{module.title}</td>
-              <td>{module.file_name}</td>
-              <td>{module.upload_date}</td>
-              <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-      
       <br />
       <button type="button" onClick={handleLogout}>Logout</button>
     </main>

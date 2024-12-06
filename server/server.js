@@ -10,6 +10,7 @@ import Login from './routes/login.js';
 import dboardRoute from './routes/dashboard.js';
 import AdminUsersRoute from './routes/admin-users.js';
 import AdminModulesRoute from './routes/admin-modules.js';
+import SubjectPageRoute from './routes/subject-page.js';
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,7 @@ app.use('/login', Login);
 app.use('/register', registerRoute);
 app.use('/admin-users', AdminUsersRoute)
 app.use('/admin-modules', AdminModulesRoute)
+app.use('/subject-page', SubjectPageRoute)
 
 app.post("/validate-token", (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
