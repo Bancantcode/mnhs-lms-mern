@@ -12,8 +12,8 @@ const Module = sequelize.define('modules', {
     type: { type:DataTypes.STRING, allowNull: false },
     subject: { type: DataTypes.STRING, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
-    file_name: { type: DataTypes.STRING, allowNull: false },
-    file_data: { type: DataTypes.BLOB('long'), allowNull: false },  
+    file_name: { type: DataTypes.STRING, allowNull: true },
+    file_data: { type: DataTypes.BLOB('long'), allowNull: true },
     upload_date: { type: DataTypes.DATEONLY, defaultValue: DataTypes.NOW }, 
     uploader: { type: DataTypes.STRING, allowNull: false }
     }, {
