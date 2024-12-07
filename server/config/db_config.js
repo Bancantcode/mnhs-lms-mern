@@ -8,11 +8,11 @@ const db = new pg.Pool({
     user: process.env.DB_USER || "postgres",
     host: process.env.DB_HOST || "localhost",
     database: process.env.DB_NAME || "MNHS-DB",
-    password: process.env.DB_PASS || "rnclwyn123",
+    password: process.env.DB_PASS || "admin",
     port: process.env.DB_PORT || 5432
 });
 
-const sequelize = new Sequelize("MNHS-DB", "postgres", "rnclwyn123", { // change to process.env
+const sequelize = new Sequelize("MNHS-DB", "postgres", "admin", { // change to process.env
   host: 'localhost',
   dialect: 'postgres',
 });
