@@ -1,18 +1,75 @@
 .main {
-    height: 100vh; //will be change
+    height: 100vh;
     width: 100%;
     display: flex;
     background-color: var(--mid-white);
-    .sidebar {
-        background-color: var(--green);
-        height: 100vh; //will be change
-        width: var(--space-2xl);
-        img {
-            width: 50px;
+    padding: var(--space-xs);
+
+    aside {
+        position: relative;
+        left: 0;
+        background-color: var(--dark-green);
+        width: 300px;
+        border-radius: .75em;
+        padding: var(--space-xs) var(--space-md);
+        margin-left: var(--space-xs);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+
+        .main__container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h1 {
+                font-size: var(--heading-5);
+            }
+        }
+
+        .profile__flex {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--slight-green);
+            padding: var(--space-xs);
+            border-radius: .5em;
+            .profile {
+                display: flex;
+                .name {
+                    font-size: var(--heading-6);
+                    font-weight: 500;
+                }
+            }
+            .click__logout {
+                cursor: pointer;
+                font-size: var(--heading-6);
+                
+                // .logout__button {
+                //     font-size: var(--text-base);
+                //     position: absolute;
+                //     top: -40px;
+                //     right: 0px;
+                //     background-color: var(--dark-green);
+                //     color: white;
+                //     border: none;
+                //     padding: var(--space-2xs) var(--space-xs);
+                //     border-radius: .5em;
+                //     cursor: pointer;
+                //     z-index: 10;
+                //     transition: 0.4s;
+                //     &:hover {
+                //         background-color: var(--white);
+                //         color: var(--dark-green);
+                //     }
+                // }
+            }
         }
     }
+
     .container {
         width: 100vw;
+        // position: relative;
         .upper {
             display: flex;
             justify-content: space-between;
@@ -219,7 +276,7 @@
 // fix responsive for below
 @media screen and (max-width: 767px) {
     .main {
-        .sidebar {
+        aside {
             display: none;
         }
         .container {
@@ -294,6 +351,7 @@
             .table__container {
                 padding: var(--space-xs);
                 table {
+                    
                     td {
                         overflow: hidden;
                         white-space: nowrap;
@@ -308,6 +366,7 @@
 
 @media screen and (min-width: 1024px) {
     .main {
+        
         .container {
             .upper {
                 h1 {
@@ -315,9 +374,10 @@
                 }
             }
             .table__container {
-                padding: var(--space-sm) var(--space-xl);
+                padding: var(--space-xs);
                 table {
-                    
+                    .hidden {
+                    }
                 }
             }
         }

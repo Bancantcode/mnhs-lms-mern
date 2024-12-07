@@ -267,8 +267,21 @@ const AdminModules = () => {
 
   return (
     <main className={styles.main}>
-      <aside className={styles.sidebar}>
-        <img src="/images/MNHS-Logo.png" alt="Logo" />
+      <aside>
+        <div className={styles.main__container}>
+          <h1>MNHS-LMS</h1>
+          <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
+        </div>
+
+        <div className={styles.profile__flex}>
+          <div className={styles.profile}>
+            <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+            <br />
+          </div>
+          <div className={styles.click__logout} style={{ position: 'relative' }}>
+            <i className="ri-logout-box-line" onClick={handleLogout}></i>
+          </div>
+        </div>
       </aside>
 
       <div className={styles.container}>

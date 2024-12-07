@@ -10,11 +10,11 @@ body {
         aside {
             position: fixed;
             left: 0;
-            height: 100vh;
+            height: 97vh;
             background-color: var(--slight-green);
             width: 300px;
             border-radius: .75em;
-            padding: var(--space-sm);
+            padding: var(--space-xs) var(--space-md);
             margin-left: var(--space-xs);
             display: flex;
             flex-direction: column;
@@ -33,14 +33,39 @@ body {
 
             .profile__flex {
                 display: flex;
+                justify-content: space-between;
+                background-color: var(--dark-green);
+                padding: var(--space-xs);
+                border-radius: .5em;
                 .profile {
+                    display: flex;
                     .name {
-                        font-size: var(--text-base--large);
+                        font-size: var(--heading-6);
                         font-weight: 500;
                     }
                 }
-                .three__dots {
+                .click__logout {
                     cursor: pointer;
+                    font-size: var(--heading-6);
+                    
+                    // .logout__button {
+                    //     font-size: var(--text-base);
+                    //     position: absolute;
+                    //     top: -40px;
+                    //     right: 0px;
+                    //     background-color: var(--dark-green);
+                    //     color: white;
+                    //     border: none;
+                    //     padding: var(--space-2xs) var(--space-xs);
+                    //     border-radius: .5em;
+                    //     cursor: pointer;
+                    //     z-index: 10;
+                    //     transition: 0.4s;
+                    //     &:hover {
+                    //         background-color: var(--white);
+                    //         color: var(--dark-green);
+                    //     }
+                    // }
                 }
             }
         }
@@ -206,3 +231,4 @@ body {
         }
     }
 }
+

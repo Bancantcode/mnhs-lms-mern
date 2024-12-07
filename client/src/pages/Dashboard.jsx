@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import styles from '../assets/styles/dashboard.module.scss';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { gsap } from 'gsap';
+// import { gsap } from 'gsap';
+import Lenis from 'lenis';
 
 const Dashboard = () => {
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
@@ -16,6 +17,7 @@ const Dashboard = () => {
   }); 
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
+  const [showLogout, setShowLogout] = useState(false);
 
   const courseRefs = useRef([]);
 
@@ -102,19 +104,34 @@ const Dashboard = () => {
     window.location.reload();
   };
 
-  const handleMouseEnter = (index) => {
-    gsap.to(courseRefs.current[index].querySelector('::before'), {
-      height: '100%',
-      ease: 'power3.inOut',
-    });
+  const handleLogoutToggle = () => {
+    setShowLogout(prev => !prev);
   };
 
-  const handleMouseLeave = (index) => {
-    gsap.to(courseRefs.current[index].querySelector('::before'), {
-      height: '0%',
-      ease: 'power3.inOut',
-    });
-  };
+  // const handleMouseEnter = (index) => {
+  //   gsap.to(courseRefs.current[index].querySelector('::before'), {
+  //     height: '100%',
+  //     ease: 'power3.inOut',
+  //   });
+  // };
+
+  // const handleMouseLeave = (index) => {
+  //   gsap.to(courseRefs.current[index].querySelector('::before'), {
+  //     height: '0%',
+  //     ease: 'power3.inOut',
+  //   });
+  // };
+
+  useEffect(() => {
+    const lenis = new Lenis();
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+  })
 
   return (
     <main className={styles.main}>
@@ -122,21 +139,20 @@ const Dashboard = () => {
       <div className={styles.hamburger}>
         <i className="ri-menu-2-line"></i>
       </div>
-      {/* ASIDE */}
       <aside>
         <div className={styles.main__container}>
           <h1>MNHS-LMS</h1>
           <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
         </div>
+
         <div className={styles.profile__flex}>
           <div className={styles.profile}>
-            <p>LRN: {LRNUser || 'Loading...'}</p>
-            <p>Student Strand: {Strand || 'Loading...'}</p> 
             <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
             <br />
-            <button type="button" onClick={handleLogout}>Logout</button>
           </div>
-          <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
+          <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
+            <i className="ri-logout-box-line" onClick={handleLogout}></i>
+          </div>
         </div>
       </aside>
 
@@ -153,11 +169,7 @@ const Dashboard = () => {
               <p>No core subjects available</p>
             ) : (
               modules.core.map((module, index) => (
-<<<<<<< HEAD
-                <Link to="/subject-page" key={index} className={styles.course__container} ref={el => courseRefs.current[index] = el} onMouseEnter={() => handleMouseEnter(index)} onMouseLeave={() => handleMouseLeave(index)}>
-=======
                 <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
->>>>>>> a2dd773aee29cc5da91485e784ba8ac4fecde988
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>
@@ -174,11 +186,7 @@ const Dashboard = () => {
               <p>No applied subjects available</p>
             ) : (
               modules.applied.map((module, index) => (
-<<<<<<< HEAD
-                <Link  to="/subject-page"  key={index}  className={styles.course__container} ref={el => courseRefs.current[index] = el} >
-=======
                 <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
->>>>>>> a2dd773aee29cc5da91485e784ba8ac4fecde988
                   <i className="ri-arrow-right-up-line"></i>
                   <p className={styles.subject} key={module.MID}>{module.subject}</p>
                 </Link>

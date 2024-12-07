@@ -27,4 +27,10 @@ server/config/db_config.js
 *.sw?
 
 db_config
+/config/db_config
+server/config/db_config
+
+db_config.js
+/config/db_config.js
+server/config/db_config.js
 
