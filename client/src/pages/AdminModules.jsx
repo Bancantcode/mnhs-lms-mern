@@ -403,7 +403,6 @@ const AdminModules = () => {
           </div>
         )}
 
-
         {deleteModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>

@@ -66,9 +66,8 @@ const SubjectPage = () => {
                 <tr key={index}>
                 <td>{module.subject}</td>
                 <td>{module.title}</td>
-                <td>{module.file_name}</td>
+                <td>{module.file_name && (module.file_name.startsWith("http://") || module.file_name.startsWith("https://")) ? (<a className={styles.file__link} href={module.file_name} target="_blank" rel="noopener noreferrer">{module.file_name}</a>) : (<p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p>)}</td>
                 <td>{module.upload_date}</td>
-                <td><button onClick={() => handleDownload(module.MID)}>Download</button></td>
                 </tr>
             ))}
             </tbody>
