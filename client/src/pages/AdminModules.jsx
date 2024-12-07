@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 
 const AdminModules = () => {
+  const [query, setQuery] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [grlvl, setGrlvl] = useState('11');
@@ -42,7 +43,6 @@ const AdminModules = () => {
     setLRNUser(null);
     window.location.reload();
   };
-
   //change the format of the date to be month, day, year
   // not sure if nagagamit to
   const formatDate = (dateString) => {
@@ -134,23 +134,6 @@ const AdminModules = () => {
     toggleModal();
   };
   
-  const indexOfLastModule = currentPage * modulesPerPage;
-  const indexOfFirstModule = indexOfLastModule - modulesPerPage;
-  const currentModules = modules.slice(indexOfFirstModule, indexOfLastModule);
-
-  const handleNext = () => {
-    const totalPages = Math.ceil(modules.length / modulesPerPage);
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
   useEffect(() => {
     const fetchModules = async () => {
       try {
@@ -171,6 +154,36 @@ const AdminModules = () => {
     return <p>Loading modules...</p>;
   }
 
+  const filterModules = modules.filter((module) =>{
+    const lowQ = query;
+    const grlvl = module.grlvl ? module.grlvl.toString().toLowerCase() : '';
+    const strand = module.strand ? module.strand.toString().toLowerCase() : '';
+    const type = module.type ? module.type.toString().toLowerCase() : '';
+    const title = module.title ? module.title.toString().toLowerCase() : '';
+    const subject = module.subject ? module.subject.toString().toLowerCase() : '';
+    const date = module.upload_date ? module.upload_date.toString().toLowerCase() : '';
+    const uploader = module.uploader ? module.uploader.toString().toLowerCase() : '';
+    return(
+      grlvl.includes(lowQ) || strand.includes(lowQ) || type.includes(lowQ) || title.includes(lowQ) || subject.includes(lowQ) || date.includes(lowQ) || uploader.includes(lowQ)
+    );
+  });
+
+  const indexOfLastModule = currentPage * modulesPerPage;
+  const indexOfFirstModule = indexOfLastModule - modulesPerPage;
+  const currentModules = filterModules.slice(indexOfFirstModule, indexOfLastModule);
+
+  const handleNext = () => {
+    const totalPages = Math.ceil(filterModules.length / modulesPerPage);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
   const handleDownload = async (id) => {
     try {
       const response = await axios.get(`http://localhost:3000/admin-modules/download/${id}`, {
@@ -243,7 +256,6 @@ const AdminModules = () => {
     setModuleToDelete(module);
     setDeleteModalOpen(true);
   };
-
   const confirmDelete = async () => {
     try {
       const id = moduleToDelete.MID;
@@ -285,7 +297,7 @@ const AdminModules = () => {
 
           <div className={styles.search__wrapper}>
             <i className="ri-search-line"></i>
-            <input type="text" placeholder="Search..." />
+            <input type="text" placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)}/>
           </div>
 
           <div className={styles.user} onClick={toggleDropdown}> 
@@ -372,10 +384,10 @@ const AdminModules = () => {
                 <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)}/>Upload a File</label>
                 <label><input type="radio" name="uploadType" checked={isLinkUpload}onChange={() => setIsLinkUpload(true)}/>Upload a Link</label>
                 {!isLinkUpload && (
-                  <input className={styles.file__upload} type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />
+                  <input className={styles.file__upload} type="file" name="file" onChange={(e) => setFile(e.target.files[0])} />
                 )}
                 {isLinkUpload && (
-                  <input type="url" placeholder="Enter URL" value={moduleToEdit.url || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>
+                  <input type="url" placeholder="Enter URL" value={moduleToEdit.file_name || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>
                 )}
                 <button type="submit">Submit</button>
                 <button type="button" onClick={() => setEditModalOpen(false)}>Cancel</button>

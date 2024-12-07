@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 
 const AdminUsers = () => {
+  const [query, setQuery] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [grlvl, setGrlvl] = useState('11');
@@ -45,23 +46,6 @@ const AdminUsers = () => {
     const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;
-  };
-
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-
-  const handleNext = () => {
-    const totalPages = Math.ceil(users.length / usersPerPage);
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
   };
 
   const validateData = (type, data) => {
@@ -249,6 +233,35 @@ const AdminUsers = () => {
   if (loading) {
     return <p>Loading users...</p>;
   }
+  const filterUsers = users.filter((user) =>{
+    const lowQ = query;
+    const name = user.name ? user.name.toString().toLowerCase() : '';
+    const email = user.email ? user.email.toString().toLowerCase() : '';
+    const grlvl = user.grlvl ? user.grlvl.toString().toLowerCase() : '';
+    const strand = user.strand ? user.strand.toString().toLowerCase() : '';
+    const user_role = user.user_role ? user.user_role.toString().toLowerCase() : '';
+    const created_at = user.created_at ? user.created_at.toString().toLowerCase() : '';
+
+    return(
+      name.includes(lowQ) || email.includes(lowQ) || grlvl.includes(lowQ) || strand.includes(lowQ) || user_role.includes(lowQ) || created_at.includes(lowQ)
+    );
+  });
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filterUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const handleNext = () => {
+    const totalPages = Math.ceil(filterUsers.length / usersPerPage);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   return (
     <main className={styles.main}>
@@ -275,7 +288,7 @@ const AdminUsers = () => {
           
           <div className={styles.search__wrapper}>
             <i className="ri-search-line"></i>
-            <input type="text" placeholder="Search..." />
+            <input type="text" placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)}/>
           </div>
 
           <div className={styles.user} onClick={toggleDropdown}> 

@@ -75,7 +75,13 @@ const Dashboard = () => {
     setLRNUser(null);
     window.location.reload();
   };
-
+  const capSubject =(str)=>{
+    return str
+      .split(" ")
+      .map(word=> word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(" ");
+  };
   const handleLogoutToggle = () => {
     setShowLogout(prev => !prev);
   };
@@ -96,7 +102,6 @@ const Dashboard = () => {
       <div className={styles.hamburger}>
         <i className="ri-menu-2-line"></i>
       </div>
-      
       <aside>
         <div className={styles.main__container}>
           <h1>MNHS-LMS</h1>
@@ -127,7 +132,7 @@ const Dashboard = () => {
               modules.core.map((module, index) => (
                 <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
                   <i className="ri-arrow-right-up-line"></i>
-                  <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                  <p className={styles.subject} key={module.MID}>{capSubject(module.subject)}</p>
                 </Link>
               ))
             )}

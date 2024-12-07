@@ -37,8 +37,8 @@ router.post('/', upload.single('file'), async (req, res) => {
     try {
         const { grlvl, strand, type, title, subject, uploader, url } = req.body;
 
+        const lowerCaseSubject = subject.toLowerCase();
         const file = req.file;
-
         let newModule;
 
         if (file) {
@@ -49,7 +49,7 @@ router.post('/', upload.single('file'), async (req, res) => {
                 grlvl,
                 strand,
                 type,
-                subject,
+                subject: lowerCaseSubject,
                 title,
                 file_name: file.originalname,
                 file_data: fileData,
@@ -61,7 +61,7 @@ router.post('/', upload.single('file'), async (req, res) => {
                 grlvl,
                 strand,
                 type,
-                subject,
+                subject: lowerCaseSubject,
                 title,
                 file_name: url,    
                 file_data: "",
@@ -110,15 +110,17 @@ router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
         const { grlvl, strand, type, title, subject, file_name } = req.body;
         const file = req.file;
 
+        const lowerCaseSubject = subject.toLowerCase();
+
         console.log('ID:', id);
         console.log('Gr Lvl:', grlvl);
         console.log('Strand:', strand);
         console.log('Type:', type);
         console.log('Title:', title);
-        console.log('Subject:', subject);
+        console.log('Subject:', lowerCaseSubject);
         console.log('File/URL:', file_name);
 
-        const updateData = { grlvl, strand, type, title, subject };
+        const updateData = { grlvl, strand, type, title, subject:lowerCaseSubject };
         
         if (file) {
             const module = await Module.findOne({ where: { MID: id } });

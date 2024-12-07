@@ -52,6 +52,25 @@ body {
                 .click__logout {
                     cursor: pointer;
                     font-size: var(--heading-6);
+                    
+                    // .logout__button {
+                    //     font-size: var(--text-base);
+                    //     position: absolute;
+                    //     top: -40px;
+                    //     right: 0px;
+                    //     background-color: var(--dark-green);
+                    //     color: white;
+                    //     border: none;
+                    //     padding: var(--space-2xs) var(--space-xs);
+                    //     border-radius: .5em;
+                    //     cursor: pointer;
+                    //     z-index: 10;
+                    //     transition: 0.4s;
+                    //     &:hover {
+                    //         background-color: var(--white);
+                    //         color: var(--dark-green);
+                    //     }
+                    // }
                 }
             }
         }
@@ -87,12 +106,10 @@ body {
                         justify-content: space-between;
                         flex-direction: column;
                         border-radius: .5em;
-                        // background-color: var(--slight-green);
-                        background-color: var(--light-green);
+                        background-color: var(--slight-green);
                         height: 290px;
                         width: 290px;
-                        // color: var(--light-green);
-                        color: var(--dark-green);
+                        color: var(--light-green);
                         padding: var(--space-sm);
                         z-index: 1;
                         cursor: pointer;
@@ -113,12 +130,19 @@ body {
                             height: 100%;
                         }
 
+                        &:hover {
+                            color: var(--dark-green);
+
+                            i {
+                                color: var(--new-arrow-color);
+                            }
+                        }
+
                         i {
                             align-self: flex-end;
                             font-size: var(--heading-3);
-                            color: var(--dark-green);
+                            color: rgba(228, 236, 227, 0.5);
                         }
-                        
                         .subject {
                             font-size: var(--heading-6);
                         }
