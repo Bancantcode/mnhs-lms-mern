@@ -1,43 +1,45 @@
 import { useState, useEffect } from 'react';
 import styles from '../assets/styles/subjectPage.module.scss';
 // import { useParams, useLocation } from "react-router-dom";
+import Lenis from 'lenis'
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const SubjectPage = () => {
-    const [modules, setModules] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState(null);      
-    const queryParams = new URLSearchParams(location.search);
-    const subject = queryParams.get("subject");
-    const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
-    const [showLogout, setShowLogout] = useState(false);
-    const [progressStatus, setProgressStatus] = useState([]);
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState(null);      
+  const queryParams = new URLSearchParams(location.search);
+  const subject = queryParams.get("subject");
+  const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
+  const [showLogout, setShowLogout] = useState(false);
+  const [progressStatus, setProgressStatus] = useState([]);
 
-    useEffect(() => {
-      const fetchModules = async () => {
-        try {
-          const response = await axios.get(
-            `http://localhost:3000/subject-page/?subject=${subject}`
-          );
-          setModules(response.data.modules);
-          setProgressStatus(Array(response.data.modules.length).fill('Incomplete'));
-        } catch (err) {
-          console.error("Error fetching module details:", err);
-        }
-      };
-  
-      fetchModules();
-    }, [subject]);
+  useEffect(() => {
+    const fetchModules = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/subject-page/?subject=${subject}`
+        );
+        setModules(response.data.modules);
+        setProgressStatus(Array(response.data.modules.length).fill('Incomplete'));
+      } catch (err) {
+        console.error("Error fetching module details:", err);
+      }
+    };
 
-    const handleLogout = () => {
-      localStorage.clear();
-      setLRNUser(null);
-      window.location.reload();
-    };
-  
-    const handleLogoutToggle = () => {
-      setShowLogout(prev => !prev);
-    };
+    fetchModules();
+  }, [subject]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setLRNUser(null);
+    window.location.reload();
+  };
+
+  const handleLogoutToggle = () => {
+    setShowLogout(prev => !prev);
+  };
 
   const handleDownload = async (id) => {
     try {
@@ -84,6 +86,17 @@ const SubjectPage = () => {
     });
   };
 
+  useEffect(() => {
+    const lenis = new Lenis();
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+  })
+
   return (
     <main className={styles.main}>
         <div className={styles.hamburger}>
@@ -95,6 +108,11 @@ const SubjectPage = () => {
                 <h1>MNHS-LMS</h1>
                 <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
             </div>
+
+            <nav className={styles.nav}>
+              <Link to="/">Dashboard</Link>
+              <Link to="/admin-users">Admin Dashboard</Link>
+            </nav>
 
             <div className={styles.profile__flex}>
                 <div className={styles.profile}>
@@ -134,7 +152,7 @@ const SubjectPage = () => {
                           <p className={styles.file__link} onClick={() => handleDownload(module.MID, index)}>{module.file_name}</p>
                         )}
                       </td>
-                      <td>{module.upload_date}</td>
+                      <td>{`${String(new Date(module.upload_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(module.upload_date).getDate()).padStart(2, '0')}/${new Date(module.upload_date).getFullYear()}`}</td>
                       <td>
                           <button onClick={() => handleProgressChange(index)} className={styles.progress__button}>
                               {progressStatus[index]}
