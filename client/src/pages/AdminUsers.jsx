@@ -8,6 +8,7 @@ const AdminUsers = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState(localStorage.getItem('name'));
+  const [role, setRole] = useState(localStorage.getItem('User_Role'));
   const [grlvl, setGrlvl] = useState('11');
   const [strand, setStrand] = useState('STEM');
   const [type, setType] = useState('Core');
@@ -44,6 +45,7 @@ const AdminUsers = () => {
   useEffect(() => {
     const handleStorageChange = () => {
       setName(localStorage.getItem('name'));
+      setRole(localStorage.getItem('User_Role'));
     };
   
     window.addEventListener('storage', handleStorageChange);
@@ -58,7 +60,7 @@ const AdminUsers = () => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
-    return `${month}/${day}/${year}`;
+    return `${month}-${day}-${year}`;
   };
 
   const validateData = (type, data) => {
@@ -287,7 +289,7 @@ const AdminUsers = () => {
           </div>
           <nav className={styles.nav}>
             <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
-            <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>
+            {role === "ADMIN" &&<Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
           </nav>
         </div>
 
@@ -456,7 +458,7 @@ const AdminUsers = () => {
                   <td className={styles.hidden}>{user.email}</td>
                   <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>
                   <td className={`${styles.hidden} ${styles.role}`}>{user.user_role}</td>
-                  <td className={styles.role}>{user.created_at}</td>
+                  <td className={styles.role}>{formatDate(user.created_at)}</td>
                   <td>
                     <div onClick={() => toggleUserDropdown(index)}>
                       <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />

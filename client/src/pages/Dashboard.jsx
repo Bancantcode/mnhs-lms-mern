@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
   const [Strand, setStrand] = useState(localStorage.getItem('Strand'));
   const [id, setID] = useState(localStorage.getItem('id'));
+  const [role, setRole] = useState(localStorage.getItem('User_Role'));
   const [name, setName] = useState('');
   const [modules, setModules] = useState({ core: [], applied: [], specialized: [] }); 
   const [loading, setLoading] = useState(true);
@@ -61,6 +62,7 @@ const Dashboard = () => {
       setLRNUser(localStorage.getItem('LRN'));
       setStrand(localStorage.getItem('Strand'));
       setID(localStorage.getItem('id'));
+      setRole(localStorage.getItem('User_Role'));
     };
   
     window.addEventListener('storage', handleStorageChange);
@@ -110,7 +112,7 @@ const Dashboard = () => {
           </div>
           <nav className={styles.nav}>
             <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
-            <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>
+            {role === "ADMIN" &&<Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
           </nav>
         </div>
 
