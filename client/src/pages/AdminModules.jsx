@@ -37,10 +37,6 @@ const AdminModules = () => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
-  // alang laman ----- MAYBE DELETE? ----- : yes?
-  useEffect(() => {
-  }, [])
-
   const handleLogout = () => {
     localStorage.clear();
     setLRNUser(null);
@@ -48,6 +44,7 @@ const AdminModules = () => {
   };
 
   //change the format of the date to be month, day, year
+  // not sure if nagagamit to
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -74,16 +71,6 @@ const AdminModules = () => {
         error.file = 'Invalid file type.';
       }
     } 
-  
-    // if (!module.file) {                  // ------ TO BE REMOVED ----- //
-    //   error.file = 'File is required.';
-    // } else {
-    //   const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
-    //   const fileExtension = module.file.name.split('.').pop();
-    //   if (!allowedExtensions.includes(`.${fileExtension}`)) {
-    //     error.file = 'Invalid file type.';
-    //   }
-    // }
 
     return error;
   };
@@ -234,15 +221,7 @@ const AdminModules = () => {
   
     if (validateEditData()) {
       try {
-        const response = await axios.put(
-          `http://localhost:3000/admin-modules/edit/${id}`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          }
-        );
+        const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' }});
         alert('Module successfully updated!');
         setModules(
           modules.map((module) =>
@@ -259,8 +238,6 @@ const AdminModules = () => {
   
     setEditModalOpen(false);
   };
-  
-  
 
   const handleDelete = (module) => {
     setModuleToDelete(module);
@@ -271,7 +248,6 @@ const AdminModules = () => {
     try {
       const id = moduleToDelete.MID;
       const response = await axios.delete(`http://localhost:3000/admin-modules/delete/${id}`);
-      // alert('Module successfully deleted!');
       setDeleteModalOpen(false);
       setModules(modules.filter(module => module.MID !== id));
     } catch (error){
@@ -297,9 +273,6 @@ const AdminModules = () => {
             <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
             <br />
           </div>
-          <div className={styles.click__logout} style={{ position: 'relative' }}>
-            <i className="ri-logout-box-line" onClick={handleLogout}></i>
-          </div>
         </div>
       </aside>
 
@@ -319,9 +292,6 @@ const AdminModules = () => {
             <i className="ri-user-line"></i>
             {isDropdownOpen && (
               <div className={styles.dropdown}>
-                <div>My Account</div>
-                <Link to="/settings">Settings</Link>
-                <div>Support</div>
                 <Link onClick={handleLogout}>Logout</Link>
               </div>
             )}
