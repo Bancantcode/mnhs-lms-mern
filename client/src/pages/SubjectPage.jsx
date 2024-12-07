@@ -124,25 +124,26 @@ const SubjectPage = () => {
         </div>
         
         <aside>
-            <div className={styles.main__container}>
-                <h1>MNHS-LMS</h1>
-                <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
+          <div className={styles.main__container}>
+            <div className={styles.row}>
+              <h1>MNHS-LMS</h1>
+              <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
             </div>
-
             <nav className={styles.nav}>
-              <Link to="/">Dashboard</Link>
-              <Link to="/admin-users">Admin Dashboard</Link>
+              <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
+              <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>
             </nav>
+          </div>
 
-            <div className={styles.profile__flex}>
-                <div className={styles.profile}>
-                    <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
-                    <br />
-                </div>
-                <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
-                    <i className="ri-logout-box-line" onClick={handleLogout}></i>
-                </div>
+          <div className={styles.profile__flex}>
+            <div className={styles.profile}>
+              <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+              <br />
             </div>
+            <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
+              <i className="ri-logout-box-line" onClick={handleLogout}></i>
+            </div>
+          </div>
         </aside>
 
         <div className={styles.container}>

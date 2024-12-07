@@ -6,9 +6,10 @@
     padding: var(--space-xs);
 
     aside {
-        position: relative;
+        position: fixed;
         left: 0;
-        background-color: var(--dark-green);
+        height: 97vh;
+        background-color: var(--slight-green);
         width: 300px;
         border-radius: .75em;
         padding: var(--space-xs) var(--space-md);
@@ -21,17 +22,36 @@
         .main__container {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-
-            h1 {
-                font-size: var(--heading-5);
+            flex-direction: column;
+            gap: var(--space-xl);
+            
+            .row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                h1 {
+                    font-size: var(--heading-5);
+                }
             }
+            .nav {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-3xs);
+                .nav__link {
+                    font-size: var(--heading-6);
+                    background-color: var(--dark-green);
+                    border-radius: .5em;
+                    padding: var(--space-xs);
+                    color: var(--mid-white);
+                }
+            }
+
         }
 
         .profile__flex {
             display: flex;
             justify-content: space-between;
-            background-color: var(--slight-green);
+            background-color: var(--dark-green);
             padding: var(--space-xs);
             border-radius: .5em;
             .profile {
