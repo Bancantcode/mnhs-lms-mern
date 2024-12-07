@@ -271,7 +271,7 @@ const AdminModules = () => {
     try {
       const id = moduleToDelete.MID;
       const response = await axios.delete(`http://localhost:3000/admin-modules/delete/${id}`);
-      alert('Module successfully deleted!');
+      // alert('Module successfully deleted!');
       setDeleteModalOpen(false);
       setModules(modules.filter(module => module.MID !== id));
     } catch (error){
@@ -357,10 +357,18 @@ const AdminModules = () => {
               </select>
               <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
               <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
-              <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)} />Upload a File</label>
-              <label><input type="radio" name="uploadType" checked={isLinkUpload} onChange={() => setIsLinkUpload(true)}/>Upload a Link </label>
-              {!isLinkUpload && (<input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />)}
-              {isLinkUpload && (<input type="url" placeholder="Enter URL" value={url} onChange={(e) => setUrl(e.target.value)} required/>)}
+              <label>
+                <input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)} />Upload a File
+              </label>
+              <label>
+                <input type="radio" name="uploadType" checked={isLinkUpload} onChange={() => setIsLinkUpload(true)}/>Upload a Link 
+              </label>
+              {!isLinkUpload && (
+                <input className={styles.file__upload} type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />
+              )}
+              {isLinkUpload && (
+                <input type="url" placeholder="Enter URL" value={url} onChange={(e) => setUrl(e.target.value)} required/>
+              )}
               <button type="submit">Submit</button>
               <button type="button" onClick={toggleModal}>Cancel</button>
             </form>
@@ -393,8 +401,12 @@ const AdminModules = () => {
                 <input type="text" placeholder="Title" required value={moduleToEdit.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })}/>
                 <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)}/>Upload a File</label>
                 <label><input type="radio" name="uploadType" checked={isLinkUpload}onChange={() => setIsLinkUpload(true)}/>Upload a Link</label>
-                {!isLinkUpload && (<input type="file" name="file" onChange={(e) => setModuleToEdit({ ...moduleToEdit, file: e.target.files[0] })}/>)}
-                {isLinkUpload && (<input type="url" placeholder="Enter URL" value={moduleToEdit.url || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>)}
+                {!isLinkUpload && (
+                  <input className={styles.file__upload} type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />
+                )}
+                {isLinkUpload && (
+                  <input type="url" placeholder="Enter URL" value={moduleToEdit.url || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>
+                )}
                 <button type="submit">Submit</button>
                 <button type="button" onClick={() => setEditModalOpen(false)}>Cancel</button>
               </form>
@@ -425,10 +437,10 @@ const AdminModules = () => {
                 <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Title</th>
                 <th>File</th>
-                <th className={`${styles.hidden} ${styles.uploader}`}>Uploader</th>
+                <th className={styles.hidden}>Uploader</th>
                 <th className={styles.hidden}>Created At</th>
               </tr>
-            </thead>
+            </thead>  
             <tbody>
               {currentModules.map((module, index) => (
                 <tr key={index}>
@@ -437,7 +449,7 @@ const AdminModules = () => {
                   <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.title}</td>
                   <td>{module.file_name && (module.file_name.startsWith("http://") || module.file_name.startsWith("https://")) ? (<a className={styles.file__link} href={module.file_name} target="_blank" rel="noopener noreferrer">{module.file_name}</a>) : (<p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p>)}</td>
-                  <td className={`${styles.hidden} ${styles.uploader}`}>{module.uploader}</td>
+                  <td className={styles.hidden}>{module.uploader}</td>
                   <td className={styles.hidden}>{module.upload_date}</td>
                   <td>
                     <div onClick={() => toggleUserDropdown(index)}><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} /></div>
