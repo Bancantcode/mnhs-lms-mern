@@ -39,6 +39,11 @@
                 .name {
                     font-size: var(--heading-6);
                     font-weight: 500;
+                    width: 150px;
+                    max-width: 150px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
                 }
             }
             .click__logout {
@@ -96,32 +101,19 @@
               .dropdown {
                 position: absolute;
                 color: var(--white);
-                top: 100%;
+                top: 110%;
                 right: 0;
                 background-color: var(--green);
                 border-radius: .5em;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
-                width: 200px;
-                div {
-                    padding: var(--space-2xs);
-                    cursor: pointer;
-                    transition: 0.4s;
-                    &:hover {
-                        background-color: var(--mid-white); 
-                        color: var(--black);
-                    }
-                }
+                width: 150px;
                 a {
                     display: block;
                     text-decoration: none;
                     padding: var(--space-2xs);
                     color: var(--white);
                     transition: 0.4s; 
-                    &:hover {
-                        background-color: var(--mid-white); 
-                        color: var(--black);
-                    }
                 }
             }
         }

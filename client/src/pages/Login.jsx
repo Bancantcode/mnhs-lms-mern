@@ -46,28 +46,17 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <img src="/images/MNHS-Logo.png" alt="Logo" />
           <label htmlFor="email">Email
-            <input 
-              type="email" 
-              name="email" 
-              value={emailOrUsername}
-              onChange={handleEmailOrUsernameChange} 
-            />
+            <input type="email" name="email" value={emailOrUsername}onChange={handleEmailOrUsernameChange} />
           </label>
           
           <label htmlFor="password">Password
-            <input 
-              type="password" 
-              name="password" 
-              value={password}
-              onChange={handlePasswordChange} 
-            />
+            <input type="password" name="password" value={password}onChange={handlePasswordChange} />
           </label>
 
           {errors && <p style={{ color: 'red' }}>{errors}</p>}
-
           <button type="submit">Login</button>
         </form>
-        <p>Don't have an account? <Link to="/Register" className={styles.link}>Register</Link></p>
+        <p>Don&apos;t have an account? <Link to="/Register" className={styles.link}>Register</Link></p>
       </div>
     </main>
   );

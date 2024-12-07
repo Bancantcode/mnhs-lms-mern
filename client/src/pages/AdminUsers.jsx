@@ -39,8 +39,6 @@ const AdminUsers = () => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
-  //change the format of the date to be month, day, year
-  //not being used
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -49,14 +47,10 @@ const AdminUsers = () => {
     return `${month}/${day}/${year}`;
   };
 
-  //pagination
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
-  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Handle Previous and Next
   const handleNext = () => {
     const totalPages = Math.ceil(users.length / usersPerPage);
     if (currentPage < totalPages) {
@@ -89,16 +83,6 @@ const AdminUsers = () => {
           error.file = 'Invalid file type.';
         }
       } 
-  
-      // if (!data.file) {                      // ------ TO BE REMOVED ----- //
-      //   error.file = 'File is required.';
-      // } else {
-      //   const extensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
-      //   const fileExtension = data.file.name.split('.').pop();
-      //   if (!extensions.includes(`.${fileExtension}`)) {
-      //     error.file = 'Invalid file type.';
-      //   }
-      // }
     } 
 
     else if (type === 'user') {
@@ -145,7 +129,7 @@ const AdminUsers = () => {
     
     if (Object.keys(error).length === 0) {
       try {
-        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' }});
         alert('Module successfully uploaded!.');
       } catch (err) {
         console.error(err);
@@ -197,7 +181,6 @@ const AdminUsers = () => {
         alert(error.response?.data?.message || 'Failed to update user details.');
       }
     }
-    
   };
 
   const handleDelete = (user) => {
@@ -245,13 +228,7 @@ const AdminUsers = () => {
       }
     }
 
-    setNewUser({
-      name: '',
-      email: '',
-      password: '',
-      grlvl: '11',
-      strand: 'STEM'
-    });
+    setNewUser({ name: '', email: '', password: '', grlvl: '11', strand: 'STEM' });
   };
 
   useEffect(() => {
@@ -261,8 +238,7 @@ const AdminUsers = () => {
         const data = await response.json();
         setUsers(data);
         setLoading(false);
-      } 
-      catch (error) {
+      } catch (error) {
         console.error('Failed to fetch users', error);
         setLoading(false); 
       }
@@ -287,9 +263,6 @@ const AdminUsers = () => {
             <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
             <br />
           </div>
-          <div className={styles.click__logout} style={{ position: 'relative' }}>
-            <i className="ri-logout-box-line" onClick={handleLogout}></i>
-          </div>
         </div>
       </aside>
 
@@ -309,9 +282,6 @@ const AdminUsers = () => {
             <i className="ri-user-fill"></i>
             {isDropdownOpen && (
               <div className={styles.dropdown}>
-                <div>My Account</div>
-                <Link to="/settings">Settings</Link>
-                <div>Support</div>
                 <Link onClick={handleLogout}>Logout</Link>
               </div>
             )}

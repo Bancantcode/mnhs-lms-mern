@@ -4,14 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
 const Register = () => {
-  const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    lrn: '',
-    grlvl: '11',
-    strand: 'STEM',
-    password: '',
-  });
+  const [userData, setUserData] = useState({ name: '', email: '', lrn: '', grlvl: '11', strand: 'STEM', password: '', });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -34,10 +27,7 @@ const Register = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData({
-      ...userData,
-      [name]: value,
-    });
+    setUserData({ ...userData, [name]: value, });
   };
 
   const handleSubmit = async (e) => {
@@ -111,10 +101,7 @@ const Register = () => {
           </label>
 
           {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-
-          <button type="submit" disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
-          </button>
+          <button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
         </form>
         <p className={styles.question}>
           Already have an account? <Link to="/login" className={styles.link}>Login</Link>
