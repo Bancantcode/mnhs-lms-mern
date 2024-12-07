@@ -170,7 +170,7 @@ const AdminModules = () => {
   }
 
   const filterModules = modules.filter((module) =>{
-    const lowQ = query;
+    const lowQ = query.toLowerCase();
     const grlvl = module.grlvl ? module.grlvl.toString().toLowerCase() : '';
     const strand = module.strand ? module.strand.toString().toLowerCase() : '';
     const type = module.type ? module.type.toString().toLowerCase() : '';
