@@ -249,7 +249,7 @@ const AdminUsers = () => {
     return <p>Loading users...</p>;
   }
   const filterUsers = users.filter((user) =>{
-    const lowQ = query;
+    const lowQ = query.toLowerCase();
     const name = user.name ? user.name.toString().toLowerCase() : '';
     const lrn = user.lrn ? user.lrn.toString().toLowerCase() : '';
     const email = user.email ? user.email.toString().toLowerCase() : '';
