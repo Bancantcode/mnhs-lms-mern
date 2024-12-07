@@ -9,6 +9,8 @@ const SubjectPage = () => {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);      
+  const [name, setName] = useState(localStorage.getItem('name'));
+  const [role, setRole] = useState(localStorage.getItem('User_Role'));
   const queryParams = new URLSearchParams(location.search);
   const subject = queryParams.get("subject");
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
@@ -30,6 +32,19 @@ const SubjectPage = () => {
 
     fetchModules();
   }, [subject]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setName(localStorage.getItem('name'));
+      setRole(localStorage.getItem('User_Role'));
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -131,7 +146,7 @@ const SubjectPage = () => {
 
             <nav className={styles.nav}>
               <Link to="/">Dashboard</Link>
-              <Link to="/admin-users">Admin Dashboard</Link>
+              {role === "ADMIN" && <Link to="/admin-users">Admin Dashboard</Link>}
             </nav>
 
             <div className={styles.profile__flex}>
