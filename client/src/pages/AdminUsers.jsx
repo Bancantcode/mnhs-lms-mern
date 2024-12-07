@@ -444,7 +444,7 @@ const AdminUsers = () => {
                 <th className={styles.hidden}>Email</th>
                 <th className={styles.hidden}>Strand</th>
                 <th className={`${styles.hidden} ${styles.role}`}>Role</th>
-                <th>Created at</th>
+                <th className={`${styles.role}`}>Created at</th>
                 <th></th>
               </tr>
             </thead>
@@ -456,7 +456,7 @@ const AdminUsers = () => {
                   <td className={styles.hidden}>{user.email}</td>
                   <td className={styles.hidden}>{`${user.grlvl} - ${user.strand}`}</td>
                   <td className={`${styles.hidden} ${styles.role}`}>{user.user_role}</td>
-                  <td>{user.created_at}</td>
+                  <td className={styles.role}>{user.created_at}</td>
                   <td>
                     <div onClick={() => toggleUserDropdown(index)}>
                       <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />

@@ -3,9 +3,7 @@
     width: 100%;
     display: flex;
     background-color: var(--mid-white);
-    gap: var(--space-md);
     padding: var(--space-sm);
-
     aside {
         position: fixed;
         left: 0;
@@ -19,13 +17,11 @@
         flex-direction: column;
         justify-content: space-between;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-
         .main__container {
             display: flex;
             justify-content: space-between;
             flex-direction: column;
             gap: var(--space-xl);
-            
             .row {
                 display: flex;
                 justify-content: space-between;
@@ -47,9 +43,7 @@
                     color: var(--mid-white);
                 }
             }
-
         }
-
         .profile__flex {
             display: flex;
             justify-content: space-between;
@@ -75,7 +69,6 @@
             }
         }
     }
-
     .container {
         width: 100vw;
         .upper {
@@ -125,7 +118,6 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
                 width: 150px;
-                
                 a {
                     display: block;
                     text-decoration: none;
@@ -194,7 +186,6 @@
                     margin-right: var(--space-3xs);
                     cursor: pointer;
                 }
-
                 form {
                     display: flex;
                     flex-direction: column;
@@ -271,7 +262,6 @@
                     }
                 }
             }
-
             .pagination {
                 display: flex;
                 justify-content: space-between;
@@ -310,7 +300,7 @@
             display: none;
         }
         .container {
-            padding: var(--space-xs) var(--space-2xs);
+            // width: 100%;
             .upper {
                 h1 {
                     display: none;
@@ -349,11 +339,9 @@
                 padding: var(--space-2xs);
                 table {
                     border-radius: .5em;
-
                     .hidden {
                         display: none;
                     }
-
                     .dropdown {
                         right: 0;
                     }
@@ -363,21 +351,26 @@
     }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 768px) and (max-width: 1024px) {
     .main {
         aside {
             display: flex;
         }
         .container {
-            padding: var(--space-xs);
+            padding-left: var(--space-xs);
+            padding-top: var(--space-xs);
+            width: calc(100% - 300px);
+            margin-left: 300px;
             .upper {
                 h1 {
                     display: block;
+                    font-size: var(--heading-4);
                 }
                 .hamburger {
                     display: none;
                 }
                 .search__wrapper {
+                    display: none;
                     input {
                         width: 150px;
                     }
@@ -393,7 +386,7 @@
                         overflow: hidden;
                         white-space: nowrap;
                         text-overflow: ellipsis;
-                        max-width: 100px;
+                        max-width: 70px;
                     }
                 }
             }
@@ -403,17 +396,31 @@
 
 @media screen and (min-width: 1024px) {
     .main {
+        aside {
+            display: flex;
+        }
         .container {
+            padding-left: var(--space-md);
+            padding-top: var(--space-xs);
+            width: calc(100% - 300px);
+            margin-left: 300px;
             .upper {
                 h1 {
                     font-size: var(--heading-4);
                 }
+                .hamburger {
+                    display: none;
+                }
+                .search__wrapper {
+                    display: block;
+                    input {
+                        width: 200px;
+                    }
+                }
             }
             .table__container {
+                padding: var(--space-md);
                 table {
-                    .role {
-                        display: block;
-                    }
                     td {
                         white-space: nowrap; 
                         overflow: hidden;
@@ -428,16 +435,11 @@
 
 @media screen and (min-width: 1567px) {
     .main {
-        gap: var(--space-sm);
         .container {
             .table__container {
                 table {
                     td {
-                        white-space: nowrap; 
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        max-width: 200px;
-
+                        max-width: 100px;
                     }
                 }
             }
