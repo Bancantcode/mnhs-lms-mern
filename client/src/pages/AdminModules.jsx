@@ -7,6 +7,7 @@ const AdminModules = () => {
   const [query, setQuery] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [name, setName] = useState(localStorage.getItem('name'));
   const [grlvl, setGrlvl] = useState('11');
   const [strand, setStrand] = useState('STEM');
   const [type, setType] = useState('Core');
@@ -43,6 +44,19 @@ const AdminModules = () => {
     setLRNUser(null);
     window.location.reload();
   };
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setName(localStorage.getItem('name'));
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+  
   //change the format of the date to be month, day, year
   // not sure if nagagamit to
   const formatDate = (dateString) => {

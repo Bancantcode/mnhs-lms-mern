@@ -7,6 +7,7 @@ const AdminUsers = () => {
   const [query, setQuery] = useState('');
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [name, setName] = useState(localStorage.getItem('name'));
   const [grlvl, setGrlvl] = useState('11');
   const [strand, setStrand] = useState('STEM');
   const [type, setType] = useState('Core');
@@ -39,6 +40,18 @@ const AdminUsers = () => {
   const toggleUserDropdown = (index) => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
   };
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setName(localStorage.getItem('name'));
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -236,6 +249,7 @@ const AdminUsers = () => {
   const filterUsers = users.filter((user) =>{
     const lowQ = query;
     const name = user.name ? user.name.toString().toLowerCase() : '';
+    const lrn = user.lrn ? user.lrn.toString().toLowerCase() : '';
     const email = user.email ? user.email.toString().toLowerCase() : '';
     const grlvl = user.grlvl ? user.grlvl.toString().toLowerCase() : '';
     const strand = user.strand ? user.strand.toString().toLowerCase() : '';
@@ -243,7 +257,7 @@ const AdminUsers = () => {
     const created_at = user.created_at ? user.created_at.toString().toLowerCase() : '';
 
     return(
-      name.includes(lowQ) || email.includes(lowQ) || grlvl.includes(lowQ) || strand.includes(lowQ) || user_role.includes(lowQ) || created_at.includes(lowQ)
+      name.includes(lowQ) || lrn.includes(lowQ) || email.includes(lowQ) || grlvl.includes(lowQ) || strand.includes(lowQ) || user_role.includes(lowQ) || created_at.includes(lowQ)
     );
   });
   const indexOfLastUser = currentPage * usersPerPage;
