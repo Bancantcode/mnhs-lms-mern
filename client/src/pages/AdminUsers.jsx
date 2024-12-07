@@ -209,7 +209,6 @@ const AdminUsers = () => {
     try {
       const id = userToDelete.UID;
       const response = await axios.delete(`http://localhost:3000/admin-users/delete/${id}`);
-      alert('User successfully deleted!');
       setDeleteModalOpen(false);
       setUsers((users) => users.filter((user) => user.UID !== id));
     } catch (error){
@@ -277,8 +276,21 @@ const AdminUsers = () => {
 
   return (
     <main className={styles.main}>
-      <aside className={styles.sidebar}>
-        <img src="/images/MNHS-Logo.png" alt="Logo" />
+      <aside>
+        <div className={styles.main__container}>
+          <h1>MNHS-LMS</h1>
+          <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
+        </div>
+
+        <div className={styles.profile__flex}>
+          <div className={styles.profile}>
+            <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+            <br />
+          </div>
+          <div className={styles.click__logout} style={{ position: 'relative' }}>
+            <i className="ri-logout-box-line" onClick={handleLogout}></i>
+          </div>
+        </div>
       </aside>
 
       <div className={styles.container}>
@@ -311,17 +323,15 @@ const AdminUsers = () => {
             <Link className={styles.a} to="/admin-users">Users</Link>
             <Link className={styles.a} to="/admin-modules">Modules</Link>
           </div>
-          <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
-          {errors.file && <p style={{ color: 'red' }}>{errors.file}</p>}
           <button onClick={() => setAddUserModalOpen(true)}><i className="ri-add-circle-line"></i>Add Admin</button>
         </section>
 
-        {/* {isModalOpen && (
+        {isModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
-                <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required >
+                <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required>
                   <option value="11">11</option>
                   <option value="12">12</option>
                 </select>
@@ -335,46 +345,15 @@ const AdminUsers = () => {
                   <option value="Applied">Applied</option>
                   <option value="Specialized">Specialized</option>
                 </select>
-                <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
-                <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-                <input type="file" onChange={(e) => setFile(e.target.files[0])} required />
-                <div>
-                  <button type="submit">Submit</button>
-                  <button type="button" onClick={toggleModal}>Cancel</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )} */}
-        
-        {isModalOpen && (
-          <div className={styles.modal}>
-            <div className={styles.modalContent}>
-              <h2>Add Module</h2>
-              <form onSubmit={handleSubmit}>
-              <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required>
-                <option value="11">11</option>
-                <option value="12">12</option>
-              </select>
-              <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
-                <option value="STEM">STEM</option>
-                <option value="ABM">ABM</option>
-                <option value="GAS">GAS</option>
-              </select>
-              <select required value={type} onChange={(e) => setType(e.target.value)}>
-                <option value="Core">Core</option>
-                <option value="Applied">Applied</option>
-                <option value="Specialized">Specialized</option>
-              </select>
-              <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
-              <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
-              <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)} />Upload a File</label>
-              <label><input type="radio" name="uploadType" checked={isLinkUpload} onChange={() => setIsLinkUpload(true)}/>Upload a Link </label>
+                <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
+                <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
+                <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)} />Upload a File</label>
+                <label><input type="radio" name="uploadType" checked={isLinkUpload} onChange={() => setIsLinkUpload(true)}/>Upload a Link </label>
               {!isLinkUpload && (<input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />)}
               {isLinkUpload && (<input type="url" placeholder="Enter URL" value={url} onChange={(e) => setUrl(e.target.value)} required/>)}
-              <button type="submit">Submit</button>
-              <button type="button" onClick={toggleModal}>Cancel</button>
-            </form>
+                <button type="submit">Submit</button>
+                <button type="button" onClick={toggleModal}>Cancel</button>
+              </form>
             </div>
           </div>
         )}
@@ -426,7 +405,6 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* modal for add admin */}
         {addUserModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
@@ -461,7 +439,7 @@ const AdminUsers = () => {
                 <th className={styles.hidden}>Name</th>
                 <th>LRN</th>
                 <th className={styles.hidden}>Email</th>
-                <th className={styles.hidden}>Grade Level & Strand</th>
+                <th className={styles.hidden}>Strand</th>
                 <th className={`${styles.hidden} ${styles.role}`}>Role</th>
                 <th>Created at</th>
                 <th></th>

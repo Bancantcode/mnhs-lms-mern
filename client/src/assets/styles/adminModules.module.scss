@@ -44,32 +44,12 @@
             .click__logout {
                 cursor: pointer;
                 font-size: var(--heading-6);
-                
-                // .logout__button {
-                //     font-size: var(--text-base);
-                //     position: absolute;
-                //     top: -40px;
-                //     right: 0px;
-                //     background-color: var(--dark-green);
-                //     color: white;
-                //     border: none;
-                //     padding: var(--space-2xs) var(--space-xs);
-                //     border-radius: .5em;
-                //     cursor: pointer;
-                //     z-index: 10;
-                //     transition: 0.4s;
-                //     &:hover {
-                //         background-color: var(--white);
-                //         color: var(--dark-green);
-                //     }
-                // }
             }
         }
     }
 
     .container {
         width: 100vw;
-        // position: relative;
         .upper {
             display: flex;
             justify-content: space-between;
@@ -90,6 +70,12 @@
                     border: none;
                     border-top-right-radius: .75em;
                     border-bottom-right-radius: .75em;
+                    // &::placeholder {
+                    //     color: var(--mid-white);
+                    // }
+                    // &:-ms-input-placeholder {
+                    //     color: red;
+                    // }
                 }
             }
             .user {
@@ -162,7 +148,6 @@
                 font-size: var(--text-base);
             }
         }
-        // modal for add modules
         .modal {
             position: fixed;
             top: 0;
@@ -176,15 +161,61 @@
             z-index: 1000;
             .modalContent {
                 background-color: var(--white);
-                padding: var(--space-xs);
                 border-radius: .5em;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                padding: var(--space-md);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
                 width: 400px; 
                 max-width: 90%;
+                h2 {
+                    font-size: var(--heading-5);
+                    margin-bottom: var(--space-2xs);
+                }
+                p {
+                    font-size: var(--text-base);
+                    line-height: 100%;
+                    margin-bottom: var(--space-xs);
+                }
+                button {
+                    background-color: var(--dark-green);
+                        color: var(--mid-white);
+                        border: none;
+                        border-radius: .5em;
+                        padding: var(--space-2xs) var(--space-lg);
+                        margin-right: var(--space-3xs);
+                        cursor: pointer;
+                }
 
                 form {
                     display: flex;
                     flex-direction: column;
+                    gap: var(--space-3xs);
+                    select {
+                        display: inline-block;
+                        border: 1px solid var(--dark-green);
+                        border-radius: .5em;
+                        padding: var(--space-3xs);
+                        transition: border-color 0.3s;
+                    }
+                    input {
+                        border: 1px solid var(--dark-green);
+                        border-radius: .5em;
+                        padding: var(--space-3xs) var(--space-2xs);
+                        transition: border-color 0.3s;
+                    }
+                    .file__upload {
+                        border: none;
+                        padding: var(--space-3xs) 0;
+                            
+                    }
+                    button {
+                        background-color: var(--dark-green);
+                        color: var(--mid-white);
+                        border: none;
+                        border-radius: .5em;
+                        padding: var(--space-2xs) var(--space-lg);
+                        margin-right: var(--space-3xs);
+                        cursor: pointer;
+                    }
                 }
             }
         }
@@ -300,6 +331,7 @@
                     }
                 }
                 .search__wrapper {
+                    
                     input {
                         width: 150px;
                     }
@@ -335,11 +367,12 @@
 
 @media screen and (min-width: 768px) {
     .main {
-        .sidebar {
-            display: block;
+        aside {
+            display: flex;
+            margin: 0;
         }
         .container {
-            padding: var(--space-sm) var(--space-md);
+            padding: var(--space-xs);
             .upper {
                 h1 {
                     display: block;
@@ -347,16 +380,23 @@
                 .hamburger {
                     display: none;
                 }
+                .search__wrapper {
+                    input {
+                        width: 150px;
+                    }
+                }
             }
             .table__container {
-                padding: var(--space-xs);
+                padding: var(--space-2xs);
                 table {
-                    
-                    td {
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
-                        max-width: 10px;
+                    border-radius: .5em;
+
+                    .hidden {
+                        display: none;
+                    }
+
+                    .dropdown {
+                        right: 0;
                     }
                 }
             }
@@ -366,7 +406,6 @@
 
 @media screen and (min-width: 1024px) {
     .main {
-        
         .container {
             .upper {
                 h1 {
@@ -374,9 +413,15 @@
                 }
             }
             .table__container {
-                padding: var(--space-xs);
                 table {
                     .hidden {
+                        display: table-cell;
+                    }
+                    td {
+                        white-space: nowrap; 
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 50px; 
                     }
                 }
             }
@@ -386,10 +431,16 @@
 
 @media screen and (min-width: 1567px) {
     .main {
+        gap: var(--space-sm);
+        
         .container {
             .table__container {
                 table {
-                    
+                    td {
+                        white-space: nowrap; 
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
                 }
             }
         }
