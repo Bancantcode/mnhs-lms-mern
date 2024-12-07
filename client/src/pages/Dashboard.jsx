@@ -96,6 +96,7 @@ const Dashboard = () => {
       <div className={styles.hamburger}>
         <i className="ri-menu-2-line"></i>
       </div>
+      
       <aside>
         <div className={styles.main__container}>
           <h1>MNHS-LMS</h1>
