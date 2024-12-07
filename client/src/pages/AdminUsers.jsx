@@ -12,6 +12,8 @@ const AdminUsers = () => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
+  const [url, setUrl] = useState('');
+  const [isLinkUpload, setIsLinkUpload] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeUserIndex, setActiveUserIndex] = useState(null);
@@ -79,16 +81,24 @@ const AdminUsers = () => {
       if (!data.subject || data.subject.length > 100) {
         error.subject = 'Subject is required and should be less than 100 characters.';
       }
-  
-      if (!data.file) {
-        error.file = 'File is required.';
-      } else {
-        const extensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+
+      if (data.file) {
+        const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
         const fileExtension = data.file.name.split('.').pop();
-        if (!extensions.includes(`.${fileExtension}`)) {
+        if (!allowedExtensions.includes(`.${fileExtension}`)) {
           error.file = 'Invalid file type.';
         }
-      }
+      } 
+  
+      // if (!data.file) {                      // ------ TO BE REMOVED ----- //
+      //   error.file = 'File is required.';
+      // } else {
+      //   const extensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
+      //   const fileExtension = data.file.name.split('.').pop();
+      //   if (!extensions.includes(`.${fileExtension}`)) {
+      //     error.file = 'Invalid file type.';
+      //   }
+      // }
     } 
 
     else if (type === 'user') {
@@ -115,17 +125,22 @@ const AdminUsers = () => {
     const uploader = localStorage.getItem("Email");
     const currentDate = new Date().toISOString();
     const formData = new FormData();
+
     formData.append('grlvl', grlvl);
     formData.append('strand', strand);
     formData.append('type', type);
     formData.append('title', title);
     formData.append('subject', subject);
-    formData.append('file', file);
     formData.append('date', formatDate(currentDate));
     formData.append('uploader', uploader);
-    console.log(file); // TESTING PURPOSES ONLY
+    
+    if (isLinkUpload) {
+      formData.append('url', url);
+    } else {
+      formData.append('file', file);
+    }
 
-    const error = validateData('module', { title, subject, file });
+    const error = validateData('module', { title, subject, file }); // check file
     setErrors(error);
     
     if (Object.keys(error).length === 0) {
@@ -141,9 +156,13 @@ const AdminUsers = () => {
     }
 
     //reset
+    setGrlvl('11');
+    setStrand('STEM');
+    setType('Core');
     setTitle('');
     setSubject('');
     setFile(null);
+    setUrl('');
     
     toggleModal();
   };
@@ -297,7 +316,7 @@ const AdminUsers = () => {
           <button onClick={() => setAddUserModalOpen(true)}><i className="ri-add-circle-line"></i>Add Admin</button>
         </section>
 
-        {isModalOpen && (
+        {/* {isModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
@@ -324,6 +343,38 @@ const AdminUsers = () => {
                   <button type="button" onClick={toggleModal}>Cancel</button>
                 </div>
               </form>
+            </div>
+          </div>
+        )} */}
+        
+        {isModalOpen && (
+          <div className={styles.modal}>
+            <div className={styles.modalContent}>
+              <h2>Add Module</h2>
+              <form onSubmit={handleSubmit}>
+              <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+              <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
+                <option value="STEM">STEM</option>
+                <option value="ABM">ABM</option>
+                <option value="GAS">GAS</option>
+              </select>
+              <select required value={type} onChange={(e) => setType(e.target.value)}>
+                <option value="Core">Core</option>
+                <option value="Applied">Applied</option>
+                <option value="Specialized">Specialized</option>
+              </select>
+              <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
+              <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
+              <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)} />Upload a File</label>
+              <label><input type="radio" name="uploadType" checked={isLinkUpload} onChange={() => setIsLinkUpload(true)}/>Upload a Link </label>
+              {!isLinkUpload && (<input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />)}
+              {isLinkUpload && (<input type="url" placeholder="Enter URL" value={url} onChange={(e) => setUrl(e.target.value)} required/>)}
+              <button type="submit">Submit</button>
+              <button type="button" onClick={toggleModal}>Cancel</button>
+            </form>
             </div>
           </div>
         )}

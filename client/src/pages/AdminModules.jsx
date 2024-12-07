@@ -75,7 +75,7 @@ const AdminModules = () => {
       }
     } 
   
-    // if (!module.file) {                  ----- TO DELETE -----
+    // if (!module.file) {                  // ------ TO BE REMOVED ----- //
     //   error.file = 'File is required.';
     // } else {
     //   const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
