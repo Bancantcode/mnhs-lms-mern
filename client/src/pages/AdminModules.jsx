@@ -12,6 +12,8 @@ const AdminModules = () => {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('');
   const [file, setFile] = useState(null);
+  const [url, setUrl] = useState('');
+  const [isLinkUpload, setIsLinkUpload] = useState(false);
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeUserIndex, setActiveUserIndex] = useState(null);
@@ -35,7 +37,7 @@ const AdminModules = () => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
   };
 
-  // alang laman ----- MAYBE DELETE? -----
+  // alang laman ----- MAYBE DELETE? ----- : yes?
   useEffect(() => {
   }, [])
 
@@ -73,7 +75,7 @@ const AdminModules = () => {
       }
     } 
   
-    // if (!module.file) {                  ----- TO DELETE -----
+    // if (!module.file) {                  // ------ TO BE REMOVED ----- //
     //   error.file = 'File is required.';
     // } else {
     //   const allowedExtensions = ['.pdf', '.docx', '.txt', '.pptx', '.jpg', '.jpeg', '.png', '.xlsx', '.xls'];
@@ -103,20 +105,25 @@ const AdminModules = () => {
     const uploader = localStorage.getItem("Email");
     const currentDate = new Date().toISOString();
     const formData = new FormData();
+  
     formData.append('grlvl', grlvl);
     formData.append('strand', strand);
     formData.append('type', type);
     formData.append('title', title);
     formData.append('subject', subject);
-    formData.append('file', file);
     formData.append('date', formatDate(currentDate));
     formData.append('uploader', uploader);
-    console.log(file); // TESTING PURPOSES ONLY
-
-    if (validateData()) {                // ----- ADD INPUT VALIDATION ----- //
+  
+    if (isLinkUpload) {
+      formData.append('url', url);
+    } else {
+      formData.append('file', file);
+    }
+  
+    if (validateData()) {
       try {
         const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-        alert('Module successfully uploaded!.');
+        alert('Module successfully uploaded!');
         const addedModule = response.data.newModule;
         setModules([...modules, addedModule]);
       } catch (err) {
@@ -125,24 +132,21 @@ const AdminModules = () => {
       } finally {
         setLoading(false);
       }
-    } 
-    else {
+    } else {
       console.log("Error with input validation:", errors);
       setLoading(false);
     }
-
-    //reset
+  
     setGrlvl('11');
     setStrand('STEM');
     setType('Core');
     setTitle('');
     setSubject('');
     setFile(null);
-    
+    setUrl('');
     toggleModal();
   };
-
-  //pagination
+  
   const indexOfLastModule = currentPage * modulesPerPage;
   const indexOfFirstModule = indexOfLastModule - modulesPerPage;
   const currentModules = modules.slice(indexOfFirstModule, indexOfLastModule);
@@ -214,34 +218,49 @@ const AdminModules = () => {
     e.preventDefault();
     const id = moduleToEdit.MID;
     const formData = new FormData();
+  
     formData.append('grlvl', moduleToEdit.grlvl);
     formData.append('strand', moduleToEdit.strand);
     formData.append('type', moduleToEdit.type);
     formData.append('subject', moduleToEdit.subject);
     formData.append('title', moduleToEdit.title);
-    if (moduleToEdit.file) {
+  
+    if (isLinkUpload) {
+      formData.append('file_name', moduleToEdit.url);
+      formData.append('file_data', null);
+    } else {
       formData.append('file', moduleToEdit.file);
     }
-
-    if (validateEditData()) {            // ----- ADD INPUT VALIDATION ----- //
+  
+    if (validateEditData()) {
       try {
-        const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData );
+        const response = await axios.put(
+          `http://localhost:3000/admin-modules/edit/${id}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
         alert('Module successfully updated!');
-        setModules(modules.map(module => (module.MID === id ? moduleToEdit : module)));
+        setModules(
+          modules.map((module) =>
+            module.MID === id ? { ...module, ...moduleToEdit } : module
+          )
+        );
       } catch (err) {
-          console.error(err);
-          alert(err.response?.data?.message || 'Update failed!');
-      } finally {
-        setLoading(false);
+        console.error(err);
+        alert(err.response?.data?.message || 'Update failed!');
       }
     } else {
       console.log("Error with input validation:", errors);
-      setLoading(false);
     }
   
-    console.log('Edited Module:', moduleToEdit); // TESTING PURPOSES //
     setEditModalOpen(false);
   };
+  
+  
 
   const handleDelete = (module) => {
     setModuleToDelete(module);
@@ -317,32 +336,34 @@ const AdminModules = () => {
           <button onClick={toggleModal}><i className="ri-add-circle-line"></i>Add Modules</button>
         </section>
 
-        {/* modal for adding modules */}
         {isModalOpen && (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <h2>Add Module</h2>
               <form onSubmit={handleSubmit}>
-                <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required >
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select>
-                <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
-                  <option value="STEM">STEM</option>
-                  <option value="ABM">ABM</option>
-                  <option value="GAS">GAS</option>
-                </select>
-                <select required value={type} onChange={(e) => setType(e.target.value)}>
-                  <option value="Core">Core</option>
-                  <option value="Applied">Applied</option>
-                  <option value="Specialized">Specialized</option>
-                </select>
-                <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
-                <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
-                <input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required/>
-                <button type="submit">Submit</button>
-                <button type="button" onClick={toggleModal}>Cancel</button>
-              </form>
+              <select value={grlvl} onChange={(e) => setGrlvl(e.target.value)} required>
+                <option value="11">11</option>
+                <option value="12">12</option>
+              </select>
+              <select required value={strand} onChange={(e) => setStrand(e.target.value)}>
+                <option value="STEM">STEM</option>
+                <option value="ABM">ABM</option>
+                <option value="GAS">GAS</option>
+              </select>
+              <select required value={type} onChange={(e) => setType(e.target.value)}>
+                <option value="Core">Core</option>
+                <option value="Applied">Applied</option>
+                <option value="Specialized">Specialized</option>
+              </select>
+              <input type="text" placeholder="Subject" required value={subject} onChange={(e) => setSubject(e.target.value)} />
+              <input type="text" placeholder="Title" required value={title} onChange={(e) => setTitle(e.target.value)} />
+              <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)} />Upload a File</label>
+              <label><input type="radio" name="uploadType" checked={isLinkUpload} onChange={() => setIsLinkUpload(true)}/>Upload a Link </label>
+              {!isLinkUpload && (<input type="file" name="file" onChange={(e) => setFile(e.target.files[0])} required />)}
+              {isLinkUpload && (<input type="url" placeholder="Enter URL" value={url} onChange={(e) => setUrl(e.target.value)} required/>)}
+              <button type="submit">Submit</button>
+              <button type="button" onClick={toggleModal}>Cancel</button>
+            </form>
             </div>
           </div>
         )}
@@ -354,31 +375,34 @@ const AdminModules = () => {
             <div className={styles.modalContent}>
               <h2>Edit Module</h2>
               <form onSubmit={handleEditSubmit}>
-                <select value={moduleToEdit?.grlvl || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, grlvl: e.target.value })} required >
+                <select value={moduleToEdit.grlvl || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, grlvl: e.target.value })} required>
                   <option value="11">11</option>
                   <option value="12">12</option>
                 </select>
-                <select required value={moduleToEdit?.strand || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, strand: e.target.value })}>
+                <select value={moduleToEdit.strand || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, strand: e.target.value })} required>
                   <option value="STEM">STEM</option>
                   <option value="ABM">ABM</option>
                   <option value="GAS">GAS</option>
                 </select>
-                <select required value={moduleToEdit?.type || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, type: e.target.value })}>
+                <select value={moduleToEdit.type || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, type: e.target.value })} required>
                   <option value="Core">Core</option>
                   <option value="Applied">Applied</option>
                   <option value="Specialized">Specialized</option>
                 </select>
-                <input type="text" placeholder="Subject" value={moduleToEdit?.subject || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, subject: e.target.value })} required />
-                <input type="text" placeholder="Title" value={moduleToEdit?.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })} required />
-                <input type="file" onChange={(e) => setModuleToEdit({ ...moduleToEdit, file: e.target.files[0] })} />
-                <div>
-                  <button type="submit">Save</button>
-                  <button type="button" onClick={() => setEditModalOpen(false)}>Cancel</button>
-                </div>
+                <input type="text" placeholder="Subject" required value={moduleToEdit.subject || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, subject: e.target.value })}/>
+                <input type="text" placeholder="Title" required value={moduleToEdit.title || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, title: e.target.value })}/>
+                <label><input type="radio" name="uploadType" checked={!isLinkUpload} onChange={() => setIsLinkUpload(false)}/>Upload a File</label>
+                <label><input type="radio" name="uploadType" checked={isLinkUpload}onChange={() => setIsLinkUpload(true)}/>Upload a Link</label>
+                {!isLinkUpload && (<input type="file" name="file" onChange={(e) => setModuleToEdit({ ...moduleToEdit, file: e.target.files[0] })}/>)}
+                {isLinkUpload && (<input type="url" placeholder="Enter URL" value={moduleToEdit.url || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>)}
+                <button type="submit">Submit</button>
+                <button type="button" onClick={() => setEditModalOpen(false)}>Cancel</button>
               </form>
+
             </div>
           </div>
         )}
+
 
         {deleteModalOpen && (
           <div className={styles.modal}>
@@ -413,20 +437,18 @@ const AdminModules = () => {
                   <td className={styles.hidden}>{module.type}</td>
                   <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.title}</td>
-                  <td><p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p></td>
+                  <td>{module.file_name && (module.file_name.startsWith("http://") || module.file_name.startsWith("https://")) ? (<a className={styles.file__link} href={module.file_name} target="_blank" rel="noopener noreferrer">{module.file_name}</a>) : (<p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p>)}</td>
                   <td className={`${styles.hidden} ${styles.uploader}`}>{module.uploader}</td>
                   <td className={styles.hidden}>{module.upload_date}</td>
                   <td>
-                      <div onClick={() => toggleUserDropdown(index)}>
-                        <img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} />
-                      </div>
+                    <div onClick={() => toggleUserDropdown(index)}><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} /></div>
                       {activeUserIndex === index && (
                         <div className={styles.dropdown}>
                           <div className={styles.dropdown__item} onClick={() => handleEdit(module)}>Edit</div>
                           <div className={styles.dropdown__item} onClick={() => handleDelete(module)}>Delete</div>
                         </div>
                       )}
-                    </td>
+                  </td>
                 </tr>
               ))}
             </tbody>

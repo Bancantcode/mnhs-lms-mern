@@ -35,37 +35,43 @@ router.get('/', async (req, res) => {
 // upload module
 router.post('/', upload.single('file'), async (req, res) => {
     try {
-        console.log(req.file.path);
-        const { grlvl, strand, type, subject, title, uploader } = req.body;
+        const { grlvl, strand, type, title, subject, uploader, url } = req.body;
+
         const file = req.file;
 
-        if (!file) {
-            return res.status(400).json({ message: 'No file uploaded' });
+        let newModule;
+
+        if (file) {
+            const fileData = fs.readFileSync(file.path);
+            console.log('Uploaded file path:', req.file.path);
+
+            newModule = await Module.create({
+                grlvl,
+                strand,
+                type,
+                subject,
+                title,
+                file_name: file.originalname,
+                file_data: fileData,
+                uploader,
+            });
+
+        } else if (url) {
+            newModule = await Module.create({
+                grlvl,
+                strand,
+                type,
+                subject,
+                title,
+                file_name: url,    
+                file_data: "",
+                uploader,
+            });
+
+        } else {
+            return res.status(400).json({ message: 'No file or URL provided' });
         }
 
-        const fileData = fs.readFileSync(file.path);
-
-        console.log({
-            grlvl: grlvl,
-            strand: strand,
-            type: type,
-            subject: subject,
-            title: title,
-            file: file,
-            uploader: uploader, // FOR TESTING PURPOSES
-        }); // REMOVE
-
-        const newModule = await Module.create({
-            grlvl: grlvl,
-            strand: strand,
-            type: type,
-            subject: subject,
-            title: title,
-            file_name: file.originalname,
-            file_data: fileData,
-            uploader: uploader,
-        });
-        
         res.status(201).json({ message: 'Module has been uploaded successfully!', newModule });
     } catch (error) {
         console.error('Error uploading module:', error);
@@ -98,26 +104,24 @@ router.get('/download/:id', async (req, res) => {
         }
 });
 
-// edit module
 router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { grlvl, strand, type, title, subject } = req.body;
+        const { grlvl, strand, type, title, subject, file_name } = req.body;
         const file = req.file;
 
-        console.log('ID:', id); // TESTING PURPOSES ONLY
+        console.log('ID:', id);
         console.log('Gr Lvl:', grlvl);
         console.log('Strand:', strand);
         console.log('Type:', type);
         console.log('Title:', title);
         console.log('Subject:', subject);
-        console.log('File Name:', file ? file.filename : 'No file uploaded');
+        console.log('File/URL:', file_name);
 
         const updateData = { grlvl, strand, type, title, subject };
         
         if (file) {
             const module = await Module.findOne({ where: { MID: id } });
-
             if (module && module.file_name) {
                 const oldFile = path.join('uploads', module.file_name);
                 if (fs.existsSync(oldFile)) {
@@ -126,6 +130,10 @@ router.put('/edit/:id', upload.single('file'), async (req, res, next) => {
                 }
             }
             updateData.file_name = file.filename;
+            updateData.file_data = fs.readFileSync(file.path);
+        } else if (file_name) {
+            updateData.file_name = file_name;
+            updateData.file_data = "";
         }
 
         const [updatedRow] = await Module.update(updateData, { where: { 'MID': id } });
