@@ -21,6 +21,7 @@ const Login = () => {
       localStorage.setItem('User_Role', response.data.userRole);
       localStorage.setItem('Strand', response.data.strand);
       localStorage.setItem('id', response.data.id);
+      localStorage.setItem('name', response.data.name);
 
       if (response.data.userRole === "ADMIN"){
         navigate('/admin-users');

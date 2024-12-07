@@ -31,6 +31,7 @@ router.post('/', async (req, res) => {
         }
 
         const token = jwt.sign({ id: user.UID }, process.env.JWT_SECRET || "!MalinoNationalHighSchool", { expiresIn: '1h' });
+        console.log(user.name);
         
         res.header('Authorization', `Bearer ${token}`).json({
             token,
@@ -38,7 +39,8 @@ router.post('/', async (req, res) => {
             userID: user.lrn,
             userRole: user.user_role,
             strand: user.strand,
-            id: user.UID
+            id: user.UID,
+            name: user.name
         });
     } catch (err) {
         console.error(err);

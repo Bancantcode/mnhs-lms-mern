@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import styles from '../assets/styles/subjectPage.module.scss';
-// import { useParams, useLocation } from "react-router-dom";
-import Lenis from 'lenis'
+import { useParams, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Lenis from 'lenis'
 
 const SubjectPage = () => {
   const [modules, setModules] = useState([]);
@@ -40,6 +40,26 @@ const SubjectPage = () => {
   const handleLogoutToggle = () => {
     setShowLogout(prev => !prev);
   };
+    // const [modules, setModules] = useState([]);
+    // const [loading, setLoading] = useState(false);
+    // const [errors, setErrors] = useState(null);      
+    // const queryParams = new URLSearchParams(location.search);
+    // const subject = queryParams.get("subject");
+  
+    // useEffect(() => {
+    //   const fetchModules = async () => {
+    //     try {
+    //       const response = await axios.get(
+    //         `http://localhost:3000/subject-page/?subject=${subject}`
+    //       );
+    //       setModules(response.data.modules);
+    //     } catch (err) {
+    //       console.error("Error fetching module details:", err);
+    //     }
+    //   };
+  
+    //   fetchModules();
+    // }, []);
 
   const handleDownload = async (id) => {
     try {
