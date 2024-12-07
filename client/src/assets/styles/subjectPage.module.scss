@@ -21,11 +21,30 @@
         .main__container {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-
-            h1 {
-                font-size: var(--heading-5);
+            flex-direction: column;
+            gap: var(--space-xl);
+            
+            .row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                h1 {
+                    font-size: var(--heading-5);
+                }
             }
+            .nav {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-3xs);
+                .nav__link {
+                    font-size: var(--heading-6);
+                    background-color: var(--dark-green);
+                    border-radius: .5em;
+                    padding: var(--space-xs);
+                    color: var(--mid-white);
+                }
+            }
+
         }
 
         .profile__flex {

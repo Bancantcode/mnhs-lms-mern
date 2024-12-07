@@ -3,12 +3,14 @@
     width: 100%;
     display: flex;
     background-color: var(--mid-white);
-    padding: var(--space-xs);
+    gap: var(--space-md);
+    padding: var(--space-sm);
 
     aside {
-        position: relative;
+        position: fixed;
         left: 0;
-        background-color: var(--dark-green);
+        height: 97vh;
+        background-color: var(--slight-green);
         width: 300px;
         border-radius: .75em;
         padding: var(--space-xs) var(--space-md);
@@ -21,19 +23,40 @@
         .main__container {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-
-            h1 {
-                font-size: var(--heading-5);
+            flex-direction: column;
+            gap: var(--space-xl);
+            
+            .row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                h1 {
+                    font-size: var(--heading-5);
+                    color: var(--light-green);
+                }
             }
+            .nav {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-3xs);
+                .nav__link {
+                    font-size: var(--heading-6);
+                    background-color: var(--dark-green);
+                    border-radius: .5em;
+                    padding: var(--space-xs);
+                    color: var(--mid-white);
+                }
+            }
+
         }
 
         .profile__flex {
             display: flex;
             justify-content: space-between;
-            background-color: var(--slight-green);
+            background-color: var(--dark-green);
             padding: var(--space-xs);
             border-radius: .5em;
+            color: var(--light-green);
             .profile {
                 display: flex;
                 .name {
@@ -102,6 +125,7 @@
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 z-index: 1000;
                 width: 150px;
+                
                 a {
                     display: block;
                     text-decoration: none;
@@ -343,7 +367,6 @@
     .main {
         aside {
             display: flex;
-            margin: 0;
         }
         .container {
             padding: var(--space-xs);
