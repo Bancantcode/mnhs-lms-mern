@@ -31,6 +31,7 @@
                 align-items: center;
                 h1 {
                     font-size: var(--heading-5);
+                    color: var(--light-green);
                 }
             }
             .nav {
@@ -54,6 +55,7 @@
             background-color: var(--dark-green);
             padding: var(--space-xs);
             border-radius: .5em;
+            color: var(--light-green);
             .profile {
                 display: flex;
                 .name {
@@ -381,7 +383,6 @@
     .main {
         aside {
             display: flex;
-            margin: 0;
         }
         .container {
             padding: var(--space-xs);
