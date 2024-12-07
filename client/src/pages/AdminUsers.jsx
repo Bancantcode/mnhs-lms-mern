@@ -289,14 +289,9 @@ const AdminUsers = () => {
           </div>
           <nav className={styles.nav}>
             <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
-            <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>
+            {role === "ADMIN" &&<Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
           </nav>
         </div>
-
-        <nav className={styles.nav}>
-          <Link to="/">Dashboard</Link>
-          {role === "ADMIN" && <Link to="/admin-users">Admin Dashboard</Link>}
-        </nav>
 
         <div className={styles.profile__flex}>
           <div className={styles.profile}>
