@@ -291,6 +291,7 @@
             .pagination {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 p {
                     font-size: var(--text-base--small);
                     vertical-align: bottom;
@@ -303,15 +304,17 @@
                 }
                 div {
                     display: flex;
-                    gap: var(--space-md);
+                    gap: var(--space-sm);
+                    align-items: center;
                     span {
                         font-size: var(--text-base);
                     }
                     button {
-                        font-size: var(--heading-6);
+                        font-size: var(--text-base);
+                        padding: var(--space-3xs);
                         border: none;
                         background-color: var(--green);
-                        color: var(--white);
+                        color: var(--light-green);
                         cursor: pointer;
                     }
                 }

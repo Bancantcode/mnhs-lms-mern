@@ -487,9 +487,9 @@ const AdminModules = () => {
           <div className={styles.pagination}>
             <p>Showing <span>{indexOfFirstModule + 1} - {Math.min(indexOfLastModule, modules.length)}</span> of <span>{modules.length}</span> Modules</p>
             <div>
-              <button onClick={handlePrevious} disabled={currentPage === 1}><i className="ri-arrow-left-s-fill"></i></button>
+              <button onClick={handlePrevious} disabled={currentPage === 1}><i className="ri-arrow-left-s-fill"></i>Prev</button>
               <span>Page {currentPage} of {Math.ceil(modules.length / modulesPerPage)}</span>
-              <button onClick={handleNext} disabled={currentPage === Math.ceil(modules.length / modulesPerPage)}><i className="ri-arrow-right-s-fill"></i></button>
+              <button onClick={handleNext} disabled={currentPage === Math.ceil(modules.length / modulesPerPage)}>Next<i className="ri-arrow-right-s-fill"></i></button>
             </div>
           </div>
         </div>

@@ -491,9 +491,9 @@ const AdminUsers = () => {
           <div className={styles.pagination}>
             <p>Showing <span>{indexOfFirstUser + 1} - {Math.min(indexOfLastUser, users.length)}</span> of <span>{users.length} Users</span></p>
             <div>
-              <button onClick={handlePrevious} disabled={currentPage === 1}><i className="ri-arrow-left-s-fill"></i></button>
+              <button onClick={handlePrevious} disabled={currentPage === 1}><i className="ri-arrow-left-s-fill"></i>Prev</button>
               <span>Page {currentPage} of {Math.ceil(users.length / usersPerPage)}</span>
-              <button onClick={handleNext} disabled={currentPage === Math.ceil(users.length / usersPerPage)}><i className="ri-arrow-right-s-fill"></i></button>
+              <button onClick={handleNext} disabled={currentPage === Math.ceil(users.length / usersPerPage)}>Next<i className="ri-arrow-right-s-fill"></i></button>
             </div>
           </div>
         </div>

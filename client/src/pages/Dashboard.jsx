@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../assets/styles/dashboard.module.scss';
 import axios from 'axios';
@@ -14,7 +14,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [showLogout, setShowLogout] = useState(false);
-  const courseRefs = useRef([]);
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
 
   useEffect(() => {
