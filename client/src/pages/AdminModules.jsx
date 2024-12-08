@@ -1,6 +1,6 @@
-import styles from '../assets/styles/adminModules.module.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import styles from '../assets/styles/adminModules.module.scss'
 import axios from 'axios';
 
 const AdminModules = () => {
@@ -64,7 +64,6 @@ const AdminModules = () => {
     };
   }, []);
 
-  //change the format of the date to be month, day, year
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -123,7 +122,8 @@ const AdminModules = () => {
   
     if (isLinkUpload) {
       formData.append('url', url);
-    } else {
+    } 
+    else {
       formData.append('file', file);
     }
   
@@ -133,13 +133,16 @@ const AdminModules = () => {
         alert('Module successfully uploaded!');
         const addedModule = response.data.newModule;
         setModules([...modules, addedModule]);
-      } catch (err) {
+      } 
+      catch (err) {
         console.error(err);
         alert(err.response?.data?.message || 'Upload failed!');
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
-    } else {
+    } 
+    else {
       console.log("Error with input validation:", errors);
       setLoading(false);
     }
@@ -284,7 +287,7 @@ const AdminModules = () => {
       setModules(modules.filter(module => module.MID !== id));
     } catch (error){
       console.log(error);
-      alert(err.response?.data?.messsage || 'Delete failed!');
+      alert(error.response?.data?.messsage || 'Delete failed!');
     }
   };
 

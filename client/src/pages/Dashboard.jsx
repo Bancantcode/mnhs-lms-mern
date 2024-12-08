@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import styles from '../assets/styles/dashboard.module.scss';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Lenis from 'lenis';
 
 const Dashboard = () => {

@@ -474,24 +474,3 @@
         }
     }
 }
-
-// .mobile__nav {
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     height: 100vh;
-//     width: 250px;
-//     background-color: var(--slight-green);
-//     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-//     transition: transform 0.3s ease;
-//     transform: translateX(-100%);
-//     &.open {
-//         transform: translateX(0);
-//     }
-// }
-
-// @media screen and (max-width: 768px) {
-//     .mobile__nav {
-//         display: block;
-//     }
-// }

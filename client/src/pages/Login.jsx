@@ -1,6 +1,6 @@
-import styles from '../assets/styles/login.module.scss';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import styles from '../assets/styles/login.module.scss';
 import axios from 'axios';
 
 const Login = () => {
@@ -25,9 +25,12 @@ const Login = () => {
 
       if (response.data.userRole === "ADMIN"){
         navigate('/admin-users');
-      } else { navigate('/'); }
-      
-    } catch (error) {
+      } 
+      else { 
+        navigate('/'); 
+      }
+    } 
+    catch (error) {
       console.error('Login failed:', error.response?.data || error.message);
       setErrorMessage(error.response?.data?.message || 'Login failed! Please try again.');
     }

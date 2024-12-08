@@ -1,6 +1,6 @@
-import styles from '../assets/styles/adminUsers.module.scss'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import styles from '../assets/styles/adminUsers.module.scss'
 import axios from 'axios';
 
 const AdminUsers = () => {
