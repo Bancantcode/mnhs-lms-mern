@@ -12,7 +12,6 @@ const SubjectPage = () => {
   const subject = queryParams.get("subject");
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
   const [showLogout, setShowLogout] = useState(false);
-  const [progressStatus, setProgressStatus] = useState([]);
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
 
   useEffect(() => {
@@ -31,7 +30,6 @@ const SubjectPage = () => {
       try {
         const response = await axios.get(`http://localhost:3000/subject-page/?subject=${subject}`);
         setModules(response.data.modules);
-        setProgressStatus(Array(response.data.modules.length).fill('Incomplete'));
       } 
       catch (err) {
         console.error("Error fetching module details:", err);
@@ -86,25 +84,36 @@ const SubjectPage = () => {
     }
   };
 
-  const handleProgressChange = (index) => {
-    setProgressStatus(prev => {
-        const newStatus = [...prev];
-        switch (newStatus[index]) {
-            case 'Incomplete':
-                newStatus[index] = 'In Progress';
-                break;
-            case 'In Progress':
-                newStatus[index] = 'Completed';
-                break;
-            case 'Completed':
-                newStatus[index] = 'Incomplete';
-                break;
-            default:
-                newStatus[index] = 'Incomplete';
-        }
-        return newStatus;
-    });
+  const handleProgressChange = async (moduleId, currentProgress, index) => {
+    const updatedProgress = (() => {
+      switch (currentProgress) {
+        case 'Incomplete':
+          return 'In Progress';
+        case 'In Progress':
+          return 'Completed';
+        case 'Completed':
+          return 'Incomplete';
+        default:
+          return 'Incomplete';
+      }
+    })();
+
+    try {
+      await axios.put(`http://localhost:3000/subject-page/progress/${moduleId}`, { progress: updatedProgress });
+
+      setModules(prevModules => {
+        const newModules = [...prevModules];
+        newModules[index].progress = updatedProgress;
+        return newModules;
+      });
+
+      alert('Progress status updated!');
+    } catch (err) {
+      console.error('Error updating progress:', err);
+      alert('Failed to update progress status');
+    }
   };
+
 
   const toggleNavbar = () => {
     setIsNavbarVisible(prev => !prev);
@@ -178,8 +187,8 @@ const SubjectPage = () => {
                   </td>
                   <td>{`${String(new Date(module.upload_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(module.upload_date).getDate()).padStart(2, '0')}/${new Date(module.upload_date).getFullYear()}`}</td>
                   <td className={styles.hide}>
-                      <button onClick={() => handleProgressChange(index)} className={styles.progress__button}>
-                          {progressStatus[index]}
+                      <button className={styles.progress__button} onClick={() => handleProgressChange(module.MID, module.progress, index)}>
+                          {module.progress}
                       </button>
                   </td>
                 </tr>
