@@ -440,7 +440,7 @@ const AdminModules = () => {
                 <th className={styles.hidden}>Subject</th>
                 <th className={styles.hidden}>Title</th>
                 <th>File</th>
-                <th className={styles.hidden}>Uploader</th>
+                <th className={`${styles.hidden} ${styles.role}`}>Uploader</th>
                 <th className={styles.hidden}>Created At</th>
               </tr>
             </thead>  
@@ -452,7 +452,7 @@ const AdminModules = () => {
                   <td className={styles.hidden}>{module.subject}</td>
                   <td className={styles.hidden}>{module.title}</td>
                   <td>{module.file_name && (module.file_name.startsWith("http://") || module.file_name.startsWith("https://")) ? (<a className={styles.file__link} href={module.file_name} target="_blank" rel="noopener noreferrer">{module.file_name}</a>) : (<p className={styles.file__link} onClick={() => handleDownload(module.MID)}>{module.file_name}</p>)}</td>
-                  <td className={styles.hidden}>{module.uploader}</td>
+                  <td className={`${styles.hidden} ${styles.role}`}>{module.uploader}</td>
                   <td className={styles.hidden}>{formatDate(module.upload_date)}</td>
                   <td>
                     <div onClick={() => toggleUserDropdown(index)}><img src="/images/threedot.svg" alt="Three Dots" className={styles.three__dots} width={15} height={20} /></div>

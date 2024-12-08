@@ -405,9 +405,6 @@
             width: calc(100% - 300px);
             margin-left: 300px;
             .upper {
-                h1 {
-                    font-size: var(--heading-4);
-                }
                 .hamburger {
                     display: none;
                 }
@@ -421,6 +418,9 @@
             .table__container {
                 padding: var(--space-md);
                 table {
+                    .hidden {
+                        display: table-cell;
+                    }
                     td {
                         white-space: nowrap; 
                         overflow: hidden;
