@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [errors, setErrors] = useState({});
   const [showLogout, setShowLogout] = useState(false);
   const courseRefs = useRef([]);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(false);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -99,11 +100,26 @@ const Dashboard = () => {
     requestAnimationFrame(raf);
   })
 
+  const toggleNavbar = () => {
+    setIsNavbarVisible(prev => !prev);
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.hamburger}>
+      <div className={styles.hamburger} onClick={toggleNavbar}>
         <i className="ri-menu-2-line"></i>
       </div>
+      
+      {isNavbarVisible && (
+        <nav className={styles.new__navbar}>
+          <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
+          {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+          <div className={styles.click__logout} onClick={handleLogoutToggle}>
+            <p onClick={handleLogout}><i className="ri-logout-box-r-line"></i> Log Out</p>
+          </div>
+        </nav>
+      )}
+
       <aside>
         <div className={styles.main__container}>
           <div className={styles.row}>

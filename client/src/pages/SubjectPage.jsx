@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import styles from '../assets/styles/subjectPage.module.scss';
-import { useParams, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Lenis from 'lenis'
 
 const SubjectPage = () => {
   const [modules, setModules] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState(null);      
+  // const [loading, setLoading] = useState(false);
+  // const [errors, setErrors] = useState(null);      
   const [name, setName] = useState(localStorage.getItem('name'));
   const [role, setRole] = useState(localStorage.getItem('User_Role'));
   const queryParams = new URLSearchParams(location.search);
@@ -16,6 +15,7 @@ const SubjectPage = () => {
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
   const [showLogout, setShowLogout] = useState(false);
   const [progressStatus, setProgressStatus] = useState([]);
+  const [isNavbarVisible, setIsNavbarVisible] = useState(false);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -55,26 +55,6 @@ const SubjectPage = () => {
   const handleLogoutToggle = () => {
     setShowLogout(prev => !prev);
   };
-    // const [modules, setModules] = useState([]);
-    // const [loading, setLoading] = useState(false);
-    // const [errors, setErrors] = useState(null);      
-    // const queryParams = new URLSearchParams(location.search);
-    // const subject = queryParams.get("subject");
-  
-    // useEffect(() => {
-    //   const fetchModules = async () => {
-    //     try {
-    //       const response = await axios.get(
-    //         `http://localhost:3000/subject-page/?subject=${subject}`
-    //       );
-    //       setModules(response.data.modules);
-    //     } catch (err) {
-    //       console.error("Error fetching module details:", err);
-    //     }
-    //   };
-  
-    //   fetchModules();
-    // }, []);
 
   const handleDownload = async (id) => {
     try {
@@ -121,6 +101,10 @@ const SubjectPage = () => {
     });
   };
 
+  const toggleNavbar = () => {
+    setIsNavbarVisible(prev => !prev);
+  };
+
   useEffect(() => {
     const lenis = new Lenis();
 
@@ -134,9 +118,19 @@ const SubjectPage = () => {
 
   return (
     <main className={styles.main}>
-        <div className={styles.hamburger}>
-            <i className="ri-menu-2-line"></i>
+        <div className={styles.hamburger} onClick={toggleNavbar}>
+          <i className="ri-menu-2-line"></i>
         </div>
+
+        {isNavbarVisible && (
+          <nav className={styles.new__navbar}>
+            <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
+            {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+            <div className={styles.click__logout} onClick={handleLogoutToggle}>
+              <p onClick={handleLogout}><i className="ri-logout-box-r-line"></i> Log Out</p>
+            </div>
+          </nav>
+        )}
         
         <aside>
           <div className={styles.main__container}>
@@ -173,7 +167,7 @@ const SubjectPage = () => {
                           <th>Title</th>
                           <th>File</th>
                           <th>Date</th>
-                          <th>Progress</th>
+                          <th className={styles.hide}>Progress</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -189,7 +183,7 @@ const SubjectPage = () => {
                         )}
                       </td>
                       <td>{`${String(new Date(module.upload_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(module.upload_date).getDate()).padStart(2, '0')}/${new Date(module.upload_date).getFullYear()}`}</td>
-                      <td>
+                      <td className={styles.hide}>
                           <button onClick={() => handleProgressChange(index)} className={styles.progress__button}>
                               {progressStatus[index]}
                           </button>

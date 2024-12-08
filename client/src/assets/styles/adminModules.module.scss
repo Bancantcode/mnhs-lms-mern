@@ -127,6 +127,32 @@
                 }
             }
         }
+        .mobile__nav {
+            background-color: var(--slight-green);
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            justify-content: start;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            width: 300px;
+            padding: var(--space-md);
+            gap: var(--space-3xs);
+            i {
+                color: var(--light-green);
+                font-weight: bold;
+                font-size: var(--heading-3);
+                margin-bottom: var(--space-lg);
+            }
+            .nav__link {
+                color: var(--light-green);
+                font-size: var(--heading-5);
+                background-color: var(--dark-green);
+                padding: var(--space-xs);
+                border-radius: .5em;
+            }
+        }
         .lower {
             display: flex;
             font-size: var(--text-base);
@@ -276,8 +302,7 @@
                 p {
                     font-size: var(--text-base--small);
                     vertical-align: bottom;
-                    color: var(--gray);
-
+                    color: var(--black);
                     span {
                         color: var(--black);
                         font-weight: 500;
@@ -298,20 +323,16 @@
                     }
                 }
             }
-                
         }
     }
 }
 
-
-// fix responsive for below
 @media screen and (max-width: 767px) {
     .main {
         aside {
             display: none;
         }
         .container {
-            // padding: var(--space-xs) var(--space-2xs);
             .upper {
                 h1 {
                     display: none;
@@ -391,24 +412,15 @@
                 padding: var(--space-xs);
                 table {
                     border-radius: .5em;
-
                     .role {
                         display: none;
                     }
-
                     .hidden {
                         display: none;
                     }
-
                     .dropdown {
                         right: 0;
                     }
-                    // td {
-                    //     overflow: hidden;
-                    //     white-space: nowrap;
-                    //     text-overflow: ellipsis;
-                    //     max-width: 70px;
-                    // }
                 }
             }
         }
@@ -426,6 +438,9 @@
             width: calc(100% - 300px);
             margin-left: 300px;
             .upper {
+                h1 {
+                    font-size: var(--heading-4);
+                }
                 .hamburger {
                     display: none;
                 }
@@ -443,15 +458,12 @@
                 table {
                     width: 100%;
                     min-width: 600px;
-
                     .role {
                         display: none;
                     }
-
                     .dropdown {
                         right: 0;
                     }
-
                     .hidden {
                         display: table-cell;
                     }
@@ -469,8 +481,6 @@
 
 @media screen and (min-width: 1567px) {
     .main {
-        // gap: var(--space-sm);
-        
         .container {
             .table__container {
                 table {

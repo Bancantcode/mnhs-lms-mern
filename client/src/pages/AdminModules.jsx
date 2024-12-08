@@ -27,6 +27,7 @@ const AdminModules = () => {
   const [errors, setErrors] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const modulesPerPage = 8;
+  const [isNavbarOpen, setNavbarOpen] = useState(false);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -38,6 +39,10 @@ const AdminModules = () => {
 
   const toggleUserDropdown = (index) => {
     setActiveUserIndex(activeUserIndex === index ? null : index);
+  };
+
+  const toggleNavbar = () => {
+    setNavbarOpen(!isNavbarOpen);
   };
 
   const handleLogout = () => {
@@ -312,7 +317,7 @@ const AdminModules = () => {
       <div className={styles.container}>
         <section className={styles.upper}>
           <h1>Admin Dashboard <i className="ri-arrow-right-wide-line"></i>Modules</h1>
-          <button className={styles.hamburger}>
+          <button className={styles.hamburger} onClick={toggleNavbar}>
             <i className="ri-menu-2-line"></i>
           </button>
 
@@ -330,6 +335,14 @@ const AdminModules = () => {
             )}
           </div>
         </section>
+
+        {isNavbarOpen && (
+          <nav className={styles.mobile__nav}>
+            <i onClick={toggleNavbar} className="ri-close-large-line"></i>
+            <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
+            {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+          </nav>
+        )}
 
         <section className={styles.lower}>
           <div className={styles.links}>

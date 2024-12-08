@@ -4,6 +4,38 @@
     gap: var(--space-md);
     padding: var(--space-sm);
 
+    .hamburger {
+        font-size: var(--heading-3);
+        cursor: pointer;
+    }
+
+    .new__navbar {
+        background-color: var(--slight-green);
+        position: absolute;
+        top: 60px;
+        left: 65;
+        width: 70%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+        border-radius: .5em;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-sm);
+        font-size: var(--heading-5);
+        gap: var(--space-2xs);
+      
+        .nav__link {
+            display: block;
+            color: var(--light-green);
+            text-decoration: none;
+        }
+        .click__logout {
+            border-top: 1px solid var(--light-green);
+            padding-top: var(--space-2xs);
+            cursor: pointer;
+        }
+    }
+
     aside {
         position: fixed;
         left: 0;
@@ -154,16 +186,33 @@
                 padding: var(--space-sm);
                 .table {
                     font-size: var(--text-base--small);
+                    thead {
+                        th {
+                            tr {
+                                font-size: var(--text-base);
+                            }
+                        }
+                        .hide {
+                            display: none;
+                        }
+                    }
                     tbody {
+                        text-align: start;
                         td {
                             overflow: hidden;
                             white-space: nowrap;
                             text-overflow: ellipsis;
-                            max-width: 52px;
+                            max-width: 60px;
                             padding: var(--space-3xs);
+                            &:nth-of-type(3) {
+                                text-align: center;
+                            }
                             .progress__button {
                                 padding: var(--space-2xs) var(--space-xs);
                             }
+                        }
+                        .hide {
+                            display: none;
                         }
                     }
                 }

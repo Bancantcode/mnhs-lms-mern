@@ -1,11 +1,42 @@
 body {
     background-color: var(--dark-green);
-    
     .main {
         color: var(--light-green);
         display: flex;
         gap: var(--space-md);
         padding: var(--space-sm);
+
+        .hamburger {
+            font-size: var(--heading-3);
+            cursor: pointer;
+        }
+
+        .new__navbar {
+            background-color: var(--slight-green);
+            position: absolute;
+            top: 60px;
+            left: 65;
+            width: 70%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+            border-radius: .5em;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-sm);
+            font-size: var(--heading-5);
+            gap: var(--space-2xs);
+            .nav__link {
+                display: block;
+                color: var(--light-green);
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .click__logout {
+                border-top: 1px solid var(--light-green);
+                padding-top: var(--space-2xs);
+                cursor: pointer;
+            }
+        }
 
         aside {
             position: fixed;
@@ -106,11 +137,13 @@ body {
                         justify-content: space-between;
                         flex-direction: column;
                         border-radius: .5em;
-                        background-color: var(--slight-green);
                         height: 290px;
                         width: 290px;
-                        color: var(--light-green);
                         padding: var(--space-sm);
+                        // color: var(--light-green);
+                        // background-color: var(--slight-green);
+                        color: var(--dark-green);
+                        background-color: var(--light-green);
                         z-index: 1;
                         cursor: pointer;
 
@@ -121,7 +154,7 @@ body {
                             left: 0;
                             right: 0;
                             height: 0;
-                            background-color: var(--super-light-green);
+                            background-color: var(--slight-green);
                             transition: height 0.3s;
                             z-index: -1;
                         }
@@ -131,7 +164,7 @@ body {
                         }
 
                         &:hover {
-                            color: var(--dark-green);
+                            color: var(--light-green);
 
                             i {
                                 color: var(--new-arrow-color);
@@ -141,7 +174,8 @@ body {
                         i {
                             align-self: flex-end;
                             font-size: var(--heading-3);
-                            color: rgba(228, 236, 227, 0.5);
+                            // color: rgba(228, 236, 227, 0.5);
+                            color: var(--dark-green);
                         }
                         .subject {
                             font-size: var(--heading-6);
@@ -157,11 +191,12 @@ body {
     body {
         .main {
             flex-direction: column;
-
+            .hamburger {
+                display: block;
+            }
             aside {
                 display: none;
             }
-
             .container {
                 width: 100%;
                 margin-left: 0;
@@ -174,10 +209,6 @@ body {
                     }
                 }
             }
-
-            .hamburger {
-                display: block;
-            }
         }
     }
 }
@@ -185,10 +216,13 @@ body {
 @media screen and (min-width: 768px) {
     body {
         .main {
+            .hamburger {
+                display: none;
+            }
+
             aside {
                 display: flex;
             }
-
             .container {
                 width: calc(100% - 320px);
                 margin-left: 320px;
@@ -200,10 +234,6 @@ body {
                         }
                     }
                 }
-            }
-
-            .hamburger {
-                display: none;
             }
         }
     }
