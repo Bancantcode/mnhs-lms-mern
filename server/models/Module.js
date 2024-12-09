@@ -15,7 +15,8 @@ const Module = sequelize.define('modules', {
     file_name: { type: DataTypes.STRING, allowNull: true },
     file_data: { type: DataTypes.BLOB('long'), allowNull: true },
     upload_date: { type: DataTypes.DATEONLY, defaultValue: DataTypes.NOW }, 
-    uploader: { type: DataTypes.STRING, allowNull: false }
+    uploader: { type: DataTypes.STRING, allowNull: false },
+    progress: { type: DataTypes.STRING, allowNull: false, defaultValue: "Incomplete" }
     }, {
         timestamps: false
 });

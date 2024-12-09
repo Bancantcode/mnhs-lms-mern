@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styles from '../assets/styles/dashboard.module.scss';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Lenis from 'lenis';
 
 const Dashboard = () => {
@@ -14,8 +14,17 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const [showLogout, setShowLogout] = useState(false);
-  const courseRefs = useRef([]);
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
+
+  useEffect(() => {
+    // Set the CSS variable on the body element
+    document.body.style.setProperty('--background-color', 'var(--dark-green)');
+  
+    // Cleanup function to reset when component unmounts
+    return () => {
+      document.body.style.removeProperty('--background-color');
+    };
+  }, []);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -104,94 +113,101 @@ const Dashboard = () => {
     setIsNavbarVisible(prev => !prev);
   };
 
+  const pageStyle = {
+    backgroundColor: 'var(--dark-green)',
+    height: '100vh'
+  }
+
   return (
-    <main className={styles.main}>
-      <div className={styles.hamburger} onClick={toggleNavbar}>
-        <i className="ri-menu-2-line"></i>
-      </div>
-      
-      {isNavbarVisible && (
-        <nav className={styles.new__navbar}>
-          <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
-          {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
-          <div className={styles.click__logout} onClick={handleLogoutToggle}>
-            <p onClick={handleLogout}><i className="ri-logout-box-r-line"></i> Log Out</p>
-          </div>
-        </nav>
-      )}
-
-      <aside>
-        <div className={styles.main__container}>
-          <div className={styles.row}>
-            <h1>MNHS-LMS</h1>
-            <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
-          </div>
-          <nav className={styles.nav}>
+    <div className={styles.container} style={pageStyle}>
+      <main className={styles.main}>
+        <div className={styles.hamburger} onClick={toggleNavbar}>
+          <i className="ri-menu-2-line"></i>
+        </div>
+        
+        {isNavbarVisible && (
+          <nav className={styles.new__navbar}>
             <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
-            {role === "ADMIN" &&<Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+            {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+            <div className={styles.click__logout} onClick={handleLogoutToggle}>
+              <p onClick={handleLogout}><i className="ri-logout-box-r-line"></i> Log Out</p>
+            </div>
           </nav>
-        </div>
+        )}
 
-        <div className={styles.profile__flex}>
-          <div className={styles.profile}>
-            <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+        <aside>
+          <div className={styles.main__container}>
+            <div className={styles.row}>
+              <h1>MNHS-LMS</h1>
+              <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
+            </div>
+            <nav className={styles.nav}>
+              <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
+              {role === "ADMIN" &&<Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+            </nav>
+          </div>
+
+          <div className={styles.profile__flex}>
+            <div className={styles.profile}>
+              <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+              <br />
+            </div>
+            <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
+              <i className="ri-logout-box-line" onClick={handleLogout}></i>
+            </div>
+          </div>
+        </aside>
+
+        <div className={styles.container}>
+          <div className={styles.dashboard}>
+            <h1>Dashboard</h1>
+          </div>
+          <div className={styles.courses}>
+            <h4><i className="ri-corner-down-right-line"></i>Core Subjects</h4>
+            <ul>
+              {modules.core.length === 0 ? (  
+                <p>No core subjects available</p>
+              ) : (
+                modules.core.map((module, index) => (
+                  <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
+                    <i className="ri-arrow-right-up-line"></i>
+                    <p className={styles.subject} key={module.MID}>{capSubject(module.subject)}</p>
+                  </Link>
+                ))
+              )}
+            </ul>
             <br />
+            <h4><i className="ri-corner-down-right-line"></i>Applied Subjects</h4>
+            <ul>
+              {modules.applied.length === 0 ? (
+                <p>No applied subjects available</p>
+              ) : (
+                modules.applied.map((module, index) => (
+                  <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
+                    <i className="ri-arrow-right-up-line"></i>
+                    <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                  </Link>
+                ))
+              )}
+            </ul>
+            <br />
+            <h4><i className="ri-corner-down-right-line"></i>Specialized Subjects</h4>
+            <ul>
+              {modules.specialized.length === 0 ? (
+                <p>No specialized subjects available</p>
+              ) : (
+                modules.specialized.map((module, index) => (
+                  <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
+                    <i className="ri-arrow-right-up-line"></i>
+                    <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                  </Link>
+                ))
+              )}
+            </ul>
           </div>
-          <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
-            <i className="ri-logout-box-line" onClick={handleLogout}></i>
-          </div>
         </div>
-      </aside>
-
-      <div className={styles.container}>
-        <div className={styles.dashboard}>
-          <h1>Dashboard</h1>
-        </div>
-        <div className={styles.courses}>
-          <h4><i className="ri-corner-down-right-line"></i>Core Subjects</h4>
-          <ul>
-            {modules.core.length === 0 ? (  
-              <p>No core subjects available</p>
-            ) : (
-              modules.core.map((module, index) => (
-                <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
-                  <i className="ri-arrow-right-up-line"></i>
-                  <p className={styles.subject} key={module.MID}>{capSubject(module.subject)}</p>
-                </Link>
-              ))
-            )}
-          </ul>
-          <br />
-          <h4><i className="ri-corner-down-right-line"></i>Applied Subjects</h4>
-          <ul>
-            {modules.applied.length === 0 ? (
-              <p>No applied subjects available</p>
-            ) : (
-              modules.applied.map((module, index) => (
-                <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
-                  <i className="ri-arrow-right-up-line"></i>
-                  <p className={styles.subject} key={module.MID}>{module.subject}</p>
-                </Link>
-              ))
-            )}
-          </ul>
-          <br />
-          <h4><i className="ri-corner-down-right-line"></i>Specialized Subjects</h4>
-          <ul>
-            {modules.specialized.length === 0 ? (
-              <p>No specialized subjects available</p>
-            ) : (
-              modules.specialized.map((module, index) => (
-                <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
-                  <i className="ri-arrow-right-up-line"></i>
-                  <p className={styles.subject} key={module.MID}>{module.subject}</p>
-                </Link>
-              ))
-            )}
-          </ul>
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 };
 

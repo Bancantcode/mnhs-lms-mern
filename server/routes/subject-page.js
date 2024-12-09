@@ -17,6 +17,24 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.put('/progress/:id', async (req, res) => {
+    const { id } = req.params;
+    const { progress } = req.body; 
+    
+    try {
+        const module = await Module.update({ progress }, { where: { MID: id } });
+            
+        if (module[0] === 0) {
+            return res.status(404).json({ message: 'Module not found' });
+        }
+
+        res.status(200).json({ message: 'Progress updated successfully' });
+    } catch (err) {
+        console.error('Error updating progress:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 export default router;
     
 //     try {

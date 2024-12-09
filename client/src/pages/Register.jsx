@@ -1,11 +1,10 @@
-import styles from '../assets/styles/register.module.scss'
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+import styles from '../assets/styles/register.module.scss'
 import axios from 'axios';
 
 const Register = () => {
   const [userData, setUserData] = useState({ name: '', email: '', lrn: '', grlvl: '11', strand: 'STEM', password: '', });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -38,22 +37,18 @@ const Register = () => {
       try {
         const response = await axios.post('http://localhost:3000/register', userData);
         alert('Registration successful! You can now log in.');
-        setUserData({
-          name: '',
-          email: '',
-          lrn: '',
-          grlvl: '11',
-          strand: 'STEM',
-          password: '',
-        });
+        setUserData({ name: '', email: '', lrn: '', grlvl: '11', strand: 'STEM', password: '', });
         navigate('/login');
-      } catch (err) {
+      } 
+      catch (err) {
         console.error(err);
         alert(err.response?.data?.message || 'Registration failed!');
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
-    } else {
+    } 
+    else {
       console.log("Error with input validation:", errors);
       setLoading(false);
     }
@@ -62,7 +57,6 @@ const Register = () => {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <img src="" alt="" />
         <form onSubmit={handleSubmit} className={styles.form}>
           <img src="/images/MNHS-Logo.png" alt="Logo" />
           <label htmlFor="name">Full Name
@@ -103,9 +97,7 @@ const Register = () => {
           {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
           <button type="submit" disabled={loading}>{loading ? 'Registering...' : 'Register'}</button>
         </form>
-        <p className={styles.question}>
-          Already have an account? <Link to="/login" className={styles.link}>Login</Link>
-        </p>
+        <p className={styles.question}>Already have an account? <Link to="/login" className={styles.link}>Login</Link></p>
       </div>
     </main>
   );
