@@ -107,8 +107,8 @@
                     background-color: var(--green);
                     color: var(--mid-white);
                 }
-              }
-              .dropdown {
+            }
+            .dropdown {
                 position: absolute;
                 color: var(--white);
                 top: 110%;
@@ -322,6 +322,7 @@
         }
     }
 }
+
 
 @media screen and (max-width: 768px) {
     .main {

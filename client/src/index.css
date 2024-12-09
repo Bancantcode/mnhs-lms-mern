@@ -75,8 +75,8 @@
 }
 
 body {
-  background-color: var(--body-color);
-  color: var(--black-color);
+  background-color: var(--mid-white);
+  /* background-color: var(--dark-green); */
   font-family: 'Neue Montreal', sans-serif;
 }
 
@@ -120,4 +120,8 @@ nav {
 
 ::-webkit-scrollbar-thumb {
   background: var(--second-black);
+}
+
+.dashboard {
+  background-color: var(--red);
 }

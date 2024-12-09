@@ -84,120 +84,91 @@ const SubjectPage = () => {
     }
   };
 
-  const handleProgressChange = async (moduleId, currentProgress, index) => {
-    const updatedProgress = (() => {
-      switch (currentProgress) {
-        case 'Incomplete':
-          return 'In Progress';
-        case 'In Progress':
-          return 'Completed';
-        case 'Completed':
-          return 'Incomplete';
-        default:
-          return 'Incomplete';
-      }
-    })();
-
-    try {
-      await axios.put(`http://localhost:3000/subject-page/progress/${moduleId}`, { progress: updatedProgress });
-
-      setModules(prevModules => {
-        const newModules = [...prevModules];
-        newModules[index].progress = updatedProgress;
-        return newModules;
-      });
-
-      alert('Progress status updated!');
-    } catch (err) {
-      console.error('Error updating progress:', err);
-      alert('Failed to update progress status');
-    }
-  };
-
-
   const toggleNavbar = () => {
     setIsNavbarVisible(prev => !prev);
   };
 
-  return (
-    <main className={styles.main}>
-      <div className={styles.hamburger} onClick={toggleNavbar}>
-        <i className="ri-menu-2-line"></i>
-      </div>
+  const pageStyle = {
+    backgroundColor: 'var(--dark-green)',
+    height: '100vh'
+  }
 
-      {isNavbarVisible && (
-        <nav className={styles.new__navbar}>
-          <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
-          {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
-          <div className={styles.click__logout} onClick={handleLogoutToggle}>
-            <p onClick={handleLogout}><i className="ri-logout-box-r-line"></i> Log Out</p>
-          </div>
-        </nav>
-      )}
-        
-      <aside>
-        <div className={styles.main__container}>
-          <div className={styles.row}>
-            <h1>MNHS-LMS</h1>
-            <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
-          </div>
-          <nav className={styles.nav}>
+  return (
+    <div className={styles.container} style={pageStyle}>
+      <main className={styles.main}>
+        <div className={styles.hamburger} onClick={toggleNavbar}>
+          <i className="ri-menu-2-line"></i>
+        </div>
+
+        {isNavbarVisible && (
+          <nav className={styles.new__navbar}>
             <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
             {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+            <div className={styles.click__logout} onClick={handleLogoutToggle}>
+              <p onClick={handleLogout}><i className="ri-logout-box-r-line"></i> Log Out</p>
+            </div>
           </nav>
-        </div>
-
-        <div className={styles.profile__flex}>
-          <div className={styles.profile}>
-            <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
-            <br />
+        )}
+          
+        <aside>
+          <div className={styles.main__container}>
+            <div className={styles.row}>
+              <h1>MNHS-LMS</h1>
+              <img src="/images/MNHS-Logo.png" alt="logo" width={60} height={60}/>
+            </div>
+            <nav className={styles.nav}>
+              <Link to="/" className={styles.nav__link}><i className="ri-dashboard-2-fill"></i> Dashboard</Link>
+              {role === "ADMIN" && <Link to="/admin-users" className={styles.nav__link}><i className="ri-user-settings-fill"></i> Admin Dashboard</Link>}
+            </nav>
           </div>
-          <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
-            <i className="ri-logout-box-line" onClick={handleLogout}></i>
+
+          <div className={styles.profile__flex}>
+            <div className={styles.profile}>
+              <p className={styles.name}><i className="ri-user-line"></i>{name || 'Loading...'}</p> 
+              <br />
+            </div>
+            <div className={styles.click__logout} onClick={handleLogoutToggle} style={{ position: 'relative' }}>
+              <i className="ri-logout-box-line" onClick={handleLogout}></i>
+            </div>
+          </div>
+        </aside>
+
+        <div className={styles.container}>
+          <div className={styles.dashboard}>
+              <h1>Lessons</h1>
+          </div>
+
+          <div className={styles.table__container}>
+            <table className={styles.table}> 
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>File</th>
+                    <th>Date</th>
+                    {/* <th className={styles.hide}>Progress</th> */}
+                  </tr>
+                </thead>
+                <tbody>
+                {modules.map((module, index) => (
+                  <tr key={index}>
+                    <td>{module.title}</td>
+                    <td className={styles.file}>{module.file_name && (
+                      module.file_name.startsWith("http://") || 
+                      module.file_name.startsWith("https://")) ? (
+                        <a className={styles.file__link} href={module.file_name} target="_blank" rel="noopener noreferrer">{module.file_name}</a>
+                      ) : (
+                        <p className={styles.file__link} onClick={() => handleDownload(module.MID, index)}>{module.file_name}</p>
+                      )}
+                    </td>
+                    <td>{`${String(new Date(module.upload_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(module.upload_date).getDate()).padStart(2, '0')}/${new Date(module.upload_date).getFullYear()}`}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-      </aside>
-
-      <div className={styles.container}>
-        <div className={styles.dashboard}>
-            <h1>Lessons</h1>
-        </div>
-
-        <div className={styles.table__container}>
-          <table className={styles.table}> 
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>File</th>
-                  <th>Date</th>
-                  <th className={styles.hide}>Progress</th>
-                </tr>
-              </thead>
-              <tbody>
-              {modules.map((module, index) => (
-                <tr key={index}>
-                  <td>{module.title}</td>
-                  <td className={styles.file}>{module.file_name && (
-                    module.file_name.startsWith("http://") || 
-                    module.file_name.startsWith("https://")) ? (
-                      <a className={styles.file__link} href={module.file_name} target="_blank" rel="noopener noreferrer">{module.file_name}</a>
-                    ) : (
-                      <p className={styles.file__link} onClick={() => handleDownload(module.MID, index)}>{module.file_name}</p>
-                    )}
-                  </td>
-                  <td>{`${String(new Date(module.upload_date).getMonth() + 1).padStart(2, '0')}/${String(new Date(module.upload_date).getDate()).padStart(2, '0')}/${new Date(module.upload_date).getFullYear()}`}</td>
-                  <td className={styles.hide}>
-                      <button className={styles.progress__button} onClick={() => handleProgressChange(module.MID, module.progress, index)}>
-                          {module.progress}
-                      </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </main>    
+      </main>    
+    </div>
   )
 }
 
