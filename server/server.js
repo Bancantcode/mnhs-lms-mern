@@ -31,10 +31,10 @@ app.use((err, req, res, next) => {
     res.status(500).send("It's not you, it's us!");
 });
 
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
 // app.use('/login', loginRoute);
