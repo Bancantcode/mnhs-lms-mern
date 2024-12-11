@@ -129,7 +129,7 @@ const AdminModules = () => {
   
     if (validateData()) {
       try {
-        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        const response = await axios.post('https://mnhs-lms-mern.onrender.com/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         alert('Module successfully uploaded!');
         const addedModule = response.data.newModule;
         setModules([...modules, addedModule]);
@@ -160,7 +160,7 @@ const AdminModules = () => {
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await fetch('http://localhost:3000/admin-modules');
+        const response = await fetch('https://mnhs-lms-mern.onrender.com/admin-modules');
         const data = await response.json();
         setModules(data);
         setLoading(false);
@@ -209,7 +209,7 @@ const AdminModules = () => {
   };
   const handleDownload = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3000/admin-modules/download/${id}`, {
+      const response = await axios.get(`https://mnhs-lms-mern.onrender.com/admin-modules/download/${id}`, {
         responseType: 'blob', 
       });
 
@@ -257,7 +257,7 @@ const AdminModules = () => {
   
     if (validateEditData()) {
       try {
-        const response = await axios.put(`http://localhost:3000/admin-modules/edit/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' }});
+        const response = await axios.put(`https://mnhs-lms-mern.onrender.com/admin-modules/edit/${id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' }});
         alert('Module successfully updated!');
         setModules(
           modules.map((module) =>
@@ -282,7 +282,7 @@ const AdminModules = () => {
   const confirmDelete = async () => {
     try {
       const id = moduleToDelete.MID;
-      const response = await axios.delete(`http://localhost:3000/admin-modules/delete/${id}`);
+      const response = await axios.delete(`https://mnhs-lms-mern.onrender.com/admin-modules/delete/${id}`);
       setDeleteModalOpen(false);
       setModules(modules.filter(module => module.MID !== id));
     } catch (error){

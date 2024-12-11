@@ -30,7 +30,7 @@ const Dashboard = () => {
     const fetchModules = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3000/dashboard/?id=${id}`);
+        const response = await axios.get(`https://mnhs-lms-mern.onrender.com/dashboard/?id=${id}`);
         const fetchedModules = response.data.modules;
 
         const uniqueModules = [];

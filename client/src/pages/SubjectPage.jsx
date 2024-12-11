@@ -28,7 +28,7 @@ const SubjectPage = () => {
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/subject-page/?subject=${subject}`);
+        const response = await axios.get(`https://mnhs-lms-mern.onrender.com/subject-page/?subject=${subject}`);
         setModules(response.data.modules);
       } 
       catch (err) {
@@ -61,7 +61,7 @@ const SubjectPage = () => {
 
   const handleDownload = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3000/download/${id}`, { responseType: 'blob' });
+      const response = await axios.get(`https://mnhs-lms-mern.onrender.com/download/${id}`, { responseType: 'blob' });
 
       const contentDisposition = response.headers['content-disposition'];
       if (contentDisposition) {

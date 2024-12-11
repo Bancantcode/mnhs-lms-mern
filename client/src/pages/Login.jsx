@@ -14,7 +14,7 @@ const Login = () => {
     setErrorMessage('');
   
     try {
-      const response = await axios.post('http://localhost:3000/login', { emailOrUsername, password });
+      const response = await axios.post('https://mnhs-lms-mern.onrender.com/login', { emailOrUsername, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('Email', response.data.username);
       localStorage.setItem('LRN', response.data.userID);

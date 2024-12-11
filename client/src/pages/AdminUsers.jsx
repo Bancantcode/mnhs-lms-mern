@@ -133,7 +133,7 @@ const AdminUsers = () => {
     
     if (Object.keys(error).length === 0) {
       try {
-        const response = await axios.post('http://localhost:3000/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' }});
+        const response = await axios.post('https://mnhs-lms-mern.onrender.com/admin-modules', formData, { headers: { 'Content-Type': 'multipart/form-data' }});
         alert('Module successfully uploaded!.');
       } catch (err) {
         console.error(err);
@@ -176,7 +176,7 @@ const AdminUsers = () => {
 
     if (Object.keys(error).length === 0) {
       try {
-        const response = await axios.put(`http://localhost:3000/admin-users/edit/${id}`, editUser);
+        const response = await axios.put(`https://mnhs-lms-mern.onrender.com/admin-users/edit/${id}`, editUser);
         alert('User details updated successfully!');
         setEditModalOpen(false); 
         setUsers(users.map(user => (user.UID === id ? editUser : user)));
@@ -195,7 +195,7 @@ const AdminUsers = () => {
   const confirmDelete = async () => {
     try {
       const id = userToDelete.UID;
-      const response = await axios.delete(`http://localhost:3000/admin-users/delete/${id}`);
+      const response = await axios.delete(`https://mnhs-lms-mern.onrender.com/admin-users/delete/${id}`);
       setDeleteModalOpen(false);
       setUsers((users) => users.filter((user) => user.UID !== id));
     } catch (error){
@@ -221,7 +221,7 @@ const AdminUsers = () => {
 
     if (Object.keys(error).length === 0) {
       try {
-        const response = await axios.post('http://localhost:3000/admin-users/add', newUser);
+        const response = await axios.post('https://mnhs-lms-mern.onrender.com/admin-users/add', newUser);
         alert('User successfully added!');
         const newAdmin = response.data.newAdmin;
         setUsers([...users, newAdmin]);
@@ -238,7 +238,7 @@ const AdminUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/admin-users');
+        const response = await fetch('https://mnhs-lms-mern.onrender.com/admin-users');
         const data = await response.json();
         setUsers(data);
         setLoading(false);

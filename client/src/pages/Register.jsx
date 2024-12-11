@@ -35,7 +35,7 @@ const Register = () => {
 
     if (validateData()) {
       try {
-        const response = await axios.post('http://localhost:3000/register', userData);
+        const response = await axios.post('https://mnhs-lms-mern.onrender.com/register', userData);
         alert('Registration successful! You can now log in.');
         setUserData({ name: '', email: '', lrn: '', grlvl: '11', strand: 'STEM', password: '', });
         navigate('/login');
