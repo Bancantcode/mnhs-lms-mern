@@ -16,7 +16,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: 'https://mnhs-lms.onrender.com/',
+    origin: 'https://mnhs-lms.onrender.com',
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
     exposedHeaders: ['Content-Disposition']
 }))
