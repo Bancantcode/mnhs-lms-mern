@@ -14,7 +14,6 @@ import SubjectPageRoute from './routes/subject-page.js';
 
 dotenv.config();
 const app = express();
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 app.use(cors({
     origin: 'https://mnhs-lms.onrender.com',
