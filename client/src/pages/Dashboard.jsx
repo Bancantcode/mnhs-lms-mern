@@ -185,7 +185,7 @@ const Dashboard = () => {
                 modules.applied.map((module, index) => (
                   <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
                     <i className="ri-arrow-right-up-line"></i>
-                    <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                    <p className={styles.subject} key={module.MID}>{capSubject(module.subject)}</p>
                   </Link>
                 ))
               )}
@@ -199,7 +199,7 @@ const Dashboard = () => {
                 modules.specialized.map((module, index) => (
                   <Link to={`/subject-page/?subject=${module.subject}`} key={index} className={styles.course__container}>
                     <i className="ri-arrow-right-up-line"></i>
-                    <p className={styles.subject} key={module.MID}>{module.subject}</p>
+                    <p className={styles.subject} key={module.MID}>{capSubject(module.subject)}</p>
                   </Link>
                 ))
               )}
