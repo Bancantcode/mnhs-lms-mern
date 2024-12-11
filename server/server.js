@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // ROUTES IMPORT //
 // import loginRoute from './routes/login.js';
@@ -14,12 +16,18 @@ import SubjectPageRoute from './routes/subject-page.js';
 
 dotenv.config();
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 app.use(cors({
     origin: 'https://mnhs-lms.onrender.com',
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
     exposedHeaders: ['Content-Disposition']
 }))
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 app.use(express.json());
 
