@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 
 // ROUTES IMPORT //
 // import loginRoute from './routes/login.js';
@@ -26,6 +27,12 @@ app.use(express.json());
 app.use((err, req, res, next) => {
     console.error(err.message);
     res.status(500).send("It's not you, it's us!");
+});
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // app.use('/login', loginRoute);
