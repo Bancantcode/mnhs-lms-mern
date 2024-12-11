@@ -252,7 +252,7 @@ const AdminModules = () => {
       formData.append('file_name', moduleToEdit.url);
       formData.append('file_data', null);
     } else {
-      formData.append('file', moduleToEdit.file);
+      formData.append('file', file);
     }
   
     if (validateEditData()) {
@@ -424,7 +424,7 @@ const AdminModules = () => {
                   <input className={styles.file__upload} type="file" name="file" onChange={(e) => setFile(e.target.files[0])} />
                 )}
                 {isLinkUpload && (
-                  <input type="url" placeholder="Enter URL" value={moduleToEdit.file_name || ''} onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>
+                  <input type="url" placeholder="Enter URL" onChange={(e) => setModuleToEdit({ ...moduleToEdit, url: e.target.value })}/>
                 )}
                 <button type="submit">Submit</button>
                 <button type="button" onClick={() => setEditModalOpen(false)}>Cancel</button>
