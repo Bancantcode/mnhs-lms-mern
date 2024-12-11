@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import url from 'url';
 
 // ROUTES IMPORT //
 // import loginRoute from './routes/login.js';
@@ -15,6 +16,7 @@ import SubjectPageRoute from './routes/subject-page.js';
 
 dotenv.config();
 const app = express();
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 app.use(cors({
     origin: 'https://mnhs-lms.onrender.com',
@@ -29,10 +31,10 @@ app.use((err, req, res, next) => {
     res.status(500).send("It's not you, it's us!");
 });
 
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // app.use('/login', loginRoute);
