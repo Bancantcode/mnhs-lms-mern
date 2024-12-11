@@ -17,16 +17,18 @@ dotenv.config();
 //   dialect: 'postgres',
 // });
 
-const sequelize = new Sequelize({
-  dialect: 'postgres',
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  ssl: true,
-  clientMinMessages: 'notice',
-});
+// const sequelize = new Sequelize({
+//   dialect: 'postgres',
+//   database: process.env.DB_NAME,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASS,
+//   host: process.env.DB_HOST,
+//   port: process.env.DB_PORT,
+//   ssl: true,
+//   clientMinMessages: 'notice',
+// });
+
+const sequelize = new Sequelize(process.env.DB_HOST);
 
 // db.connect();
 
