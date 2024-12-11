@@ -16,7 +16,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['13.228.225.19', '18.142.128.26', '54.254.162.138'],
     methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
     exposedHeaders: ['Content-Disposition']
 }))
