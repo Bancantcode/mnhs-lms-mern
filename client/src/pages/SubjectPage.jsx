@@ -11,6 +11,7 @@ const SubjectPage = () => {
   const queryParams = new URLSearchParams(location.search);
   const subject = queryParams.get("subject");
   const [LRNUser, setLRNUser] = useState(localStorage.getItem('LRN'));
+  const [Strand, setStrand] = useState(localStorage.getItem('Strand'));
   const [showLogout, setShowLogout] = useState(false);
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
 
@@ -29,7 +30,8 @@ const SubjectPage = () => {
     const fetchModules = async () => {
       try {
         const response = await axios.get(`https://mnhs-lms-mern.onrender.com/subject-page/?subject=${subject}`);
-        setModules(response.data.modules);
+        const sortedModules = response.data.modules.filter(module => module.strand === Strand);
+        setModules(sortedModules);
       } 
       catch (err) {
         console.error("Error fetching module details:", err);
@@ -42,6 +44,7 @@ const SubjectPage = () => {
     const handleStorageChange = () => {
       setName(localStorage.getItem('name'));
       setRole(localStorage.getItem('User_Role'));
+      setStrand(localStorage.getItem('Strand'));
     };
   
     window.addEventListener('storage', handleStorageChange);
